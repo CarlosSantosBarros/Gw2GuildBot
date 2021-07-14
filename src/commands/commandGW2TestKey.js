@@ -1,6 +1,5 @@
-const { User } = require("../database/");
-const { log } = require("../utils/utilsDiscord");
 const fetch = require("node-fetch");
+const { getDBUserById } = require("../utils/utilsDatabase");
 
 module.exports = {
   name: "testkey",
@@ -9,11 +8,7 @@ module.exports = {
   usage: "<APIKEY>",
 
   async execute(message) {
-    const user = await User.findOne({
-      where: {
-        snowflake: message.author.id,
-      },
-    });
+    const user = await getDBUserById(message.author.id);
     const response = await fetch(
       `https://api.guildwars2.com/v2/account?access_token=` + user.apikey
     )

@@ -22,13 +22,19 @@ module.exports = async (message) => {
     return command;
   };
 
-  const isValidTarget = async (modName) => {
+  const isValidTarget = async (moderationAction) => {
     const targetUser = message.mentions.users.first();
-    const targetMember = message.guild.member(targetUser);
     if (!targetUser)
-      throw `You need to tag a user in order to ${modName} them!`;
+      throw `You need to tag a user in order to ${moderationAction} them!`;
+    const targetMember = message.guild.member(targetUser);
     if (!targetMember) throw `The user isn't in this server`;
     return targetMember;
+  };
+
+  const isValidAPIKeyString = (apiKeyString) => {
+    if (apiKeyString === "") throw `You did not enter a key`;
+    if (apiKeyString.length != 72) throw `API key is not the correct size`;
+    return apiKeyString;
   };
 
   const isValidArgs = async (command) => {
@@ -44,9 +50,6 @@ module.exports = async (message) => {
     // need to change arg type checking, maybe turn it into ENUM
     //
 
-    //
-    // REMOVE WHITE SPACE FROM BEGINING OF STRING
-    //
     for (let index = 0; index < commandInputArray.length; index++) {
       if (commandArgArray[index] === "member") {
         argObj.member = await isValidTarget(command.name);
@@ -63,7 +66,9 @@ module.exports = async (message) => {
       }
       // add api key validation here
       if (commandArgArray[index] === "APIKey") {
-        argObj.apikey = await isValidAPIKey(commandInputArray[index].slice(1));
+        argObj.apikey = await isValidAPIKeyString(
+          commandInputArray[index].slice(1)
+        );
         break;
       }
 

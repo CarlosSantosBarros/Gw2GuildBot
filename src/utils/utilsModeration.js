@@ -3,12 +3,12 @@ const fs = module.require("fs");
 const { isValidLogChannel, getRoleByName } = require("../../../util");
 const { moderation } = require("../../../config.json");
 
-module.exports = async (message, action) => {
-
+module.exports = async (message, moderationAction) => {
   const isValidModerationTarget = async (target) => {
-    if (target.id === message.author.id) throw `You can't ${action} yourself`;
+    if (target.id === message.author.id)
+      throw `You can't ${moderationAction} yourself`;
     if (target.roles.highest.position >= message.member.roles.highest.position)
-      throw `You can't ${action} a member with equal or higher permissions `;
+      throw `You can't ${moderationAction} a member with equal or higher permissions `;
   };
 
   const isValidMuteRole = async () => {
@@ -38,11 +38,11 @@ module.exports = async (message, action) => {
     const author = message.author;
     const channelToSendLog = await isValidLogChannel(
       member.guild.channels,
-      moderation.logChannel,
+      moderation.logChannel
     );
 
     // color code for severaty
-    switch (action) {
+    switch (moderationAction) {
       case "mute":
         msg.setColor("YELLOW");
         break;
@@ -55,8 +55,8 @@ module.exports = async (message, action) => {
       default:
         break;
     }
-const duration = (action === "mute") ? "hours" : "days";
-    let description = `***Member***: ${member.user.username} \n ***Action***: ${action}`;
+    const duration = moderationAction === "mute" ? "hours" : "days";
+    let description = `***Member***: ${member.user.username} \n ***Action***: ${moderationAction}`;
     if (time) description += `\n ***Duration***: ${time} ${duration}`;
 
     if (string) description += `\n ***Reason***: ${string.trim()}`;
@@ -70,11 +70,11 @@ const duration = (action === "mute") ? "hours" : "days";
   };
 
   const addToModerationList = async (member, time) => {
-    const duration = (action === "mute") ? 3600000 : 86400000;
+    const duration = moderationAction === "mute" ? 3600000 : 86400000;
     message.client.moderatedList[member.id] = {
       guild: message.guild.id,
       time: Date.now() + parseInt(time) * duration,
-      type: action,
+      type: moderationAction,
     };
 
     await fs.writeFile(
@@ -92,9 +92,9 @@ const duration = (action === "mute") ? "hours" : "days";
   // isMuted(snowflake) return bool
   // moderationTimer
   return {
-    isValidModerationTarget:isValidModerationTarget,
-    isValidMuteRole:isValidMuteRole,
-    moderationLog:moderationLog,
-    addToModerationList:addToModerationList
+    isValidModerationTarget: isValidModerationTarget,
+    isValidMuteRole: isValidMuteRole,
+    moderationLog: moderationLog,
+    addToModerationList: addToModerationList,
   };
 };
