@@ -1,0 +1,15 @@
+{
+  "token": "Njk1MjM2OTIwNDY0Mzc1OTI4.XpGOdw.KGCHat4si8mE_6Y8t4wvCW3e68o",
+  "prefix": "!",
+  "logging": {
+    "IsDebugging": false,
+    "IsRaw": false,
+    "IsSuccessLogging": false,
+    "IsFailureLogging": true
+  },
+  "moderation": {
+    "channelOnlyMod": true,
+    "logChannel": "mod-logs"
+  },
+  "memberLog": "member-log" 
+}

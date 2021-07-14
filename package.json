@@ -1,0 +1,25 @@
+{
+  "name": "wow-discord-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --watch src"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.6.0",
+    "keyv": "^4.0.3",
+    "keyv-file": "^0.1.13",
+    "moment": "^2.29.1",
+    "node-fetch": "^2.6.1",
+    "sequelize": "^6.6.5",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  }
+}
