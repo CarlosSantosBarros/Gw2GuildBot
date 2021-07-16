@@ -1,5 +1,4 @@
-const { User } = require("../database/");
-const { log } = require("../utils/utilsDiscord");
+const { getDBUserById } = require("../utils/utilsDatabase");
 
 module.exports = {
   name: "getkey",
@@ -8,12 +7,7 @@ module.exports = {
   usage: "<APIKEY>",
 
   async execute(message) {
-    const key = await User.findOne({
-      where: {
-        snowflake: message.author.id,
-      },
-    });
-
-    message.reply(`${key.apikey}`);
+    const user = await getDBUserById(message.author.id);
+    message.reply(`${user.apikey}`);
   },
 };

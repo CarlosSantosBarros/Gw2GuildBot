@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
 const { getDBUserById } = require("../utils/utilsDatabase");
+const { getGW2TokenInfo } = require("../utils/utilsGw2API");
 
 module.exports = {
   name: "testkey",
@@ -9,14 +9,8 @@ module.exports = {
 
   async execute(message) {
     const user = await getDBUserById(message.author.id);
-    const response = await fetch(
-      `https://api.guildwars2.com/v2/account?access_token=` + user.apikey
-    )
-      .then((res) => {
-        return res.json();
-      })
-      .catch((error) => console.log(error));
+    const response = await getGW2TokenInfo(user.apikey);
     if (response.text) throw response.text;
-    console.log(response.name);
+    message.reply("Api key name: '" + response.name + "' tested");
   },
 };
