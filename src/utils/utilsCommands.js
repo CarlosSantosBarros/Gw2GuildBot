@@ -1,5 +1,4 @@
 const { prefix } = require("../config.json");
-const { isValidAPIKey } = require("./utilsGw2API");
 
 module.exports = async (message) => {
   const isValidCommand = async (commandName) => {
