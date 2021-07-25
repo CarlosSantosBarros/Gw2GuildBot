@@ -10,6 +10,7 @@ module.exports = {
   async execute(message, args) {
     const response = await getGW2TokenInfo(args.apikey);
     if (response.text) throw response.text;
+    await updateDBUserById(message.author.id, args.apikey);
     message.reply("Api key name: '" + response.name + "' updated");
   },
 };

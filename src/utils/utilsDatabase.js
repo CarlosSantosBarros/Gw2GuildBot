@@ -40,8 +40,6 @@ exports.updateDBUserById = async (id, newValue) => {
       },
     }
   ).catch((error) => {
-    // if (error instanceof UniqueConstraintError)
-    //   throw "Your already have a key stored";
     console.log(error);
   });
   return userUpdate;
