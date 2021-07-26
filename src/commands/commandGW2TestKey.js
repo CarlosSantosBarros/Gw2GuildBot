@@ -12,9 +12,13 @@ module.exports = {
     const user = await getDBUserById(message.author.id);
     const response = await getGW2TokenInfo(user.apikey);
     if (response.text) throw response.text;
+    // config object should be "emoji, function/action, collector config"
     const emoji = "👍";
-    await message.react(emoji);
-    await emojiReply(message, emoji);
-    message.reply("Api key name: '" + response.name + "' tested");
+    const funct = () => {
+      message.reply("Api key name: '" + response.name + "' tested");
+    };
+    // params should be (message, config object)
+    await emojiReply(message, emoji, funct);
+    // await message.reply("Api key name: '" + response.name + "' tested");
   },
 };
