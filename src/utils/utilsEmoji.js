@@ -1,16 +1,21 @@
-// This function needs renaming, it does not represent what it does
-// need to pass an awaitReacitons collecter options
-exports.emojiReply = async (message, emoji, funct) => {
-  //   filter may need to be extracted because you may not always need author
-  const filter = (reaction, user) =>
+const emojiSingleFilterByAuthor = (message, emoji) => {
+  return (reaction, user) =>
     reaction.emoji.name === emoji && user.id === message.author.id;
+};
+
+exports.emojiTriggeredAction = async (message, config) => {
+  const { emoji, action, collectorSettings } = config;
+
   await message.react(emoji);
+
   message
-    .awaitReactions(filter, { max: 1, time: 60000, errors: ["time"] })
+    .awaitReactions(
+      emojiSingleFilterByAuthor(message, emoji),
+      collectorSettings
+    )
     .then((collected) => {
       const reaction = collected.first();
-      if (reaction.emoji.name === emoji) funct();
-      // message.reply("You reacted with: " + emoji);
+      action(reaction);
     })
     .catch((error) => {
       console.log(error.size);

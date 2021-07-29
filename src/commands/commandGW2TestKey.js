@@ -1,5 +1,5 @@
 const { getDBUserById } = require("../utils/utilsDatabase");
-const { emojiReply } = require("../utils/utilsEmoji");
+const { emojiTriggeredAction } = require("../utils/utilsEmoji");
 const { getGW2TokenInfo } = require("../utils/utilsGw2API");
 
 module.exports = {
@@ -12,13 +12,18 @@ module.exports = {
     const user = await getDBUserById(message.author.id);
     const response = await getGW2TokenInfo(user.apikey);
     if (response.text) throw response.text;
-    // config object should be "emoji, function/action, collector config"
-    const emoji = "👍";
-    const funct = () => {
-      message.reply("Api key name: '" + response.name + "' tested");
+
+    const funct = (data) => {
+      message.reply(
+        "Api key name: '" + response.name + "' tested using: " + data.count
+      );
     };
-    // params should be (message, config object)
-    await emojiReply(message, emoji, funct);
-    // await message.reply("Api key name: '" + response.name + "' tested");
+    //rename this to represent single choise actions
+    const emojiConfig = {
+      emoji: "👍",
+      action: funct,
+      collectorSettings: { max: 1, time: 60000, errors: ["time"] },
+    };
+    await emojiTriggeredAction(message, emojiConfig);
   },
 };
