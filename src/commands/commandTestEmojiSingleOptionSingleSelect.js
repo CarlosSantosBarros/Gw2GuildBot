@@ -15,7 +15,12 @@ module.exports = {
 
     const funct = (data) => {
       message.reply(
-        "Api key name: '" + response.name + "' tested using: " + data.count
+        "Api key name: '" +
+          response.name +
+          "' tested using: " +
+          data.count +
+          " " +
+          user.apikey
       );
     };
     //rename this to represent single choise actions

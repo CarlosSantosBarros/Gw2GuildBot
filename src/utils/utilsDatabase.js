@@ -39,8 +39,9 @@ exports.updateDBUserById = async (id, newValue) => {
         snowflake: id,
       },
     }
-  ).catch((error) => {
-    console.log(error);
-  });
+  );
+  // .catch((error) => {
+  //   console.log(error);
+  // });
   return userUpdate;
 };
