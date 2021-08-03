@@ -1,7 +1,6 @@
 const { getCollection } = require("../modules/moduleEmojiTest");
-
 module.exports = {
-  name: "single",
+  name: "multi",
   description: "Test emoji functionality",
   args: [],
   usage: "<comand>",
@@ -12,7 +11,7 @@ module.exports = {
       collection: optionsCollection,
       commandUser: message.author.id,
       collectorSettings: {
-        max: 1,
+        max: 2,
         time: 10000,
         errors: ["time"],
       },
@@ -21,7 +20,7 @@ module.exports = {
       message,
       emojiOptionConfig
     );
-    await emojiDialog.createDialogMessage("Select 1");
+    await emojiDialog.createDialogMessage("Select 2");
     await emojiDialog.emojiSelectMuiltiActionFromOptions();
   },
 };
