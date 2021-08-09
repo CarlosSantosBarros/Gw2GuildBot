@@ -10,14 +10,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.0.1",
     "dotenv": "^8.6.0",
     "keyv": "^4.0.3",
     "keyv-file": "^0.1.13",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
     "sequelize": "^6.6.5",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^4.2.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0"

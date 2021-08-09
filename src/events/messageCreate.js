@@ -17,7 +17,7 @@ module.exports = async (message) => {
     await command.execute(message, args);
   } catch (error) {
     if (typeof error === "object") {
-      console.log("there is an error " + error);
+      console.log(error);
       error = "There was an error trying to execute that command!";
     }
     message.reply(error);

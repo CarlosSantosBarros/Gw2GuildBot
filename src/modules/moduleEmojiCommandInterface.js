@@ -1,8 +1,9 @@
-const {
-  filterAllOptionEmojisByAuthor,
-  getActionFromCollectionByEmoji,
-} = require("../utils/utilsEmoji");
+const { getActionFromCollectionByEmoji } = require("../utils/utilsEmoji");
 
+/*
+POSSIBLE REFACTOR HERE BECAUSE OF
+FILTER BEING PART OF CONFIG OBJECT
+*/
 module.exports = async (cmdMessage, config) => {
   let botMessage;
 
@@ -39,7 +40,6 @@ module.exports = async (cmdMessage, config) => {
 
   const emojiMuiltiOptionCollecter = async (onCollected) => {
     const collector = botMessage.createReactionCollector(
-      filterAllOptionEmojisByAuthor(config.commandUser, config.collection),
       config.collectorSettings
     );
     collector.on("collect", (reaction, user) => {

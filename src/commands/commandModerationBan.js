@@ -1,4 +1,5 @@
 const { moderation } = require("../config.json");
+const { Permissions } = require("discord.js");
 
 module.exports = {
   name: "ban",
@@ -6,14 +7,11 @@ module.exports = {
   args: ["member", "time", "string"],
   usage: "<@Name>, <#Days>, <Reason>",
   channelOnly: moderation.channelOnlyMod,
-  permission: "BAN_MEMBERS",
+  permission: Permissions.FLAGS.BAN_MEMBERS,
 
   async execute(message, args) {
-    const {
-      isValidModerationTarget,
-      moderationLog,
-      addToModerationList
-    } = await require("../utilsModeration")(message, this.name);
+    const { isValidModerationTarget, moderationLog, addToModerationList } =
+      await require("../utilsModeration")(message, this.name);
     const { member, time, string } = args;
 
     await isValidModerationTarget(member);

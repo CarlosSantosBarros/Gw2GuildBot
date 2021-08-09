@@ -1,8 +1,19 @@
 // Run dotenv
 require("dotenv").config();
 
-const Discord = require("discord.js");
-const client = new Discord.Client();
+const { Client, Intents } = require("discord.js");
+const clientIntents = new Intents();
+clientIntents.add(
+  Intents.FLAGS.GUILDS,
+  Intents.FLAGS.GUILD_PRESENCES,
+  Intents.FLAGS.GUILD_MEMBERS,
+  Intents.FLAGS.GUILD_BANS,
+  Intents.FLAGS.GUILD_MESSAGES,
+  Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+  Intents.FLAGS.DIRECT_MESSAGES,
+  Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
+);
+const client = new Client({ intents: clientIntents });
 
 require("./events/index.js")(client);
 require("./commands/index")(client);

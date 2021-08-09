@@ -1,20 +1,16 @@
 const { prefix } = require("../config.json");
-
+const { getGuildMemberById } = require("./utilsDiscord");
+/*
+JUICY REFACTOR RIGHT HERE
+*/
 module.exports = async (message) => {
   const isValidCommand = async (commandName) => {
     const commandsCollecttion = message.client.commands;
     const command = commandsCollecttion.get(commandName);
-    const hasPermissionOptions = {
-      checkAdmin: true,
-      checkOwner: true,
-    };
     if (!commandsCollecttion.has(commandName))
       throw `Command: "!${commandName}" doesn't exist!`;
-    const author = message.guild.member(message.author);
-    if (
-      command.permission &&
-      !author.hasPermission(command.permission, hasPermissionOptions)
-    )
+    const author = getGuildMemberById(message.guild, message.author.id);
+    if (command.permission && !author.permissions.has(command.permission))
       throw "You don't have permission to do that";
     if (!message.guild && command.channelOnly)
       throw `This command is for text channels only`;
