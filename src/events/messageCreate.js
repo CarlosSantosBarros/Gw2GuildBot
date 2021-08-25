@@ -5,7 +5,6 @@ const { prefix } = require("../config.json");
 module.exports = async (message) => {
   try {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
-
     const { isValidCommand, isValidArgs } =
       await require("../utils/utilsCommands")(message);
     const commandName = message.content

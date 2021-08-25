@@ -1,7 +1,7 @@
-const { Sequelize, DataTypes } = require("sequelize");
-const UserModel = require("./modelUser");
+const { log } = require("../utils/utilsDiscord");
+const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("database", "user", "password", {
+exports.sequelize = new Sequelize("database", "user", "password", {
   host: "localhost",
   dialect: "sqlite",
   logging: false,
@@ -11,12 +11,10 @@ const sequelize = new Sequelize("database", "user", "password", {
 
 (async () => {
   try {
-    await sequelize.sync();
-    await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
+    await this.sequelize.sync();
+    await this.sequelize.authenticate();
+    log("Connected to database.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }
 })();
-
-exports.User = UserModel(sequelize, DataTypes);

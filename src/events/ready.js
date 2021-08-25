@@ -10,10 +10,10 @@ const {
 module.exports = async (client) => {
   log(`Logged in as ${client.user.tag}!`);
   log(`I serve "${client.guilds.cache.size}" servers.`);
-
   //
   // THIS NEEDS TO BE REPLACED WITH A COLLECTION OR A DATABASE CALL OR BOTH
   //
+  require("../commands/index")(client);
 
   client.moderatedList = require("../data/moderationList.json");
   // start timer

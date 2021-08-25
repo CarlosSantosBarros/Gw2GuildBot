@@ -3,6 +3,7 @@ require("dotenv").config();
 
 const { Client, Intents } = require("discord.js");
 const clientIntents = new Intents();
+// move intents to config file
 clientIntents.add(
   Intents.FLAGS.GUILDS,
   Intents.FLAGS.GUILD_PRESENCES,
@@ -14,9 +15,7 @@ clientIntents.add(
   Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
 );
 const client = new Client({ intents: clientIntents });
-
 require("./events/index.js")(client);
-require("./commands/index")(client);
 
 const config = require("./config.json");
 client.login(process.env.DISCORD_TOKEN);
