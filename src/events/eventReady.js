@@ -1,20 +1,24 @@
-const fs = require("fs");
+// const fs = require("fs");
 const {
-  getGuildById,
-  getGuildMemberById,
-  getRoleByName,
+  // getGuildById,
+  // getGuildMemberById,
+  // getRoleByName,
   log,
 } = require("../utils/utilsDiscord");
 // cnst { User } = require("../database/");
 
-module.exports = async (client) => {
-  log(`Logged in as ${client.user.tag}!`);
-  log(`I serve "${client.guilds.cache.size}" servers.`);
-  //
+module.exports = {
+  name: "ready",
+  once: true,
+  execute(client) {
+    log(`Logged in as ${client.user.tag}!`);
+    log(`I serve "${client.guilds.cache.size}" servers.`);
+    require("../commands/index")(client);
+  },
+};
+/*
   // THIS NEEDS TO BE REPLACED WITH A COLLECTION OR A DATABASE CALL OR BOTH
   //
-  require("../commands/index")(client);
-
   client.moderatedList = require("../data/moderationList.json");
   // start timer
   // checks every xtime for expired moderation
@@ -55,4 +59,4 @@ module.exports = async (client) => {
       }
     }
   }, 60000);
-};
+  */

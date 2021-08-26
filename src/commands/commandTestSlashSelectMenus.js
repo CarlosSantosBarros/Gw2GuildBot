@@ -1,10 +1,10 @@
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const { selectMenu } = require("../modules/moduleSlashTest");
 
 module.exports = {
-  name: "select",
-  description: "Test select menues",
-  args: [],
-  usage: "<comand>",
+  data: new SlashCommandBuilder()
+    .setName("select")
+    .setDescription("Select menue test command!"),
 
   async execute(interaction) {
     await interaction.reply({

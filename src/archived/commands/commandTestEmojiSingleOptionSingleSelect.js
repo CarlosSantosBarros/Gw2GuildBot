@@ -1,6 +1,6 @@
-const { getDBUserById } = require("../utils/utilsDatabase");
-const { emojiTriggeredAction } = require("../utils/utilsEmoji");
-const { getGW2TokenInfo } = require("../utils/utilsGw2API");
+const { getDBUserById } = require("../../utils/utilsDatabase");
+const { emojiTriggeredAction } = require("../../utils/utilsEmoji");
+const { getGW2TokenInfo } = require("../../utils/utilsGw2API");
 
 module.exports = {
   name: "testkey",
