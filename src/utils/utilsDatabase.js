@@ -1,18 +1,22 @@
 const { UniqueConstraintError } = require("sequelize");
-const { User } = require("../database/");
+const { GW2Player } = require("../database/");
 
-exports.getDBUserById = async (id) => {
-  const userRes = await User.findOne({
+/*
+  ? This can maybe be extracted into a class or something like that
+  ? maybe have a file for each table?
+ */
+
+exports.getDBGW2PlayerById = async (id) => {
+  const userRes = await GW2Player.findOne({
     where: {
       snowflake: id,
     },
   });
-  if (userRes === null) throw "You have not set an API key";
   return userRes;
 };
 
-exports.deleteDBUserById = async (id) => {
-  const userDel = await User.destroy({
+exports.deleteDBGW2PlayerById = async (id) => {
+  const userDel = await GW2Player.destroy({
     where: {
       snowflake: id,
     },
@@ -20,8 +24,8 @@ exports.deleteDBUserById = async (id) => {
   return userDel;
 };
 
-exports.createDBUserById = async (id, key) => {
-  const userCre = await User.create({
+exports.createDBGW2PlayerById = async (id, key) => {
+  const userCre = await GW2Player.create({
     snowflake: id,
     apikey: key,
   }).catch((error) => {
@@ -31,8 +35,8 @@ exports.createDBUserById = async (id, key) => {
   return userCre;
 };
 
-exports.updateDBUserById = async (id, newValue) => {
-  const userUpdate = await User.update(
+exports.updateDBGW2PlayerById = async (id, newValue) => {
+  const userUpdate = await GW2Player.update(
     { apikey: newValue },
     {
       where: {
@@ -40,8 +44,5 @@ exports.updateDBUserById = async (id, newValue) => {
       },
     }
   );
-  // .catch((error) => {
-  //   console.log(error);
-  // });
   return userUpdate;
 };

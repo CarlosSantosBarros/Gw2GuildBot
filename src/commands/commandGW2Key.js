@@ -17,12 +17,11 @@ module.exports = {
   data: commandData,
 
   async execute(interaction) {
-    console.log(interaction.options.getSubcommand());
-    console.log(interaction.options.getString("key"));
+    await subCollection
+      .get(interaction.options.getSubcommand())
+      .execute(interaction);
 
-    interaction.reply({
-      content: "test",
-      ephemeral: true,
-    });
+    // console.log(interaction.options.getSubcommand());
+    // console.log(interaction.options.getString("key"));
   },
 };

@@ -21,8 +21,8 @@ exports.createCommandData = (config) => {
   return commandObj;
 };
 
-/*maybe dont need to put this and can go straight
- into command file as its probs only used here */
+/*maybe dont need to put this here and can go straight
+ into refresh command file as its probs only used here */
 exports.refreshCommands = async (fileFilter, dir) => {
   const commands = [];
   const token = process.env.DISCORD_TOKEN;

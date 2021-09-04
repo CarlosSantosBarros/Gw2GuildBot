@@ -1,6 +1,5 @@
 // Run dotenv
 require("dotenv").config();
-
 const { Client, Intents } = require("discord.js");
 const clientIntents = new Intents();
 // move intents to config file

@@ -1,5 +1,2 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../index");
-
-const UserModel = require("./models/modelUser");
-exports.User = UserModel(sequelize, DataTypes);
+exports.UserModel = require("./modelUser");
+exports.GW2PlayerModel = require("./modelGW2Player");

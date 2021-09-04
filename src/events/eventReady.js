@@ -5,7 +5,7 @@ const {
   // getRoleByName,
   log,
 } = require("../utils/utilsDiscord");
-// cnst { User } = require("../database/");
+// const { User } = require("../database/");
 
 module.exports = {
   name: "ready",

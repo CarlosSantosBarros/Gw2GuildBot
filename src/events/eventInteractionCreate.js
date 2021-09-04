@@ -9,14 +9,15 @@ module.exports = {
       await interaction.client.commands
         .get(interaction.commandName)
         .execute(interaction);
-    }
-    catch (error) {
+    } catch (error) {
+      let errorMsg = error;
       if (typeof error === "object") {
         console.log(error);
-        error = "There was an error trying to execute that command!";
+        // eslint-disable-next-line no-ex-assign
+        errorMsg = "There was an error trying to execute that command!";
       }
       await interaction.reply({
-        content: error,
+        content: errorMsg,
         ephemeral: true,
       });
     }

@@ -11,5 +11,10 @@ const configure = (subCommandObj) => {
 module.exports = {
   config: subConfig,
   configure: configure,
-  async execute(interaction) {},
+  async execute(interaction) {
+    interaction.reply({
+      content: "Select stuff here",
+      ephemeral: true,
+    });
+  },
 };

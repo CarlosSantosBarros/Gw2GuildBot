@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-
+const { log } = require("../utils/utilsDiscord");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("reset")
@@ -16,8 +16,8 @@ module.exports = {
     });
     commands.forEach((command) => {
       if (command.name == "refresh" || command.name == "reset") return;
-      console.log("Removing: " + command.name);
-      //   command.delete().then(console.log());
+      log("Removing: " + command.name);
+      command.delete();
     });
     await interaction.editReply({
       content: "Successfully removed application (/) commands.",
