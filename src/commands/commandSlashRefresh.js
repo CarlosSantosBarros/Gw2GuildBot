@@ -10,13 +10,11 @@ module.exports = {
     await interaction.reply({
       content: "Started refreshing application (/) commands.",
       ephemeral: true,
-      components: [],
     });
     refreshCommands("command", __dirname);
     await interaction.editReply({
       content: "Successfully reloaded application (/) commands.",
       ephemeral: true,
-      components: [],
     });
   },
 };

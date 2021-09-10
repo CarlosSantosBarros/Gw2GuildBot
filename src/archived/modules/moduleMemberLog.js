@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
-const { memberLog } = require("../config.json");
-const { isValidLogChannel } = require("../utils/utilsDiscord");
+const { memberLog } = require("../../config.json");
+const { isValidLogChannel } = require("../../utils/utilsDiscord");
 module.exports = async (member, event) => {
   const channelToSendLog = await isValidLogChannel(
     member.guild.channels,

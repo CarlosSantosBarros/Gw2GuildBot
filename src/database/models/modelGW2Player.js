@@ -7,5 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     apikey: {
       type: DataTypes.STRING,
     },
+    classes: {
+      type: DataTypes.JSON,
+    },
   });
 };

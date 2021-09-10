@@ -15,7 +15,6 @@ exports.createCommandData = (config) => {
     const subCom = require(subfolder + fileItem);
     commandObj.addSubcommand((subcommand) => subCom.configure(subcommand));
     subCommandCollection.set(subCom.config.name, subCom);
-    // log("'---------" + subCom.config.name);
   };
   findJSStartingWith_In_AndDo_("sub", subfolder, loadSubcommands);
   return commandObj;

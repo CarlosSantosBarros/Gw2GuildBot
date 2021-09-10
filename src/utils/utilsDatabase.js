@@ -7,11 +7,12 @@ const { GW2Player } = require("../database/");
  */
 
 exports.getDBGW2PlayerById = async (id) => {
-  const userRes = await GW2Player.findOne({
+  let userRes = await GW2Player.findOne({
     where: {
       snowflake: id,
     },
   });
+  if (!userRes) userRes = await createDBGW2PlayerById(id);
   return userRes;
 };
 
@@ -24,10 +25,9 @@ exports.deleteDBGW2PlayerById = async (id) => {
   return userDel;
 };
 
-exports.createDBGW2PlayerById = async (id, key) => {
+const createDBGW2PlayerById = async (id) => {
   const userCre = await GW2Player.create({
     snowflake: id,
-    apikey: key,
   }).catch((error) => {
     if (error instanceof UniqueConstraintError)
       throw "Your already have a key stored";
@@ -36,13 +36,10 @@ exports.createDBGW2PlayerById = async (id, key) => {
 };
 
 exports.updateDBGW2PlayerById = async (id, newValue) => {
-  const userUpdate = await GW2Player.update(
-    { apikey: newValue },
-    {
-      where: {
-        snowflake: id,
-      },
-    }
-  );
+  const userUpdate = await GW2Player.update(newValue, {
+    where: {
+      snowflake: id,
+    },
+  });
   return userUpdate;
 };

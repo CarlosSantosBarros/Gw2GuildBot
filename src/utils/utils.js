@@ -7,3 +7,10 @@ exports.findJSStartingWith_In_AndDo_ = (prefix, path, action) => {
     .filter((file) => file.startsWith(prefix))
     .forEach((file) => action(file));
 };
+
+exports.removeFromArray = (array, string) => {
+  const isNotString = (item) => {
+    return item !== string;
+  };
+  return array.filter(isNotString);
+};

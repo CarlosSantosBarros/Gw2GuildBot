@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { selectMenu } = require("../modules/moduleSlashTest");
+// const { classesMenu } = require("../data/dataGW2Class");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,9 +10,10 @@ module.exports = {
     await interaction.reply({
       content: "Select test",
       ephemeral: true,
-      components: selectMenu,
+      components: classesMenu,
     });
-    // ~
+    // * Extract this to be reusable
+    // * Start
     const collectorSelect = interaction.channel.createMessageComponentCollector(
       {
         componentType: "SELECT_MENU",
@@ -36,7 +37,6 @@ module.exports = {
     const collectorButton = interaction.channel.createMessageComponentCollector(
       {
         componentType: "BUTTON",
-        max: 1,
       }
     );
     collectorButton.on("collect", (collected) => {
@@ -47,5 +47,6 @@ module.exports = {
       });
       collectorSelect.stop();
     });
+    //* End
   },
 };
