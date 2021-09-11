@@ -51,21 +51,27 @@ exports.buildPlayerClassSummary = (playerClassArray, playerInfo) => {
     .setThumbnail(playerInfo.avatarURL());
   if (!playerClassArray.length)
     embedObject.addField("You have not added any classes", "\u200B");
-  playerClassArray.forEach(async (item) => {
-    const fieldData = classDataCollection().get(item);
+  playerClassArray.forEach(async (fieldItem) => {
+    const fieldData = classDataCollection().get(fieldItem);
     const emojiSting = "<:" + fieldData.label + ":" + fieldData.emoji + ">";
+    let mentorString = "";
+    fieldData.mentors.forEach((mentorItem) => {
+      const concatString =
+        memberNicknameMention(mentorItem.mentorId) + "/" + mentorItem.mentorIGN;
+      mentorString = mentorString.concat(" ", concatString);
+    });
+
     const fieldString = {
       name: emojiSting + fieldData.label + emojiSting,
       value:
         "**Role**: " +
         fieldData.description +
-        " **Mentor**: " +
-        memberNicknameMention(fieldData.mentorId) +
-        "/" +
-        fieldData.mentorIGN +
-        " **[Build](" +
+        " **Build:** *[Here](" +
         fieldData.build +
-        ")**",
+        ")*" +
+        "\n" +
+        "**Mentor**: " +
+        mentorString,
     };
     embedObject.addFields(fieldString);
   });

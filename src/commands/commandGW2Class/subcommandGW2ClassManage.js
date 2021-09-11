@@ -29,7 +29,6 @@ module.exports = {
       interaction.user
     );
     await interaction.reply({
-      content: "Summary embed at start",
       ephemeral: true,
       components: classesMenu,
       embeds: [playerClassSummary],
@@ -64,7 +63,6 @@ module.exports = {
           classes: { classes: classesArray },
         });
         collected.update({
-          content: "Summary embed at end",
           components: [],
         });
         collectorSelect.stop();
@@ -76,13 +74,11 @@ module.exports = {
       //check if can remove
       if (collected.customId == "remove")
         classesArray = removeFromArray(classesArray, currentValue);
-      console.log(classesArray);
       const newPlayerClassSummary = buildPlayerClassSummary(
         classesArray,
         interaction.user
       );
       collected.update({
-        content: "Updated something to do with: " + currentValue,
         components: classesMenu,
         embeds: [newPlayerClassSummary],
       });
