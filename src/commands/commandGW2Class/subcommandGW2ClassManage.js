@@ -4,7 +4,9 @@ const {
 } = require("./componentsGW2Class");
 const { removeFromArray } = require("../../utils/utils");
 const { getPlayerClasses } = require("./functionsGW2Class");
-const { updateDBGW2PlayerById } = require("../../utils/utilsDatabase");
+const {
+  updateDBGW2PlayerById,
+} = require("../../database/tableInterfaces/tableInterfaceGW2Player");
 
 const subConfig = {
   name: "manage",

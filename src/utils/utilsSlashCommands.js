@@ -20,13 +20,10 @@ exports.createCommandData = (config) => {
   return commandObj;
 };
 
-/*maybe dont need to put this here and can go straight
- into refresh command file as its probs only used here */
-exports.refreshCommands = async (fileFilter, dir) => {
+exports.refreshCommands = async (fileFilter, dir, guildId) => {
   const commands = [];
   const token = process.env.DISCORD_TOKEN;
   const clientId = process.env.CLIENT_ID;
-  const guildId = process.env.GUILD_ID;
   const rest = new REST({ version: "9" }).setToken(token);
 
   const loadCommand = (fileItem) => {

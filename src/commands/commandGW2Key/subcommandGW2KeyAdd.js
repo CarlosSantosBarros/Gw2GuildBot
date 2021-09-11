@@ -2,7 +2,7 @@ const {
   createDBGW2PlayerById,
   getDBGW2PlayerById,
   updateDBGW2PlayerById,
-} = require("../../utils/utilsDatabase");
+} = require("../../database/tableInterfaces/tableInterfaceGW2Player");
 const { tokenAccInfoEmbed } = require("../../utils/utilsEmbed");
 const {
   getGW2TokenInfo,

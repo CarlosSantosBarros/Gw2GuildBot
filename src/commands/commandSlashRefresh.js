@@ -11,7 +11,7 @@ module.exports = {
       content: "Started refreshing application (/) commands.",
       ephemeral: true,
     });
-    refreshCommands("command", __dirname);
+    refreshCommands("command", __dirname, interaction.guildId);
     await interaction.editReply({
       content: "Successfully reloaded application (/) commands.",
       ephemeral: true,

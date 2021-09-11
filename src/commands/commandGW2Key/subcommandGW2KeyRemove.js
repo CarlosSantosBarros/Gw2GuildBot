@@ -1,7 +1,7 @@
 const {
   getDBGW2PlayerById,
   updateDBGW2PlayerById,
-} = require("../../utils/utilsDatabase");
+} = require("../../database/tableInterfaces/tableInterfaceGW2Player");
 const { getGW2TokenInfo } = require("../../utils/utilsGw2API");
 
 const subConfig = {
