@@ -66,7 +66,7 @@ const classDataArray = [
   {
     label: "Chrono",
     description: "Support",
-    value: "Chrono Spellbreaker",
+    value: "Chrono",
     emoji: "620986123103240222",
     mentors: [{ mentorId: "106799270820052992", mentorIGN: "Shizuma.8179" }],
     build:

@@ -1,17 +1,25 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { refreshCommands } = require("../utils/utilsSlashCommands");
+const {
+  refreshGuildCommands,
+  refreshGlobalCommands,
+} = require("../utils/utilsSlashCommands");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("refresh")
     .setDescription("Refresh/update commands!"),
+  guildCommand: false,
 
   async execute(interaction) {
     await interaction.reply({
       content: "Started refreshing application (/) commands.",
       ephemeral: true,
     });
-    refreshCommands("command", __dirname, interaction.guildId);
+    refreshGuildCommands("command", __dirname, interaction.guildId);
+    refreshGlobalCommands("command", __dirname);
+    // const client = interaction.client;
+    // if (!client.application.owner) await client.application.fetch();
+
     await interaction.editReply({
       content: "Successfully reloaded application (/) commands.",
       ephemeral: true,

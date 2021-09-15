@@ -1,5 +1,5 @@
 const { MessageActionRow, MessageEmbed } = require("discord.js");
-const { memberNicknameMention, hyperlink } = require("@discordjs/builders");
+const { memberNicknameMention } = require("@discordjs/builders");
 const {
   buildSelectMenu,
   buildButton,
@@ -43,7 +43,6 @@ exports.buildClassManageMenu = async (rebuildOptions) => {
 };
 
 exports.buildPlayerClassSummary = (playerClassArray, playerInfo) => {
-  console.log(playerInfo);
   const embedObject = new MessageEmbed()
     .setAuthor(playerInfo.username)
     .setTitle("Player Summary")

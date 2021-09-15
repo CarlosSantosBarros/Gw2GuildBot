@@ -15,6 +15,7 @@ const commandData = createCommandData(commandConfig);
 
 module.exports = {
   data: commandData,
+  guildCommand: true,
   async execute(interaction) {
     await subCollection
       .get(interaction.options.getSubcommand())

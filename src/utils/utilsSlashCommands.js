@@ -20,21 +20,40 @@ exports.createCommandData = (config) => {
   return commandObj;
 };
 
-exports.refreshCommands = async (fileFilter, dir, guildId) => {
-  const commands = [];
-  const token = process.env.DISCORD_TOKEN;
-  const clientId = process.env.CLIENT_ID;
-  const rest = new REST({ version: "9" }).setToken(token);
+const token = process.env.DISCORD_TOKEN;
+const clientId = process.env.CLIENT_ID;
+const rest = new REST({ version: "9" }).setToken(token);
 
+exports.refreshGuildCommands = async (fileFilter, dir, guildId) => {
+  const commands = [];
   const loadCommand = (fileItem) => {
     const filePath = path.join(dir, `./${fileItem}`);
     const command = require(filePath);
-    log("Refreshing: " + command.data.name);
-    commands.push(command.data.toJSON());
+    if (command.guildCommand) {
+      log("Refreshing: Guild " + command.data.name);
+      commands.push(command.data.toJSON());
+    }
+  };
+  findJSStartingWith_In_AndDo_(fileFilter, dir, loadCommand);
+  await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+    body: commands,
+    defaultPermission: false,
+  });
+};
+
+exports.refreshGlobalCommands = async (fileFilter, dir) => {
+  const commands = [];
+  const loadCommand = (fileItem) => {
+    const filePath = path.join(dir, `./${fileItem}`);
+    const command = require(filePath);
+    if (!command.guildCommand) {
+      log("Refreshing: Global " + command.data.name);
+      commands.push(command.data.toJSON());
+    }
   };
   findJSStartingWith_In_AndDo_(fileFilter, dir, loadCommand);
 
-  await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+  await rest.put(Routes.applicationCommands(clientId), {
     body: commands,
   });
 };
