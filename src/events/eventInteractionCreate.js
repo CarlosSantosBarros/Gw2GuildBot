@@ -18,7 +18,11 @@ module.exports = {
   name: "interactionCreate",
   once: false,
   async execute(interaction) {
-    // console.log(interaction);
+    /**
+     * juicy refactor here
+     * manage class selection as roles
+     * *Start here*
+     */
     const classesMenu = await buildClassManageMenu();
     if (interaction.commandName == "gw2class") {
       const classesArray = await getPlayerClasses(interaction.user.id);

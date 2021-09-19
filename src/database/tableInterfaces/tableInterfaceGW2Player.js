@@ -4,6 +4,9 @@ const { GW2Player } = require("..");
 /*
   ? Refactor here - pass model instead of import?
  */
+exports.getAll = async () => {
+  return await GW2Player.findAll();
+};
 
 exports.getDBGW2PlayerById = async (id) => {
   let userRes = await GW2Player.findOne({

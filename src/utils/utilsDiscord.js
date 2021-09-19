@@ -43,3 +43,7 @@ exports.getGuildMemberById = async (guild, id) => {
 exports.getGuildById = async (client, id) => {
   return client.guilds.cache.find((guild) => guild.id === id);
 };
+
+exports.getMembersByRoleId = (guild, id) => {
+  return guild.roles.cache.find((role) => role.id === id).members;
+};

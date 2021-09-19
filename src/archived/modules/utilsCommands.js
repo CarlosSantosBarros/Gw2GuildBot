@@ -1,5 +1,5 @@
-const { prefix } = require("../config.json");
-const { getGuildMemberById } = require("./utilsDiscord");
+const { prefix } = require("../../config.json");
+const { getGuildMemberById } = require("../../utils/utilsDiscord");
 /*
 JUICY REFACTOR RIGHT HERE
 */

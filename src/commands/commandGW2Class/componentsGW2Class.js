@@ -1,10 +1,11 @@
 const { MessageActionRow, MessageEmbed } = require("discord.js");
-const { memberNicknameMention } = require("@discordjs/builders");
+const { memberNicknameMention, userMention } = require("@discordjs/builders");
 const {
   buildSelectMenu,
   buildButton,
 } = require("../../utils/utilsMessageComponents");
 const { classDataCollection, buttonData } = require("./dataGW2Class");
+const { getMembersByRoleId } = require("../../utils/utilsDiscord");
 
 const baseSelect = {
   id: "class",
@@ -42,6 +43,11 @@ exports.buildClassManageMenu = async (rebuildOptions) => {
   ];
 };
 
+/**
+ * juicy refactor here
+ * manage class selection as roles
+ */
+
 exports.buildPlayerClassSummary = (playerClassArray, playerInfo) => {
   const embedObject = new MessageEmbed()
     .setAuthor(playerInfo.username)
@@ -67,12 +73,72 @@ exports.buildPlayerClassSummary = (playerClassArray, playerInfo) => {
         fieldData.description +
         " **Build:** *[Here](" +
         fieldData.build +
-        ")*" +
-        "\n" +
+        ")*\n" +
         "**Mentor**: " +
         mentorString,
     };
     embedObject.addFields(fieldString);
+  });
+  return embedObject;
+};
+
+exports.buildRosterSummary = (rosterCollection, guild) => {
+  const embedObject = new MessageEmbed()
+    .setThumbnail(guild.iconURL())
+    .setAuthor("Ordo Ab [Chao]")
+    .setTitle("Roster Summary")
+    .setDescription("Guild Breakdown");
+
+  const commanderCollection = getMembersByRoleId(guild, "618286716423372832");
+  const recruitCollection = getMembersByRoleId(guild, "816397178004045864");
+  const officerCollection = getMembersByRoleId(guild, "618286301111910400");
+  const totalMembers = getMembersByRoleId(guild, "581597683597443073");
+
+  let officerString = "";
+  officerCollection.forEach((officer) => {
+    const concatString = memberNicknameMention(officer.id);
+    officerString = officerString.concat(" ", concatString);
+  });
+
+  embedObject.addFields(
+    {
+      name: "Membership:",
+      value: `<:Chao:743800298560028672> **Total members**: ${totalMembers.size}
+    <:commander:888814161725886484> **Commanders**: ${commanderCollection.size}
+    <:recruit:888815068983218186> **Recruits**: ${recruitCollection.size}
+    <:officer:888815047026032721> **Officers**:
+    ${officerString} 
+    \u200B`,
+    }
+    // {
+    //   name: "<:officer:888815047026032721> Officers",
+    //   value: officerString + " \n \u200B",
+    // }
+  );
+
+  embedObject.addField("Class Breakdown:", "\u200B");
+  classDataCollection().forEach((classItem) => {
+    const emojiSting = "<:" + classItem.label + ":" + classItem.emoji + ">";
+    let classMentorString = "";
+    classItem.mentors.forEach((mentorItem) => {
+      const concatString =
+        memberNicknameMention(mentorItem.mentorId) + "/" + mentorItem.mentorIGN;
+      classMentorString = classMentorString.concat(" ", concatString);
+    });
+
+    const fieldValueString =
+      `**Players**: ${rosterCollection.get(classItem.value).length}` +
+      `\n**Role**: ${classItem.description} ` +
+      `\n**Build:** *[Here](${classItem.build})*` +
+      `\n**Mentor**: ${classMentorString}`;
+
+    const fieldObject = {
+      name: emojiSting + classItem.label + emojiSting,
+      value: fieldValueString,
+      inline: true,
+    };
+
+    embedObject.addFields(fieldObject);
   });
   return embedObject;
 };
