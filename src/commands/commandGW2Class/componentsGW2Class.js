@@ -1,18 +1,22 @@
 const { MessageActionRow, MessageEmbed } = require("discord.js");
-const { memberNicknameMention, userMention } = require("@discordjs/builders");
 const {
   buildSelectMenu,
   buildButton,
 } = require("../../utils/utilsMessageComponents");
 const { classDataCollection, buttonData } = require("./dataGW2Class");
-const { getMembersByRoleId } = require("../../utils/utilsDiscord");
+const {
+  getRoleByName,
+  getMembersByRoleId,
+} = require("../../utils/utilsDiscord");
+const { buildClassFieldString } = require("./functionsGW2Class");
+const { memberNicknameMention } = require("@discordjs/builders");
 
 const baseSelect = {
   id: "class",
   placeholder: "Select A Class",
 };
 
-exports.buildClassManageMenu = async (rebuildOptions) => {
+exports.buildClassManageMenu = (rebuildOptions) => {
   //build select
   const classData = classDataCollection();
   const select = buildSelectMenu(baseSelect);
@@ -43,102 +47,63 @@ exports.buildClassManageMenu = async (rebuildOptions) => {
   ];
 };
 
-/**
- * juicy refactor here
- * manage class selection as roles
- */
-
-exports.buildPlayerClassSummary = (playerClassArray, playerInfo) => {
+exports.buildPlayerClassSummary = (playerMember) => {
   const embedObject = new MessageEmbed()
-    .setAuthor(playerInfo.username)
+    .setAuthor(playerMember.user.username)
     .setTitle("Player Summary")
     .setDescription("Classes:")
-    .setThumbnail(playerInfo.avatarURL());
-  if (!playerClassArray.length)
-    embedObject.addField("You have not added any classes", "\u200B");
-  playerClassArray.forEach(async (fieldItem) => {
-    const fieldData = classDataCollection().get(fieldItem);
-    const emojiSting = "<:" + fieldData.label + ":" + fieldData.emoji + ">";
-    let mentorString = "";
-    fieldData.mentors.forEach((mentorItem) => {
-      const concatString =
-        memberNicknameMention(mentorItem.mentorId) + "/" + mentorItem.mentorIGN;
-      mentorString = mentorString.concat(" ", concatString);
-    });
+    .setThumbnail(playerMember.user.avatarURL());
 
-    const fieldString = {
-      name: emojiSting + fieldData.label + emojiSting,
-      value:
-        "**Role**: " +
-        fieldData.description +
-        " **Build:** *[Here](" +
-        fieldData.build +
-        ")*\n" +
-        "**Mentor**: " +
-        mentorString,
-    };
-    embedObject.addFields(fieldString);
+  if (getRoleByName(playerMember.roles, "No-Class"))
+    embedObject.addField("You have not added any classes", "\u200B");
+  classDataCollection().forEach((classItem) => {
+    if (!getRoleByName(playerMember.roles, classItem.value)) return;
+    const classFieldString = buildClassFieldString(
+      classItem,
+      playerMember.guild
+    );
+    embedObject.addFields(classFieldString);
   });
   return embedObject;
 };
 
-exports.buildRosterSummary = (rosterCollection, guild) => {
+exports.buildRosterSummary = (guild) => {
   const embedObject = new MessageEmbed()
     .setThumbnail(guild.iconURL())
     .setAuthor("Ordo Ab [Chao]")
     .setTitle("Roster Summary")
     .setDescription("Guild Breakdown");
 
-  const commanderCollection = getMembersByRoleId(guild, "618286716423372832");
-  const recruitCollection = getMembersByRoleId(guild, "816397178004045864");
-  const officerCollection = getMembersByRoleId(guild, "618286301111910400");
-  const totalMembers = getMembersByRoleId(guild, "581597683597443073");
-
   let officerString = "";
+  const officerCollection = getMembersByRoleId(guild, "618286301111910400");
   officerCollection.forEach((officer) => {
     const concatString = memberNicknameMention(officer.id);
     officerString = officerString.concat(" ", concatString);
   });
 
-  embedObject.addFields(
-    {
-      name: "Membership:",
-      value: `<:Chao:743800298560028672> **Total members**: ${totalMembers.size}
-    <:commander:888814161725886484> **Commanders**: ${commanderCollection.size}
-    <:recruit:888815068983218186> **Recruits**: ${recruitCollection.size}
-    <:officer:888815047026032721> **Officers**:
-    ${officerString} 
-    \u200B`,
+  embedObject.addFields({
+    name: "Membership:",
+    value: `<:Chao:743800298560028672> **Total members**: ${
+      getMembersByRoleId(guild, "581597683597443073").size
     }
-    // {
-    //   name: "<:officer:888815047026032721> Officers",
-    //   value: officerString + " \n \u200B",
-    // }
-  );
+    <:commander:888814161725886484> **Commanders**: ${
+      getMembersByRoleId(guild, "618286716423372832").size
+    }
+    <:recruit:888815068983218186> **Recruits**: ${
+      getMembersByRoleId(guild, "816397178004045864").size
+    }
+    <:officer:888815047026032721> **Officers**:
+    ${officerString}
+    \u200B`,
+  });
 
   embedObject.addField("Class Breakdown:", "\u200B");
   classDataCollection().forEach((classItem) => {
-    const emojiSting = "<:" + classItem.label + ":" + classItem.emoji + ">";
-    let classMentorString = "";
-    classItem.mentors.forEach((mentorItem) => {
-      const concatString =
-        memberNicknameMention(mentorItem.mentorId) + "/" + mentorItem.mentorIGN;
-      classMentorString = classMentorString.concat(" ", concatString);
-    });
-
-    const fieldValueString =
-      `**Players**: ${rosterCollection.get(classItem.value).length}` +
-      `\n**Role**: ${classItem.description} ` +
-      `\n**Build:** *[Here](${classItem.build})*` +
-      `\n**Mentor**: ${classMentorString}`;
-
-    const fieldObject = {
-      name: emojiSting + classItem.label + emojiSting,
-      value: fieldValueString,
-      inline: true,
+    const classFieldString = {
+      ...buildClassFieldString(classItem, guild),
+      ...{ inline: true },
     };
-
-    embedObject.addFields(fieldObject);
+    embedObject.addFields(classFieldString);
   });
   return embedObject;
 };

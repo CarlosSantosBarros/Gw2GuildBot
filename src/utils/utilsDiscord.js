@@ -22,13 +22,13 @@ exports.isValidLogChannel = async (channels, logChannel) => {
   return channelToSendLog;
 };
 
-exports.getChannelObj = (channels, textName, type) => {
+exports.getChannelByNameAndType = (channels, textName, type) => {
   return channels.cache.find(
     (channel) => channel.name === `${textName}` && channel.type === type
   );
 };
 
-exports.getRoleByName = async (roles, roleName) => {
+exports.getRoleByName = (roles, roleName) => {
   return roles.cache.find((role) => role.name === `${roleName}`);
 };
 
@@ -46,4 +46,8 @@ exports.getGuildById = async (client, id) => {
 
 exports.getMembersByRoleId = (guild, id) => {
   return guild.roles.cache.find((role) => role.id === id).members;
+};
+
+exports.getMembersByRoleName = (guild, roleName) => {
+  return guild.roles.cache.find((role) => role.name === roleName).members;
 };

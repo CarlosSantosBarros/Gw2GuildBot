@@ -21,7 +21,7 @@ const classDataArray = [
   {
     label: "Scrapper",
     description: "Support",
-    value: "Support Scrapper",
+    value: "Support-Scrapper",
     emoji: "620986123027611658",
     mentors: [
       { mentorId: "341313381950816257", mentorIGN: "Lynce.2935" },
@@ -33,7 +33,7 @@ const classDataArray = [
   {
     label: "Scrapper",
     description: "Power DPS",
-    value: "DPS Scrapper",
+    value: "DPS-Scrapper",
     emoji: "620986123027611658",
     mentors: [
       { mentorId: "103109623006924800", mentorIGN: "MandatoryManeiac.3207" },
@@ -45,7 +45,7 @@ const classDataArray = [
   {
     label: "Spellbreaker",
     description: "Support",
-    value: "Support Spellbreaker",
+    value: "Support-Spellbreaker",
     emoji: "620986123342315521",
     mentors: [
       { mentorId: "314633700006690818", mentorIGN: "lordkrall.7241" },
@@ -57,7 +57,7 @@ const classDataArray = [
   {
     label: "Spellbreaker",
     description: "Power DPS",
-    value: "DPS Spellbreaker",
+    value: "DPS-Spellbreaker",
     emoji: "620986123342315521",
     mentors: [{ mentorId: "151334112731463680", mentorIGN: "MaaZe.2893" }],
     build:
@@ -108,5 +108,6 @@ exports.buttonData = [
     label: "Done",
     style: "SUCCESS",
     emoji: "870320857837346887",
+    disabled: true,
   },
 ];
