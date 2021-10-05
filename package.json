@@ -12,18 +12,18 @@
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
-    "discord-api-types": "^0.22.0",
-    "discord.js": "^13.0.1",
-    "dotenv": "^8.6.0",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.2.0",
+    "dotenv": "^10.0.0",
     "gw2api-client": "^7.5.1",
     "keyv": "^4.0.3",
-    "keyv-file": "^0.1.13",
+    "keyv-file": "^0.2.0",
     "moment": "^2.29.1",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.0.0",
     "sequelize": "^6.6.5",
     "sqlite3": "^4.2.0"
   },
   "devDependencies": {
-    "eslint": "^6.8.0"
+    "eslint": "^7.32.0"
   }
 }
