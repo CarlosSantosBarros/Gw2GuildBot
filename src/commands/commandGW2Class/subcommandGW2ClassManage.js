@@ -4,6 +4,7 @@ const {
 } = require("./componentsGW2Class");
 const { removeFromArray } = require("../../utils/utils");
 const { getPlayerClasses } = require("./functionsGW2Class");
+const { getRoleByName } = require("../../utils/utilsDiscord");
 const {
   updateDBGW2PlayerById,
 } = require("../../database/tableInterfaces/tableInterfaceGW2Player");
@@ -23,67 +24,68 @@ module.exports = {
   config: subConfig,
   configure: configure,
   async execute(interaction) {
-    const classesMenu = await buildClassManageMenu();
-    let classesArray = await getPlayerClasses(interaction.user.id);
+    let classesMenu = buildClassManageMenu();
+    const userMember = interaction.member;
+    const guildRoles = interaction.guild.roles;
     let currentValue;
-    const playerClassSummary = buildPlayerClassSummary(
-      classesArray,
-      interaction.user
-    );
-    await interaction.reply({
+    // let classesArray = await getPlayerClasses(interaction.user.id);
+
+    const playerClassSummary = buildPlayerClassSummary(userMember);
+    const classManagedMessage = await interaction.reply({
       ephemeral: true,
       components: classesMenu,
       embeds: [playerClassSummary],
+      fetchReply: true,
     });
     // * Extract this to be reusable
     // * Start
-    const collectorSelect = interaction.channel.createMessageComponentCollector(
-      { componentType: "SELECT_MENU" }
-    );
-
-    collectorSelect.on("collect", async (collected) => {
-      currentValue = collected.values[0];
-      const actionButton = classesArray.includes(currentValue)
-        ? "remove"
-        : "add";
-      const classesMenuNew = await buildClassManageMenu({
-        button: actionButton,
-        select: currentValue,
+    const classManageCollector =
+      classManagedMessage.channel.createMessageComponentCollector({
+        idle: 5000,
       });
-      collected.update({ components: classesMenuNew });
-    });
 
-    const collectorButton = interaction.channel.createMessageComponentCollector(
-      {
-        componentType: "BUTTON",
+    classManageCollector.on("collect", async (collected) => {
+      classesMenu = buildClassManageMenu();
+      if (collected.customId == "class") {
+        currentValue = collected.values[0];
+        const actionButton = getRoleByName(userMember.roles, currentValue)
+          ? "remove"
+          : "add";
+        classesMenu = buildClassManageMenu({
+          button: actionButton,
+          select: currentValue,
+        });
+        currentValue = getRoleByName(guildRoles, currentValue);
       }
-    );
-    collectorButton.on("collect", async (collected) => {
-      //when done
+
+      if (collected.customId == "add") {
+        classesMenu = buildClassManageMenu();
+        await userMember.roles.add(currentValue.id);
+      }
+      if (collected.customId == "remove") {
+        classesMenu = buildClassManageMenu();
+        await userMember.roles.remove(currentValue.id);
+      }
       if (collected.customId == "done") {
-        await updateDBGW2PlayerById(interaction.user.id, {
-          classes: { classes: classesArray },
+        classesMenu = buildClassManageMenu({
+          button: "done",
+          select: null,
         });
-        collected.update({
-          components: [],
-        });
-        collectorSelect.stop();
-        collectorButton.stop();
-        return;
+        classManageCollector.stop();
       }
-      //check if can add
-      if (collected.customId == "add") classesArray.push(currentValue);
-      //check if can remove
-      if (collected.customId == "remove")
-        classesArray = removeFromArray(classesArray, currentValue);
-      const newPlayerClassSummary = buildPlayerClassSummary(
-        classesArray,
-        interaction.user
-      );
+      const newPlayerClassSummary = buildPlayerClassSummary(userMember);
       collected.update({
         components: classesMenu,
         embeds: [newPlayerClassSummary],
       });
+    });
+    classManageCollector.on("end", async (collected, reason) => {
+      if (reason == "idle")
+        interaction.editReply({
+          components: [],
+          content: "This operation has timed out",
+          embeds: [],
+        });
     });
     //* End
   },
