@@ -2,12 +2,7 @@ const {
   buildClassManageMenu,
   buildPlayerClassSummary,
 } = require("./componentsGW2Class");
-const { removeFromArray } = require("../../utils/utils");
-const { getPlayerClasses } = require("./functionsGW2Class");
 const { getRoleByName } = require("../../utils/utilsDiscord");
-const {
-  updateDBGW2PlayerById,
-} = require("../../database/tableInterfaces/tableInterfaceGW2Player");
 
 const subConfig = {
   name: "manage",
@@ -28,7 +23,6 @@ module.exports = {
     const userMember = interaction.member;
     const guildRoles = interaction.guild.roles;
     let currentValue;
-    // let classesArray = await getPlayerClasses(interaction.user.id);
 
     const playerClassSummary = buildPlayerClassSummary(userMember);
     const classManagedMessage = await interaction.reply({
@@ -41,7 +35,7 @@ module.exports = {
     // * Start
     const classManageCollector =
       classManagedMessage.channel.createMessageComponentCollector({
-        idle: 5000,
+        idle: 20000,
       });
 
     classManageCollector.on("collect", async (collected) => {
@@ -56,28 +50,27 @@ module.exports = {
           select: currentValue,
         });
         currentValue = getRoleByName(guildRoles, currentValue);
+        collected.update({ components: classesMenu });
       }
 
-      if (collected.customId == "add") {
-        classesMenu = buildClassManageMenu();
-        await userMember.roles.add(currentValue.id);
-      }
-      if (collected.customId == "remove") {
-        classesMenu = buildClassManageMenu();
-        await userMember.roles.remove(currentValue.id);
-      }
-      if (collected.customId == "done") {
-        classesMenu = buildClassManageMenu({
-          button: "done",
-          select: null,
+      if (collected.isButton()) {
+        if (collected.customId == "add")
+          await userMember.roles.add(currentValue.id);
+        if (collected.customId == "remove")
+          await userMember.roles.remove(currentValue.id);
+        if (collected.customId == "done") {
+          classesMenu = buildClassManageMenu({
+            button: "done",
+            select: null,
+          });
+          classManageCollector.stop();
+        }
+        const newPlayerClassSummary = await buildPlayerClassSummary(userMember);
+        await collected.update({
+          components: classesMenu,
+          embeds: [newPlayerClassSummary],
         });
-        classManageCollector.stop();
       }
-      const newPlayerClassSummary = buildPlayerClassSummary(userMember);
-      collected.update({
-        components: classesMenu,
-        embeds: [newPlayerClassSummary],
-      });
     });
     classManageCollector.on("end", async (collected, reason) => {
       if (reason == "idle")

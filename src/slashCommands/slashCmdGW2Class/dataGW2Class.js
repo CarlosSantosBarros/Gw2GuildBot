@@ -42,18 +42,18 @@ const classDataArray = [
     build:
       "http://en.gw2skills.net/editor/?PegAIJlRUwgYcsN2JO2LvteA-zVJYiRFfh0UYUbBURGY7FJM6to/ZE-w",
   },
-  {
-    label: "Spellbreaker",
-    description: "Support",
-    value: "Support-Spellbreaker",
-    emoji: "620986123342315521",
-    mentors: [
-      { mentorId: "314633700006690818", mentorIGN: "lordkrall.7241" },
-      { mentorId: "151334112731463680", mentorIGN: "MaaZe.2893" },
-    ],
-    build:
-      "http://gw2skills.net/editor/?PWwAYd7lRwwYfMJmJmyW6vdA-zVJYjRJ/hkpEoahQ6KANeICwW4t43mF-w",
-  },
+  // {
+  //   label: "Spellbreaker",
+  //   description: "Support",
+  //   value: "Support-Spellbreaker",
+  //   emoji: "620986123342315521",
+  //   mentors: [
+  //     { mentorId: "314633700006690818", mentorIGN: "lordkrall.7241" },
+  //     { mentorId: "151334112731463680", mentorIGN: "MaaZe.2893" },
+  //   ],
+  //   build:
+  //     "http://gw2skills.net/editor/?PWwAYd7lRwwYfMJmJmyW6vdA-zVJYjRJ/hkpEoahQ6KANeICwW4t43mF-w",
+  // },
   {
     label: "Spellbreaker",
     description: "Power DPS",

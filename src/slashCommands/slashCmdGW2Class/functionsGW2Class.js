@@ -1,14 +1,5 @@
-const {
-  getDBGW2PlayerById,
-} = require("../../database/tableInterfaces/tableInterfaceGW2Player");
 const { memberNicknameMention } = require("@discordjs/builders");
 const { getMembersByRoleName } = require("../../utils/utilsDiscord");
-
-exports.getPlayerClasses = async (userId) => {
-  const gw2Player = await getDBGW2PlayerById(userId);
-  if (!gw2Player.classes) return [];
-  return gw2Player.classes;
-};
 
 exports.buildClassFieldString = (classItem, guild) => {
   const emojiSting = `<:${classItem.label}:${classItem.emoji}>`;

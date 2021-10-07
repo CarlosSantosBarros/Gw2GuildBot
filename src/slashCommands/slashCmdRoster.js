@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const {
   buildRosterSummary,
-} = require("../commands/commandGW2Class/componentsGW2Class");
+} = require("../slashCommands/commandGW2Class/componentsGW2Class");
 
 module.exports = {
   data: new SlashCommandBuilder()

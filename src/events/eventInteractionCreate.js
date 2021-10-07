@@ -3,10 +3,10 @@ module.exports = {
   once: false,
   async execute(interaction) {
     if (!interaction.isCommand()) return;
-    if (!interaction.client.commands.has(interaction.commandName)) return;
+    if (!interaction.client.slashCommands.has(interaction.commandName)) return;
 
     try {
-      await interaction.client.commands
+      await interaction.client.slashCommands
         .get(interaction.commandName)
         .execute(interaction);
     } catch (error) {

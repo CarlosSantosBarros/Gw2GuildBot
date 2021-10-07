@@ -17,7 +17,6 @@ const baseSelect = {
 };
 
 exports.buildClassManageMenu = (rebuildOptions) => {
-  //build select
   const classData = classDataCollection();
   const select = buildSelectMenu(baseSelect);
   const selectOptions = [];
@@ -33,7 +32,6 @@ exports.buildClassManageMenu = (rebuildOptions) => {
     selectOptions.push(item);
   });
   select.addOptions(selectOptions);
-  // build buttons
   const buttons = [];
   buttonData.forEach((item) => {
     const buttonItem = buildButton(item);
@@ -47,6 +45,10 @@ exports.buildClassManageMenu = (rebuildOptions) => {
   ];
 };
 
+/**
+ * !!!!! this need to be a promise
+ */
+
 exports.buildPlayerClassSummary = (playerMember) => {
   const embedObject = new MessageEmbed()
     .setAuthor(playerMember.user.username)
@@ -54,16 +56,18 @@ exports.buildPlayerClassSummary = (playerMember) => {
     .setDescription("Classes:")
     .setThumbnail(playerMember.user.avatarURL());
 
-  if (getRoleByName(playerMember.roles, "No-Class"))
-    embedObject.addField("You have not added any classes", "\u200B");
+  let hasRole = false;
   classDataCollection().forEach((classItem) => {
     if (!getRoleByName(playerMember.roles, classItem.value)) return;
+    hasRole = true;
     const classFieldString = buildClassFieldString(
       classItem,
       playerMember.guild
     );
     embedObject.addFields(classFieldString);
   });
+  if (!hasRole)
+    embedObject.addField("You have not added any classes", "\u200B");
   return embedObject;
 };
 

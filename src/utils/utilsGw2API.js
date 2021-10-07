@@ -45,6 +45,27 @@ exports.getGW2AccountInfo = async (apikey) => {
   return returnData;
 };
 
+// store this in db
+const guildId = "F7F37FC2-C23D-E411-A278-AC162DC0070D";
+const leaderkey =
+  "E1FECABE-9989-BA4A-A262-92D5233CD96143FA83FC-D1EB-49CB-9C6E-9A14BD453421";
+exports.getGW2GuildInfo = async () => {
+  api.authenticate(leaderkey);
+  let returnData;
+  await api
+    .guild(guildId)
+    .members()
+    .get()
+    .then((result) => {
+      if (result.text) throw result.text;
+      returnData = result;
+    })
+    .catch((error) => {
+      throw error;
+    });
+  return returnData;
+};
+
 /**
  * Gets Guildwars 2 characters information.
  * @param {String} apikey - The api key of the user
