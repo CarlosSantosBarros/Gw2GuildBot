@@ -85,6 +85,8 @@ exports.buildRosterSummary = (guild) => {
     officerString = officerString.concat(" ", concatString);
   });
 
+  // refactor getMembersByRoleId getMembersByRoleName use role name instead of id
+  // and/or use config file
   embedObject.addFields({
     name: "Membership:",
     value: `<:Chao:743800298560028672> **Total members**: ${
@@ -110,4 +112,61 @@ exports.buildRosterSummary = (guild) => {
     embedObject.addFields(classFieldString);
   });
   return embedObject;
+};
+
+exports.buildGw2ClassManager = async (interaction, classManagedMessage) => {
+  const userMember = interaction.member;
+  const guildRoles = interaction.guild.roles;
+  let currentValue;
+
+  const classManageCollector =
+    classManagedMessage.createMessageComponentCollector({
+      idle: 20000,
+    });
+
+  classManageCollector.on("collect", async (collected) => {
+    let classesMenu = this.buildClassManageMenu();
+    if (collected.customId == "class") {
+      currentValue = collected.values[0];
+      const actionButton = getRoleByName(userMember.roles, currentValue)
+        ? "remove"
+        : "add";
+      classesMenu = this.buildClassManageMenu({
+        button: actionButton,
+        select: currentValue,
+      });
+      currentValue = getRoleByName(guildRoles, currentValue);
+      collected.update({ components: classesMenu });
+    }
+
+    if (collected.isButton()) {
+      if (collected.customId == "add")
+        await userMember.roles.add(currentValue.id);
+      if (collected.customId == "remove")
+        await userMember.roles.remove(currentValue.id);
+      if (collected.customId == "done") {
+        classesMenu = this.buildClassManageMenu({
+          button: "done",
+          select: null,
+        });
+        classManageCollector.stop();
+      }
+      const newPlayerClassSummary = await this.buildPlayerClassSummary(
+        userMember
+      );
+      await collected.update({
+        components: classesMenu,
+        embeds: [newPlayerClassSummary],
+      });
+    }
+  });
+  classManageCollector.on("end", async (collected, reason) => {
+    if (reason == "idle")
+      interaction.editReply({
+        components: [],
+        content: "This operation has timed out",
+        embeds: [],
+      });
+  });
+  //* End
 };

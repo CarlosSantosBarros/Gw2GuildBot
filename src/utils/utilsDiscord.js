@@ -21,6 +21,7 @@ exports.isValidLogChannel = async (channels, logChannel) => {
   return channelToSendLog;
 };
 
+// Refactor to use guild as param
 exports.getChannelByNameAndType = (channels, textName, type) => {
   return channels.cache.find(
     (channel) => channel.name === `${textName}` && channel.type === type

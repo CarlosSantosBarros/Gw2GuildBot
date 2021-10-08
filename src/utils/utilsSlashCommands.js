@@ -16,7 +16,7 @@ exports.createCommandData = (config) => {
     commandObj.addSubcommand((subcommand) => subCom.configure(subcommand));
     subCommandCollection.set(subCom.config.name, subCom);
   };
-  findJSStartingWith_In_AndDo_("sub", subfolder, loadSubcommands);
+  findJSStartingWith_In_AndDo_("slashSub", subfolder, loadSubcommands);
   return commandObj;
 };
 

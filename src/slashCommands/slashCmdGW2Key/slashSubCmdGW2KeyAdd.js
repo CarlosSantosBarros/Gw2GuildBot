@@ -10,6 +10,11 @@ const {
   getGW2GuildInfo,
 } = require("../../utils/utilsGw2API");
 const { getRoleByName } = require("../../utils/utilsDiscord");
+const {
+  buildGw2ClassManager,
+  buildPlayerClassSummary,
+  buildClassManageMenu,
+} = require("../slashCmdGW2Class/componentsGW2Class");
 const subConfig = {
   name: "add",
   decription: "Add key",
@@ -41,8 +46,11 @@ module.exports = {
     //TODO: check for right permissions here at some point
     const accountInfo = await getGW2AccountInfo(key);
     // reply stuff
-    if (accountInfo.guilds.includes("471D471A-5EA1-EB11-81A8-CDE2AC1EED30"))
+    let isMember = false;
+    if (accountInfo.guilds.includes("471D471A-5EA1-EB11-81A8-CDE2AC1EED30")) {
+      isMember = true;
       await interaction.member.roles.add("581597683597443073");
+    }
     const keyEmbed = tokenAccInfoEmbed(tokenInfo, accountInfo);
     const guildInfo = await getGW2GuildInfo();
     guildInfo.every(async (member) => {
@@ -51,15 +59,28 @@ module.exports = {
           interaction.guild.roles,
           member.rank
         );
-        console.log(rankRole);
         await interaction.member.roles.add(rankRole.id);
         return;
       }
     });
     await interaction.reply({
-      content: "Added the following as default key",
+      content: "You are now verified",
       embeds: [keyEmbed],
       ephemeral: true,
     });
+    // console.log(interaction);
+    if (isMember)
+      setTimeout(async () => {
+        const playerClassSummary = buildPlayerClassSummary(interaction.member);
+        const classesMenu = buildClassManageMenu();
+        const classManagedMessage = await interaction.editReply({
+          content: "Add classes that you play",
+          ephemeral: true,
+          components: classesMenu,
+          embeds: [playerClassSummary],
+          fetchReply: true,
+        });
+        buildGw2ClassManager(interaction, classManagedMessage);
+      }, 5000);
   },
 };

@@ -1,5 +1,3 @@
-/* eslint-disable no-ex-assign */
-
 const { prefix } = require("../config.json");
 
 module.exports = {
