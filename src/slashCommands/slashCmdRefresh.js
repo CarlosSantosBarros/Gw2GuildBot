@@ -17,8 +17,6 @@ module.exports = {
     });
     refreshGuildCommands("command", __dirname, interaction.guildId);
     refreshGlobalCommands("command", __dirname);
-    // const client = interaction.client;
-    // if (!client.application.owner) await client.application.fetch();
 
     await interaction.editReply({
       content: "Successfully reloaded application (/) commands.",

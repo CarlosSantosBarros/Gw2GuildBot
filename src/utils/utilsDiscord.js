@@ -1,7 +1,6 @@
 const moment = require("moment");
 
 const { logging } = require("../config.json");
-//loging messages
 
 const { IsSuccessLogging, IsFailureLogging } = logging;
 exports.log = (message) => {

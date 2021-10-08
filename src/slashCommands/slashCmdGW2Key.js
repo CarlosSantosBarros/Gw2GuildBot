@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const { createCommandData } = require("../utils/utilsSlashCommands");
 const path = require("path");
 
-const subpath = path.join(__dirname, "./commandGW2Key/");
+const subpath = path.join(__dirname, "./slashCmdGW2Key/");
 const subCollection = new Discord.Collection();
 const commandConfig = {
   subfolder: subpath,

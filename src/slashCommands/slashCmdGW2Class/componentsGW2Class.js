@@ -46,7 +46,7 @@ exports.buildClassManageMenu = (rebuildOptions) => {
 };
 
 /**
- * !!!!! this need to be a promise
+ * !!!!! this need to be a promise as it bugs sometimes
  */
 
 exports.buildPlayerClassSummary = (playerMember) => {
