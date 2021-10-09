@@ -1,14 +1,13 @@
-const moment = require("moment");
+const { format } = require("date-fns");
 
 const { logging } = require("../config.json");
 
 const { IsSuccessLogging, IsFailureLogging } = logging;
 exports.log = (message) => {
-  if (IsSuccessLogging)
-    console.log(`[${moment().format("YYYY-MM-DD HH:mm:ss")}] ${message}`);
+  const dateString = format(new Date(), "PPPppp");
+  if (IsSuccessLogging) console.log(`[${dateString}] ${message}`);
 
-  if (IsFailureLogging)
-    console.log(`[${moment().format("YYYY-MM-DD HH:mm:ss")}] ${message}`);
+  if (IsFailureLogging) console.log(`[${dateString}] ${message}`);
 };
 
 exports.isValidLogChannel = async (channels, logChannel) => {
