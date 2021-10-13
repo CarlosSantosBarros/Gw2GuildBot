@@ -1,8 +1,4 @@
-const {
-  createDBGW2PlayerById,
-  getDBGW2PlayerById,
-  updateDBGW2PlayerById,
-} = require("../../database/tableInterfaces/tableInterfaceGW2Player");
+const InterfaceGW2Player = require("../../database/tableInterfaces/interfaceGW2Player");
 const { tokenAccInfoEmbed } = require("../../utils/utilsEmbed");
 const {
   getGW2TokenInfo,
@@ -37,17 +33,21 @@ module.exports = {
   configure: configure,
   async execute(interaction) {
     const key = interaction.options.getString("key");
-    // database stuff
-    const gw2Player = await getDBGW2PlayerById(interaction.user.id);
-    if (!gw2Player) await createDBGW2PlayerById(interaction.user.id);
-    await updateDBGW2PlayerById(interaction.user.id, { apikey: key });
+    const player = new InterfaceGW2Player();
+    player.setSelector({
+      where: {
+        snowflake: interaction.user.id,
+      },
+    });
+    await player.get();
+    await player.update({ apikey: key });
     // API stuff
     const tokenInfo = await getGW2TokenInfo(key);
     //TODO: check for right permissions here at some point
     const accountInfo = await getGW2AccountInfo(key);
     // reply stuff
     let isMember = false;
-    if (accountInfo.guilds.includes("471D471A-5EA1-EB11-81A8-CDE2AC1EED30")) {
+    if (accountInfo.guilds.includes("F7F37FC2-C23D-E411-A278-AC162DC0070D")) {
       isMember = true;
       await interaction.member.roles.add("581597683597443073");
     }

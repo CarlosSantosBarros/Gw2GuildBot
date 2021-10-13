@@ -1,6 +1,6 @@
 const { log, getChannelByNameAndType } = require("../utils/utilsDiscord");
 const { format, isMonday, isThursday, isTuesday } = require("date-fns");
-const { roleMention } = require("@discordjs/builders");
+//const { roleMention } = require("@discordjs/builders");
 
 module.exports = {
   name: "ready",
@@ -21,8 +21,9 @@ module.exports = {
         }
         if (isTuesday(date)) {
           channelName = "chao_chat";
-          message = ": Guild Meeting starts in 1h!";
+          message = ": Guild meeting in 1h! Duration 30 min MAX.";
         }
+        if (channelName == null) return;
         const channel = getChannelByNameAndType(
           client.channels,
           channelName,

@@ -1,6 +1,5 @@
-const { log } = require("../utils/utilsDiscord");
+const { log } = require("../../../utils/utilsDiscord");
 const { Sequelize, DataTypes } = require("sequelize");
-const { UserModel, GW2PlayerModel, DiscordGuildModel } = require("./models/");
 
 const sequelize = new Sequelize("database", "user", "password", {
   host: "localhost",
@@ -21,6 +20,6 @@ const sequelize = new Sequelize("database", "user", "password", {
 })();
 
 // maybe import+export tableinterfaces here and pass model
-exports.User = UserModel(sequelize, DataTypes);
-exports.GW2Player = GW2PlayerModel(sequelize, DataTypes);
-exports.DiscordGuild = DiscordGuildModel(sequelize, DataTypes);
+exports.ModelGW2Player = require("./modelGW2Player")(sequelize, DataTypes);
+// exports.ModelUser = require("./modelUser")(sequelize, DataTypes);
+// exports.ModelDiscordGuild = require("./modelGuild")(sequelize, DataTypes);
