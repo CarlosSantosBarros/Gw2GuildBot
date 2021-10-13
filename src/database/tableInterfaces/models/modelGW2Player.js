@@ -4,11 +4,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       unique: true,
     },
-    apikey: {
+    apiKey: {
       type: DataTypes.STRING,
     },
-    classes: {
-      type: DataTypes.JSON,
+    accountName: {
+      type: DataTypes.STRING,
+    },
+    isMentor: {
+      type: DataTypes.BOOLEAN,
     },
   });
 };

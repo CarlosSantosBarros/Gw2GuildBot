@@ -15,8 +15,8 @@ module.exports = {
       content: "Started refreshing application (/) commands.",
       ephemeral: true,
     });
-    refreshGuildCommands("command", __dirname, interaction.guildId);
-    refreshGlobalCommands("command", __dirname);
+    refreshGuildCommands("slashCmd", __dirname, interaction.guildId);
+    refreshGlobalCommands("slashCmd", __dirname);
 
     await interaction.editReply({
       content: "Successfully reloaded application (/) commands.",

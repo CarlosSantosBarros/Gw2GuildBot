@@ -1,3 +1,4 @@
+const { log } = require("./utils/utilsDiscord");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 
@@ -5,8 +6,8 @@ const fs = require("fs");
 
 const commands = [];
 const commandFiles = fs
-  .readdirSync("./commands")
-  .filter((file) => file.startsWith("command"))
+  .readdirSync("./slashCommands")
+  .filter((file) => file.startsWith("slashCmd"))
   .filter((file) => file.endsWith(".js"));
 
 // Place your client and guild ids here
@@ -15,9 +16,11 @@ const clientId = "695236920464375928";
 const guildId = "294892279322378240";
 
 for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  //   console.log(command.data);
-  commands.push(command.data.toJSON());
+  const command = require(`./slashCommands/${file}`);
+  if (!command.guildCommand) {
+    log("Deploying Global command: " + command.data.name);
+    commands.push(command.data.toJSON());
+  }
 }
 
 const rest = new REST({ version: "9" }).setToken(token);
