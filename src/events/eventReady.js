@@ -1,6 +1,6 @@
-const { log, getChannelByNameAndType } = require("../utils/utilsDiscord");
+const { log } = require("../utils/utils");
 const { format, isMonday, isThursday, isTuesday } = require("date-fns");
-//const { roleMention } = require("@discordjs/builders");
+const { roleMention } = require("@discordjs/builders");
 
 module.exports = {
   name: "ready",
@@ -24,14 +24,13 @@ module.exports = {
           message = ": Guild meeting in 1h! Duration 30 min MAX.";
         }
         if (channelName == null) return;
-        const channel = getChannelByNameAndType(
-          client.channels,
-          channelName,
-          "GUILD_TEXT"
+        const announcementChannel = client.channels.cache.find(
+          (channel) =>
+            channel.name === `${channelName}` && channel.type === "GUILD_TEXT"
         );
-        // roleMention("581597683597443073") +
-        channel.send({
-          content: message,
+
+        announcementChannel.send({
+          content: roleMention("581597683597443073") + message,
         });
       }
     }, 60000);

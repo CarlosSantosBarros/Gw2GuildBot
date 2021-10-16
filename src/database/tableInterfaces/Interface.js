@@ -14,9 +14,7 @@ module.exports = class Interface {
   }
 
   async get() {
-    let userRes = await this.interfaceModel.findOne(this.querySelector);
-    if (!userRes) userRes = await this.create();
-    return userRes;
+    return await this.interfaceModel.findOne(this.querySelector);
   }
 
   async deleted() {

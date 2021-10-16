@@ -1,6 +1,5 @@
 const Discord = require("discord.js");
-const { log } = require("../utils/utilsDiscord");
-const { findJSStartingWith_In_AndDo_ } = require("../utils/utils");
+const { log, findJSStartingWith_In_AndDo_ } = require("../utils/utils");
 
 module.exports = async (client) => {
   client.slashCommands = new Discord.Collection();

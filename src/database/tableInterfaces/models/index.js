@@ -1,4 +1,4 @@
-const { log } = require("../../../utils/utilsDiscord");
+const { log } = require("../../../utils/utils");
 const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize("database", "user", "password", {

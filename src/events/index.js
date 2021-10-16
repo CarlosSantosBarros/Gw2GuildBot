@@ -1,5 +1,4 @@
-const { findJSStartingWith_In_AndDo_ } = require("../utils/utils");
-const { log } = require("../utils/utilsDiscord");
+const { findJSStartingWith_In_AndDo_, log } = require("../utils/utils");
 
 module.exports = (client) => {
   const loadEvent = (fileItem) => {
