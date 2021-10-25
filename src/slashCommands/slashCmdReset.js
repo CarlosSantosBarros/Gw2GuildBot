@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { log } = require("../utils/utilsDiscord");
+const { log } = require("../utils/utils");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("reset")

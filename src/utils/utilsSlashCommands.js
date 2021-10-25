@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { findJSStartingWith_In_AndDo_ } = require("./utils");
-const { log } = require("./utilsDiscord");
+const { log } = require("./utils");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const path = require("path");

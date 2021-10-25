@@ -1,7 +1,8 @@
 const { memberNicknameMention } = require("@discordjs/builders");
-const { getMembersByRoleName } = require("../../utils/utilsDiscord");
+const DiscordUtils = require("../../utils/utilsDiscord");
+const utils = new DiscordUtils.GuildUtils();
 
-exports.buildClassFieldString = (classItem, guild) => {
+exports.buildClassFieldString = (classItem) => {
   const emojiSting = `<:${classItem.label}:${classItem.emoji}>`;
   let classMentorString = "";
   classItem.mentors.forEach((mentorItem) => {
@@ -12,7 +13,7 @@ exports.buildClassFieldString = (classItem, guild) => {
   });
 
   const fieldValueString = `**Players**: ${
-    getMembersByRoleName(guild, classItem.value).size
+    utils.getMembersByRoleName(classItem.value).size
   }
     **Role**: ${classItem.description} 
     **Build:** *[Here](${classItem.build})*

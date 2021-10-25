@@ -18,3 +18,9 @@ require("./events/index.js")(client);
 
 const config = require("./config.json");
 client.login(process.env.DISCORD_TOKEN);
+
+exports.guildObject = () => {
+  return client.guilds.cache.find(
+    (guild) => guild.id === config.guildSettings.discordGuildId
+  );
+};

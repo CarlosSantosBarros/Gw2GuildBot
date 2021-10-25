@@ -4,10 +4,7 @@ const {
   buildButton,
 } = require("../../utils/utilsMessageComponents");
 const { classDataCollection, buttonData } = require("./dataGW2Class");
-const {
-  getRoleByName,
-  getMembersByRoleId,
-} = require("../../utils/utilsDiscord");
+const DiscordUtils = require("../../utils/utilsDiscord");
 const { buildClassFieldString } = require("./functionsGW2Class");
 const { memberNicknameMention } = require("@discordjs/builders");
 
@@ -15,6 +12,8 @@ const baseSelect = {
   id: "class",
   placeholder: "Select A Class",
 };
+
+const utils = new DiscordUtils.GuildUtils();
 
 exports.buildClassManageMenu = (rebuildOptions) => {
   const classData = classDataCollection();
@@ -50,6 +49,7 @@ exports.buildClassManageMenu = (rebuildOptions) => {
  */
 
 exports.buildPlayerClassSummary = (playerMember) => {
+  const memberUtils = new DiscordUtils.MemberUtils(playerMember);
   const embedObject = new MessageEmbed()
     .setAuthor(playerMember.user.username)
     .setTitle("Player Summary")
@@ -58,12 +58,9 @@ exports.buildPlayerClassSummary = (playerMember) => {
 
   let hasRole = false;
   classDataCollection().forEach((classItem) => {
-    if (!getRoleByName(playerMember.roles, classItem.value)) return;
+    if (!memberUtils.getRoleByName(classItem.value)) return;
     hasRole = true;
-    const classFieldString = buildClassFieldString(
-      classItem,
-      playerMember.guild
-    );
+    const classFieldString = buildClassFieldString(classItem);
     embedObject.addFields(classFieldString);
   });
   if (!hasRole)
@@ -79,7 +76,7 @@ exports.buildRosterSummary = (guild) => {
     .setDescription("Guild Breakdown");
 
   let officerString = "";
-  const officerCollection = getMembersByRoleId(guild, "618286301111910400");
+  const officerCollection = utils.getMembersByRoleId("618286301111910400");
   officerCollection.forEach((officer) => {
     const concatString = memberNicknameMention(officer.id);
     officerString = officerString.concat(" ", concatString);
@@ -90,13 +87,13 @@ exports.buildRosterSummary = (guild) => {
   embedObject.addFields({
     name: "Membership:",
     value: `<:Chao:743800298560028672> **Total members**: ${
-      getMembersByRoleId(guild, "581597683597443073").size
+      utils.getMembersByRoleId("581597683597443073").size
     }
     <:commander:888814161725886484> **Commanders**: ${
-      getMembersByRoleId(guild, "618286716423372832").size
+      utils.getMembersByRoleId("618286716423372832").size
     }
     <:recruit:888815068983218186> **Recruits**: ${
-      getMembersByRoleId(guild, "816397178004045864").size
+      utils.getMembersByRoleId("816397178004045864").size
     }
     <:officer:888815047026032721> **Officers**:
     ${officerString}
@@ -115,8 +112,7 @@ exports.buildRosterSummary = (guild) => {
 };
 
 exports.buildGw2ClassManager = async (interaction, classManagedMessage) => {
-  const userMember = interaction.member;
-  const guildRoles = interaction.guild.roles;
+  const memberUtils = new DiscordUtils.MemberUtils(interaction.member);
   let currentValue;
 
   const classManageCollector =
@@ -128,22 +124,22 @@ exports.buildGw2ClassManager = async (interaction, classManagedMessage) => {
     let classesMenu = this.buildClassManageMenu();
     if (collected.customId == "class") {
       currentValue = collected.values[0];
-      const actionButton = getRoleByName(userMember.roles, currentValue)
+      const actionButton = memberUtils.getRoleByName(currentValue)
         ? "remove"
         : "add";
       classesMenu = this.buildClassManageMenu({
         button: actionButton,
         select: currentValue,
       });
-      currentValue = getRoleByName(guildRoles, currentValue);
+      currentValue = utils.getRoleByName(currentValue);
       collected.update({ components: classesMenu });
     }
 
     if (collected.isButton()) {
       if (collected.customId == "add")
-        await userMember.roles.add(currentValue.id);
+        await memberUtils.addRole(currentValue.id);
       if (collected.customId == "remove")
-        await userMember.roles.remove(currentValue.id);
+        await memberUtils.removeRole(currentValue.id);
       if (collected.customId == "done") {
         classesMenu = this.buildClassManageMenu({
           button: "done",
@@ -152,7 +148,7 @@ exports.buildGw2ClassManager = async (interaction, classManagedMessage) => {
         classManageCollector.stop();
       }
       const newPlayerClassSummary = await this.buildPlayerClassSummary(
-        userMember
+        interaction.member
       );
       await collected.update({
         components: classesMenu,

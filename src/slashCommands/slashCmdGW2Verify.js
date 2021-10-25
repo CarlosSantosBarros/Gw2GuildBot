@@ -1,11 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { getGW2AccountInfo, getGW2GuildInfo } = require("../utils/utilsGw2API");
-
-const {
-  buildGw2ClassManager,
-  buildPlayerClassSummary,
-  buildClassManageMenu,
-} = require("./slashCmdGW2Class/componentsGW2Class");
 const GW2Player = require("../classes/GW2Player");
 
 module.exports = {
@@ -22,9 +15,22 @@ module.exports = {
 
   async execute(interaction) {
     const key = interaction.options.getString("key");
-    const player = new GW2Player(interaction);
-    await player.getAPIData(key);
-    await player.giveRoles(interaction.guild);
+    const player = new GW2Player(interaction.user.id);
+    await player.verify(key);
+
+    await interaction.reply({
+      content: "You are now verified",
+      ephemeral: true,
+    });
+    /**
+     * getUserByRole
+     * if has role
+     * ask if want to apply
+     * if yes show embed with current information
+     * older than 18 dialog
+     * class select dialog + willing to play other builds/classes
+     * private message asking tell us more about your self
+     */
 
     // line 47
     // if (isMember)

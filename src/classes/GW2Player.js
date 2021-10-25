@@ -3,60 +3,56 @@ const InterfaceGW2Player = require("../database");
 const DiscordUtils = require("../utils/utilsDiscord");
 
 module.exports = class GW2Player {
-  constructor(interaction) {
+  constructor(id) {
     // refactor here to only use this.interaction
-    this.interaction = interaction;
-    this.snowflake = interaction.user.id;
-    this.member = interaction.member;
     this.GW2Player = new InterfaceGW2Player();
     this.GW2Player.setSelector({
       where: {
-        snowflake: this.snowflake,
+        snowflake: id,
       },
     });
+    this.id = id;
     this.playerData;
     this.accountData;
-    this.isMember;
   }
 
-  async getAPIData(key) {
+  async verify(key) {
     this.playerData = await this.GW2Player.get();
-    if (!this.playerData) await this.GW2Player.create();
-    this.accountData = await getGW2AccountInfo(key);
-    this.playerData = {
-      accountName: this.accountData.name,
-      apiKey: key,
-    };
-    this.GW2Player.update(this.playerData);
-  }
+    let queryKey = key;
+    if (this.playerData) queryKey = this.playerData.apiKey;
+    this.accountData = await getGW2AccountInfo(queryKey);
+    if (!this.accountData) {
+      await this.GW2Player.create();
+      this.playerData = {
+        accountName: this.accountData.name,
+        apiKey: key,
+      };
+      this.GW2Player.update(this.playerData);
+    }
 
-  async giveRoles(guild) {
-    const utils = new DiscordUtils(guild);
+    const utils = new DiscordUtils.GuildUtils();
+    const member = utils.getMemberById(this.id);
     if (
       this.accountData.guilds.includes("F7F37FC2-C23D-E411-A278-AC162DC0070D")
     ) {
-      this.isMember = true;
       // import from config
       const memberRole = utils.getRoleByName("Chao Member");
-      await this.member.roles.add(memberRole.id);
+      await member.roles.add(memberRole.id);
 
       const guildInfo = await getGW2GuildInfo();
-      guildInfo.every(async (member) => {
-        if (member.name == this.accountData.name) {
-          const rankRole = await utils.getRoleByName(member.rank);
-          await this.member.roles.add(rankRole.id);
+      guildInfo.every(async (guildMember) => {
+        if (guildMember.name == this.accountData.name) {
+          const rankRole = utils.getRoleByName(guildMember.rank);
+          await member.roles.add(rankRole.id);
           return;
         }
       });
       return;
     }
     const verifiedRole = utils.getRoleByName("Verified");
-    await this.member.roles.add(verifiedRole.id);
-    await this.interaction.reply({
-      content: "You are now verified",
-      ephemeral: true,
-    });
+    await member.roles.add(verifiedRole.id);
   }
+
   getApplicationData() {
     return {
       accountName: this.accountData.name,
