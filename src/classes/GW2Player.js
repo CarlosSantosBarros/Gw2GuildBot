@@ -17,11 +17,11 @@ module.exports = class GW2Player {
   }
 
   async verify(key) {
-    this.playerData = await this.GW2Player.get();
     let queryKey = key;
+    this.playerData = await this.GW2Player.get();
     if (this.playerData) queryKey = this.playerData.apiKey;
     this.accountData = await getGW2AccountInfo(queryKey);
-    if (!this.accountData) {
+    if (!this.playerData) {
       await this.GW2Player.create();
       this.playerData = {
         accountName: this.accountData.name,

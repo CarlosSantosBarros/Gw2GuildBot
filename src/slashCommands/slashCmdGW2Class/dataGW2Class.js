@@ -99,15 +99,3 @@ exports.classDataCollection = () => {
   });
   return collectionObject;
 };
-
-exports.buttonData = [
-  { customId: "add", label: "Add", style: "PRIMARY", disabled: true },
-  { customId: "remove", label: "Remove", style: "PRIMARY", disabled: true },
-  {
-    customId: "done",
-    label: "Done",
-    style: "SUCCESS",
-    emoji: "870320857837346887",
-    disabled: true,
-  },
-];

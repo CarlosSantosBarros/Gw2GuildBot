@@ -31,22 +31,5 @@ module.exports = {
      * class select dialog + willing to play other builds/classes
      * private message asking tell us more about your self
      */
-
-    // line 47
-    // if (isMember)
-    // setTimeout(async () => {
-    //   // maybe put this all in a class also
-    //   // class stuff needs rework
-    //   const playerClassSummary = buildPlayerClassSummary(interaction.member);
-    //   const classesMenu = buildClassManageMenu();
-    //   const classManagedMessage = await interaction.editReply({
-    //     content: "Add classes that you play",
-    //     ephemeral: true,
-    //     components: classesMenu,
-    //     embeds: [playerClassSummary],
-    //     fetchReply: true,
-    //   });
-    //   buildGw2ClassManager(interaction, classManagedMessage);
-    // }, 5000);
   },
 };

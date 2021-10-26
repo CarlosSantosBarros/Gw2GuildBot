@@ -1,21 +1,30 @@
 const { MessageSelectMenu, MessageButton } = require("discord.js");
 
-exports.buildSelectMenu = (config) => {
-  const { id, placeholder } = config;
-  const selectMenuObject = new MessageSelectMenu()
-    .setCustomId(id)
-    .setPlaceholder(placeholder);
-  if (config.options) selectMenuObject.addOptions(config.options);
+exports.buildSelectMenu = (baseData, selectMenuDataArray, selectedValue) => {
+  const selectMenuObject = new MessageSelectMenu(baseData);
+  selectMenuDataArray.forEach((item) => {
+    let isDefault = false;
+    if (selectedValue == item.value) isDefault = true;
+    const optionItem = {
+      label: item.label,
+      description: item.description,
+      value: item.value,
+      emoji: item.emoji,
+      default: isDefault,
+    };
+    selectMenuObject.addOptions(optionItem);
+  });
   return selectMenuObject;
 };
 
-exports.buildButton = (config) => {
-  const { customId, label, style } = config;
-  const buttonObject = new MessageButton()
-    .setCustomId(customId)
-    .setLabel(label)
-    .setStyle(style);
-  if (config.disabled) buttonObject.setDisabled(config.disabled);
-  if (config.emoji) buttonObject.setEmoji(config.emoji);
-  return buttonObject;
+exports.buildButtons = (buttonDataArray, buttonAction) => {
+  const buttonArray = [];
+  buttonDataArray.forEach((item) => {
+    const buttonItem = new MessageButton(item);
+    let isDisabled = item.disabled;
+    if (buttonAction == item.customId) isDisabled = false;
+    buttonItem.setDisabled(isDisabled);
+    buttonArray.push(buttonItem);
+  });
+  return buttonArray;
 };
