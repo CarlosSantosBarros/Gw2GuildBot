@@ -30,13 +30,14 @@ module.exports = class GW2Player {
       this.GW2Player.update(this.playerData);
     }
 
-    const utils = new DiscordUtils.GuildUtils();
-    const member = utils.getMemberById(this.id);
+    //import this from config
     if (
       this.accountData.guilds.includes("F7F37FC2-C23D-E411-A278-AC162DC0070D")
     ) {
+      const utils = new DiscordUtils.GuildUtils();
       // import from config
       const memberRole = utils.getRoleByName("Chao Member");
+      const member = utils.getMemberById(this.id);
       await member.roles.add(memberRole.id);
 
       const guildInfo = await getGW2GuildInfo();
@@ -49,12 +50,11 @@ module.exports = class GW2Player {
       });
       return;
     }
-    const verifiedRole = utils.getRoleByName("Verified");
-    await member.roles.add(verifiedRole.id);
   }
 
   getApplicationData() {
     return {
+      snowflake: this.id,
       accountName: this.accountData.name,
       server: this.accountData.world,
       wvwRank: this.accountData.wvw_rank,

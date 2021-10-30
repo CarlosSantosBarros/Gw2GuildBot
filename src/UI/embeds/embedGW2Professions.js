@@ -1,8 +1,8 @@
 const { MessageEmbed } = require("discord.js");
 const { fieldProfession } = require("./embedComponents/fieldProfession");
 const {
-  classDataCollection,
-} = require("../../slashCommands/slashCmdGW2Class/dataGW2Class");
+  collectionGW2Professions,
+} = require("../dialogData/dataGW2Professions");
 const DiscordUtils = require("../../utils/utilsDiscord");
 
 exports.embedGW2Professions = async (member) => {
@@ -14,7 +14,7 @@ exports.embedGW2Professions = async (member) => {
     .setThumbnail(member.user.avatarURL());
 
   let hasRole = false;
-  classDataCollection().forEach((classItem) => {
+  collectionGW2Professions().forEach((classItem) => {
     if (!memberUtils.getRoleByName(classItem.value)) return;
     hasRole = true;
     const classFieldString = fieldProfession(classItem);

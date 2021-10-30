@@ -1,8 +1,10 @@
 const { MessageEmbed } = require("discord.js");
 const { memberNicknameMention } = require("@discordjs/builders");
 const DiscordUtils = require("../../utils/utilsDiscord");
+const { dataGW2Professions } = require("../dialogData/dataGW2Professions");
+const { fieldProfession } = require("./embedComponents/fieldProfession");
 
-exports.buildRosterSummary = (guild) => {
+exports.embedRosterSummary = (guild) => {
   const utils = new DiscordUtils.GuildUtils();
   const embedObject = new MessageEmbed()
     .setThumbnail(guild.iconURL())
@@ -36,9 +38,9 @@ exports.buildRosterSummary = (guild) => {
   });
 
   embedObject.addField("Class Breakdown:", "\u200B");
-  classDataCollection().forEach((classItem) => {
+  dataGW2Professions.forEach((classItem) => {
     const classFieldString = {
-      ...buildClassFieldString(classItem, guild),
+      ...fieldProfession(classItem, guild),
       ...{ inline: true },
     };
     embedObject.addFields(classFieldString);

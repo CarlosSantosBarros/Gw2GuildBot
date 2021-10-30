@@ -22,6 +22,10 @@ module.exports = {
       content: "You are now verified",
       ephemeral: true,
     });
+
+    // const verifiedRole = utils.getRoleByName("Verified");
+    // await member.roles.add(verifiedRole.id);
+
     /**
      * getUserByRole
      * if has role

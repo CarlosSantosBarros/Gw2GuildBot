@@ -1,7 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const {
-  buildRosterSummary,
-} = require("../slashCommands/slashCmdGW2Class/componentsGW2Class");
+const { embedRosterSummary } = require("../UI/embeds/embedRosterSummary");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,7 +8,7 @@ module.exports = {
   guildCommand: true,
 
   async execute(interaction) {
-    const rosterEmbed = buildRosterSummary(interaction.guild);
+    const rosterEmbed = embedRosterSummary(interaction.guild);
     await interaction.reply({
       embeds: [rosterEmbed],
       ephemeral: false,

@@ -17,6 +17,18 @@ class GuildUtils {
     return this.guild.roles.cache.find((role) => role.name === `${roleName}`);
   }
 
+  getRoleByColor(colorHexValue) {
+    return this.guild.roles.cache.find(
+      (role) => role.color === `${colorHexValue}`
+    );
+  }
+
+  getRoleByNameAndColor(roleName, colorHexValue) {
+    return this.guild.roles.cache.find(
+      (role) => role.color === `${colorHexValue}` && role.name === `${roleName}`
+    );
+  }
+
   getRoleByPermissions(permission) {
     return this.guild.roles.cache.find(
       (role) => !role.permissions.has(permission)
@@ -43,6 +55,11 @@ class MemberUtils {
   }
   getRoleByName(roleName) {
     return this.member.roles.cache.find((role) => role.name === `${roleName}`);
+  }
+  getRoleByColor(colorHexValue) {
+    return this.member.roles.cache.find(
+      (role) => role.color === `${colorHexValue}`
+    );
   }
   hasRoleByName(roleName) {
     return this.member.roles.cache.has(roleName);
