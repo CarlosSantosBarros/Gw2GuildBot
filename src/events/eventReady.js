@@ -1,6 +1,9 @@
 const { log } = require("../utils/utils");
 const { format, isMonday, isThursday, isTuesday } = require("date-fns");
 const { roleMention } = require("@discordjs/builders");
+const Discord = require("discord.js");
+const { createCollection } = require("../utils/utils");
+const { professionsSettings } = require("../config.json");
 
 module.exports = {
   name: "ready",
@@ -34,5 +37,12 @@ module.exports = {
         });
       }
     }, 60000);
+    client.professionsData = new Discord.Collection();
+    client.proficiencyData = new Discord.Collection();
+    const { professionsData, proficiencyData } = professionsSettings;
+    createCollection(client.professionsData, professionsData);
+    log("Profession data loaded");
+    createCollection(client.proficiencyData, proficiencyData);
+    log("Role data loaded");
   },
 };

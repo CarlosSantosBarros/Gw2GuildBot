@@ -3,14 +3,11 @@ const {
   buildButtons,
   buildSelectMenu,
 } = require("../../utils/utilsMessageComponents");
-const {
-  dataGW2Professions,
-  dataProficiency,
-} = require("../dialogData/dataGW2Professions");
+const { professionsSettings } = require("../../config.json");
 
 const professionSelectBase = {
-  customId: "class",
-  placeholder: "Select A Class",
+  customId: "profession",
+  placeholder: "Select A profession",
 };
 const proficiencySelectBase = {
   customId: "proficiency",
@@ -26,7 +23,7 @@ const buttonData = [
     label: "Done",
     style: "SUCCESS",
     emoji: "870320857837346887",
-    disabled: true,
+    disabled: false,
   },
 ];
 
@@ -39,22 +36,27 @@ exports.menuGW2Profession = async (rebuildOptions) => {
     };
   const { selectedProficiencyValue, selectedProfessionValue, buttonAction } =
     rebuildOptions;
-
-  console.log(rebuildOptions);
+  const { professionsData, proficiencyData } = professionsSettings;
 
   const selectProficiency = buildSelectMenu(
     proficiencySelectBase,
-    dataProficiency,
+    proficiencyData,
     selectedProficiencyValue
   );
 
+  /**
+   * rebuild profession selection based on roles
+   * remove role if its selected in other tier
+   */
+
   const selectProfession = buildSelectMenu(
     professionSelectBase,
-    dataGW2Professions,
+    professionsData,
     selectedProfessionValue
   );
 
   const buttons = buildButtons(buttonData, buttonAction);
+
   return [
     new MessageActionRow().addComponents(selectProficiency),
     new MessageActionRow().addComponents(selectProfession),

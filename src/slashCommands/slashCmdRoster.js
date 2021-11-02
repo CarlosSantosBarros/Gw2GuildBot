@@ -4,7 +4,7 @@ const { embedRosterSummary } = require("../UI/embeds/embedRosterSummary");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("roster")
-    .setDescription("show class roster!"),
+    .setDescription("show profession roster!"),
   guildCommand: true,
 
   async execute(interaction) {

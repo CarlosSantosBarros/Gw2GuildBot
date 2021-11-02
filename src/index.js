@@ -13,14 +13,14 @@ clientIntents.add(
   Intents.FLAGS.DIRECT_MESSAGES,
   Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
 );
-const client = new Client({ intents: clientIntents });
-require("./events/index.js")(client);
+exports.client = new Client({ intents: clientIntents });
+require("./events/index.js")(this.client);
 
 const config = require("./config.json");
-client.login(process.env.DISCORD_TOKEN);
+this.client.login(process.env.DISCORD_TOKEN);
 
 exports.guildObject = () => {
-  return client.guilds.cache.find(
+  return this.client.guilds.cache.find(
     (guild) => guild.id === config.guildSettings.discordGuildId
   );
 };

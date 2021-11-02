@@ -2,39 +2,48 @@ const { menuGW2Profession } = require("../menus/menuGW2Professions");
 const { embedGW2Professions } = require("../embeds/embedGW2Professions");
 const DiscordUtils = require("../../utils/utilsDiscord");
 
-exports.controlerGW2Professions = async (interaction, classManagedMessage) => {
+exports.controlerGW2Professions = async (interaction, message) => {
+  const proficiencyCollection = interaction.client.proficiencyData;
   const memberUtils = new DiscordUtils.MemberUtils(interaction.member);
   const utils = new DiscordUtils.GuildUtils();
   let currentProficiencyValue;
+  let currentProficiencyColor;
   let currentProfessionValue;
   if (!memberUtils.getRoleByColor("#000000")) currentProficiencyValue = "main";
 
-  const classManageCollector =
-    classManagedMessage.createMessageComponentCollector({
-      idle: 2000000,
-    });
+  const professionManageCollector = message.createMessageComponentCollector({
+    idle: 2000000,
+  });
 
-  classManageCollector.on("collect", async (collected) => {
-    let classesMenu;
+  professionManageCollector.on("collect", async (collected) => {
+    // if has main role enable done button
+    let professionesMenu;
     if (collected.isSelectMenu()) {
       let actionButton;
-      if (collected.customId == "proficiency")
+      if (collected.customId == "proficiency") {
         currentProficiencyValue = collected.values[0];
-      if (collected.customId == "class")
+        currentProficiencyColor = proficiencyCollection.get(
+          currentProficiencyValue
+        ).color;
+      }
+      if (collected.customId == "profession")
         currentProfessionValue = collected.values[0];
       if (currentProfessionValue && currentProficiencyValue) {
         actionButton = "set";
         if (currentProficiencyValue != "main")
-          actionButton = memberUtils.getRoleByName(currentProfessionValue)
+          actionButton = memberUtils.getRoleByNameAndColor(
+            currentProfessionValue,
+            currentProficiencyColor
+          )
             ? "remove"
             : "add";
       }
-      classesMenu = await menuGW2Profession({
+      professionesMenu = await menuGW2Profession({
         selectedProficiencyValue: currentProficiencyValue,
         selectedProfessionValue: currentProfessionValue,
         buttonAction: actionButton,
       });
-      await collected.update({ components: classesMenu });
+      await collected.update({ components: professionesMenu });
     }
 
     /**
@@ -45,10 +54,10 @@ exports.controlerGW2Professions = async (interaction, classManagedMessage) => {
     if (collected.isButton()) {
       const currentProfessionRole = utils.getRoleByNameAndColor(
         currentProfessionValue,
-        currentProficiencyValue
+        currentProficiencyColor
       );
       if (collected.customId == "set") {
-        const roleToRemove = utils.getRoleByColor(currentProficiencyValue);
+        const roleToRemove = utils.getRoleByColor(currentProficiencyColor);
         await memberUtils.removeRole(roleToRemove.id);
         await memberUtils.addRole(currentProfessionRole.id);
       }
@@ -56,29 +65,31 @@ exports.controlerGW2Professions = async (interaction, classManagedMessage) => {
         await memberUtils.addRole(currentProfessionRole.id);
       if (collected.customId == "remove")
         await memberUtils.removeRole(currentProfessionRole.id);
-      if (collected.customId == "done") {
-        classesMenu = await menuGW2Profession({
-          buttonAction: "done",
-          selectedValue: null,
-        });
-        classManageCollector.stop();
-      }
-      const newPlayerClassSummary = await embedGW2Professions(
+      if (collected.customId == "done") professionManageCollector.stop();
+
+      const newPlayerprofessionSummary = await embedGW2Professions(
         interaction.member
       );
+      professionesMenu = await menuGW2Profession();
+      // refactor to one collected.update
       await collected.update({
-        components: classesMenu,
-        embeds: [newPlayerClassSummary],
+        components: professionesMenu,
+        embeds: [newPlayerprofessionSummary],
       });
-      console.log("sent message");
     }
   });
-  classManageCollector.on("end", async (collected, reason) => {
+
+  professionManageCollector.on("end", async (collected, reason) => {
     if (reason == "idle")
       interaction.editReply({
         components: [],
         content: "This operation has timed out",
         embeds: [],
       });
+    interaction.editReply({
+      components: [],
+      content: "Done",
+      embeds: [],
+    });
   });
 };

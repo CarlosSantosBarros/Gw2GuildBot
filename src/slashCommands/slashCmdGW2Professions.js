@@ -9,25 +9,27 @@ const { MemberUtils } = require("../utils/utilsDiscord");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("professions")
-    .setDescription("Add/Remove Classes that you play"),
+    .setDescription("Add/Remove Professiones that you play"),
   guildCommand: true,
 
   async execute(interaction) {
-    const playerClassSummary = await embedGW2Professions(interaction.member);
+    const playerProfessionSummary = await embedGW2Professions(
+      interaction.member
+    );
     const memberUtils = new MemberUtils(interaction.member);
     let hasMain;
     if (!memberUtils.getRoleByColor("#000000")) hasMain = "main";
-    const classesMenu = await menuGW2Profession({
+    const professionesMenu = await menuGW2Profession({
       selectedProficiencyValue: hasMain,
       selectedProfessionValue: null,
-      buttonAction: null,
+      buttonAction: "done",
     });
-    const classManagedMessage = await interaction.reply({
+    const collectorMessage = await interaction.reply({
       ephemeral: true,
-      components: classesMenu,
-      embeds: [playerClassSummary],
+      components: professionesMenu,
+      embeds: [playerProfessionSummary],
       fetchReply: true,
     });
-    controlerGW2Professions(interaction, classManagedMessage);
+    controlerGW2Professions(interaction, collectorMessage);
   },
 };

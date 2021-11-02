@@ -37,13 +37,13 @@ exports.embedRosterSummary = (guild) => {
       \u200B`,
   });
 
-  embedObject.addField("Class Breakdown:", "\u200B");
-  dataGW2Professions.forEach((classItem) => {
-    const classFieldString = {
-      ...fieldProfession(classItem, guild),
+  embedObject.addField("Profession Breakdown:", "\u200B");
+  dataGW2Professions.forEach((professionItem) => {
+    const professionFieldString = {
+      ...fieldProfession(professionItem, guild),
       ...{ inline: true },
     };
-    embedObject.addFields(classFieldString);
+    embedObject.addFields(professionFieldString);
   });
   return embedObject;
 };

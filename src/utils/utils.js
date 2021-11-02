@@ -3,7 +3,7 @@ const { logging } = require("../config.json");
 const { IsSuccessLogging, IsFailureLogging } = logging;
 const fs = require("fs");
 
-// terrible name, call this some thing else
+// terrible name, call this something else
 exports.findJSStartingWith_In_AndDo_ = (prefix, path, action) => {
   fs.readdirSync(path)
     .filter((file) => file.endsWith(".js"))
@@ -21,16 +21,11 @@ exports.removeFromArray = (array, string) => {
 exports.log = (message) => {
   const dateString = format(new Date(), "PPPppp");
   if (IsSuccessLogging) console.log(`[${dateString}] ${message}`);
-
   if (IsFailureLogging) console.log(`[${dateString}] ${message}`);
 };
 
-exports.isValidLogChannel = async (channels, logChannel) => {
-  let channelToSendLog = await this.getChannelObj(channels, logChannel, "text");
-  if (!channelToSendLog)
-    channelToSendLog = await channels.create(logChannel, {
-      type: "text",
-    });
-
-  return channelToSendLog;
+exports.createCollection = (collection, data) => {
+  data.forEach((entry) => {
+    collection.set(entry.value, entry);
+  });
 };

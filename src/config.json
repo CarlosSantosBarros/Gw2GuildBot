@@ -12,5 +12,86 @@
     "gw2GuildId": "F7F37FC2-C23D-E411-A278-AC162DC0070D",
     "guildLeaderKey": "E1FECABE-9989-BA4A-A262-92D5233CD96143FA83FC-D1EB-49CB-9C6E-9A14BD453421",
     "memberRole": "Chao Member"
+  },
+  "professionsSettings": {
+    "professionsData": [
+      {
+        "label": "Firebrand",
+        "description": "Support",
+        "value": "Firebrand",
+        "emoji": "620986123203641354",
+        "build": "http://gw2skills.net/editor/?PWwAYd7lRwwYfMJmJmyW6vdA-zVJYjRJ/hkpEoahQ6KANeICwW4t43mF-w"
+      },
+      {
+        "label": "Dragonhunter",
+        "description": "Power DPS",
+        "value": "Dragonhunter",
+        "emoji": "620986122734141471",
+        "build": "http://en.gw2skills.net/editor/?PWwAYt7lFwQYOsG2IO0L+tUA-zVJYiRNfh0TI0UCURFY7FIg9wbR/ZA-w"
+      },
+      {
+        "label": "Scrapper",
+        "description": "Support",
+        "value": "Support-Scrapper",
+        "emoji": "620986123027611658",
+        "build": "http://gw2skills.net/editor/?PeQAIlNweYOMP2Je0TntSA-zVJYjRBfZkZBUdC47BJU2AvF/2sA-w"
+      },
+      {
+        "label": "Scrapper",
+        "description": "Power DPS",
+        "value": "DPS-Scrapper",
+        "emoji": "620986123027611658",
+        "build": "http://en.gw2skills.net/editor/?PegAIJlRUwgYcsN2JO2LvteA-zVJYiRFfh0UYUbBURGY7FJM6to/ZE-w"
+      },
+      {
+        "label": "Spellbreaker",
+        "description": "Power DPS",
+        "value": "DPS-Spellbreaker",
+        "emoji": "620986123342315521",
+        "build": "http://gw2skills.net/editor/?PWwAYd7lRwwYfMJmJmyW6vdA-zVJYjRJ/hkpEoahQ6KANeICwW4t43mF-w"
+      },
+      {
+        "label": "Chrono",
+        "description": "Support",
+        "value": "Chrono",
+        "emoji": "620986123103240222",
+        "build": "http://gw2skills.net/editor/?PWwAYd7lRwwYfMJmJmyW6vdA-zVJYjRJ/hkpEoahQ6KANeICwW4t43mF-w"
+      },
+      {
+        "label": "Herald",
+        "description": "Power DPS",
+        "value": "Herald",
+        "emoji": "620986122977411083",
+        "build": "http://gw2skills.net/editor/?PWwAYd7lRwwYfMJmJmyW6vdA-zVJYjRJ/hkpEoahQ6KANeICwW4t43mF-w"
+      },
+      {
+        "label": "Scourge",
+        "description": "Power DPS",
+        "value": "Scourge",
+        "emoji": "620986123111497738",
+        "build": "http://gw2skills.net/editor/?PWwAYd7lRwwYfMJmJmyW6vdA-zVJYjRJ/hkpEoahQ6KANeICwW4t43mF-w"
+      }
+    ],
+    "proficiencyData": [
+      {
+        "label": "Main",
+        "description": "This is the Profession you play the most",
+        "value": "main",
+        "color": "#3d85c6"
+      },
+      {
+        "label": "Alternative",
+        "description": "These are your next most played Professiones",
+        "value": "alt",
+        "color": "#6fa8dc"
+      },
+      {
+        "label": "Learner",
+        "description": "These are Professiones you are learning",
+        "value": "learn",
+        "color": "#9fc5e8"
+      }
+    ],
+    "mentorColor": "#b45f06"
   }
 }

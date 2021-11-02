@@ -3,26 +3,27 @@ const DiscordUtils = require("../../../utils/utilsDiscord");
 const utils = new DiscordUtils.GuildUtils();
 
 //can tidy here
-exports.fieldProfession = (classItem) => {
-  const emojiSting = `<:${classItem.label}:${classItem.emoji}>`;
-  let classMentorString = "";
-  // change here to use mentor role
-  classItem.mentors.forEach((mentorItem) => {
-    const concatString = `${memberNicknameMention(mentorItem.mentorId)}/${
-      mentorItem.mentorIGN
-    }`;
-    classMentorString = classMentorString.concat(" ", concatString);
-  });
+exports.fieldProfession = (professionItem) => {
+  const emojiSting = `<:${professionItem.label}:${professionItem.emoji}>`;
+  // // change here to use mentor role
+  // let professionMentorString = "";
+  // professionItem.mentors.forEach((mentorItem) => {
+  //   const concatString = `${memberNicknameMention(mentorItem.mentorId)}/${
+  //     mentorItem.mentorIGN
+  //   }`;
+  //   professionMentorString = professionMentorString.concat(" ", concatString);
+  // });
 
   const fieldValueString = `**Players**: ${
-    utils.getMembersByRoleName(classItem.value).size
+    utils.getMembersByRoleName(professionItem.value).size
   }
-    **Role**: ${classItem.description} 
-    **Build:** *[Here](${classItem.build})*
-    **Mentor**: ${classMentorString}`;
+    **Role**: ${professionItem.description} 
+    **Build:** *[Here](${professionItem.build})*`;
+  // **Mentor**: ${professionMentorString}
 
   return {
-    name: emojiSting + classItem.label + emojiSting,
+    name: emojiSting + professionItem.label + emojiSting,
     value: fieldValueString,
+    inline: true,
   };
 };

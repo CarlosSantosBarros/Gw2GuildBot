@@ -32,7 +32,7 @@ module.exports = {
      * ask if want to apply
      * if yes show embed with current information
      * older than 18 dialog
-     * class select dialog + willing to play other builds/classes
+     * profession select dialog + willing to play other builds/professiones
      * private message asking tell us more about your self
      */
   },
