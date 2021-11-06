@@ -5,15 +5,6 @@ const {
 } = require("../../utils/utilsMessageComponents");
 const { professionsSettings } = require("../../config.json");
 
-const professionSelectBase = {
-  customId: "profession",
-  placeholder: "Select A profession",
-};
-const proficiencySelectBase = {
-  customId: "proficiency",
-  placeholder: "Proficiency",
-};
-
 const buttonData = [
   { customId: "set", label: "Set", style: "PRIMARY", disabled: true },
   { customId: "add", label: "Add", style: "PRIMARY", disabled: true },
@@ -36,11 +27,14 @@ exports.menuGW2Profession = async (rebuildOptions) => {
     };
   const { selectedProficiencyValue, selectedProfessionValue, buttonAction } =
     rebuildOptions;
-  const { professionsData, proficiencyData } = professionsSettings;
+  let { professionsData } = professionsSettings;
 
   const selectProficiency = buildSelectMenu(
-    proficiencySelectBase,
-    proficiencyData,
+    {
+      customId: "proficiency",
+      placeholder: "Proficiency",
+    },
+    professionsSettings.proficiencyData,
     selectedProficiencyValue
   );
 
@@ -48,9 +42,14 @@ exports.menuGW2Profession = async (rebuildOptions) => {
    * rebuild profession selection based on roles
    * remove role if its selected in other tier
    */
-
+  if (rebuildOptions.availableProfessions)
+    professionsData = rebuildOptions.availableProfessions;
   const selectProfession = buildSelectMenu(
-    professionSelectBase,
+    {
+      customId: "profession",
+      placeholder: "Select A profession",
+      disabled: selectedProficiencyValue ? false : true,
+    },
     professionsData,
     selectedProfessionValue
   );

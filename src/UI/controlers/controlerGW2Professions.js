@@ -4,33 +4,60 @@ const DiscordUtils = require("../../utils/utilsDiscord");
 
 exports.controlerGW2Professions = async (interaction, message) => {
   const proficiencyCollection = interaction.client.proficiencyData;
+  const professionCollection = interaction.client.professionsData;
   const memberUtils = new DiscordUtils.MemberUtils(interaction.member);
   const utils = new DiscordUtils.GuildUtils();
   let currentProficiencyValue;
   let currentProficiencyColor;
   let currentProfessionValue;
-  if (!memberUtils.getRoleByColor("#000000")) currentProficiencyValue = "main";
 
   const professionManageCollector = message.createMessageComponentCollector({
-    idle: 2000000,
+    idle: 600000,
   });
+
+  const availableProfessionsFilter = () => {
+    return new Promise((resolve) => {
+      const filter = (profession) =>
+        currentProficiencyValue === "main"
+          ? !memberUtils.getRoleByName(profession.value) ||
+            memberUtils.getRoleByNameAndColor(profession.value, "#b45f06")
+          : memberUtils.getRoleByNameAndColor(
+              profession.value,
+              currentProficiencyColor
+            );
+      const returnObj = professionCollection.filter((profession) =>
+        filter(profession)
+      );
+      resolve(returnObj);
+    });
+  };
 
   professionManageCollector.on("collect", async (collected) => {
     // if has main role enable done button
-    let professionesMenu;
+    let professionesMenu = await menuGW2Profession();
     if (collected.isSelectMenu()) {
-      let actionButton;
+      let actionButton = null;
+      let availableProfessions = null;
+
       if (collected.customId == "proficiency") {
+        currentProfessionValue = null;
         currentProficiencyValue = collected.values[0];
         currentProficiencyColor = proficiencyCollection.get(
           currentProficiencyValue
         ).color;
+        const currentProficiency = memberUtils.getRolesByColor(
+          currentProficiencyColor
+        );
+        const maxProficiency = proficiencyCollection.get(
+          currentProficiencyValue
+        ).professionCap;
+        if (currentProficiency.size == maxProficiency)
+          availableProfessions = await availableProfessionsFilter();
       }
-      if (collected.customId == "profession")
+      if (collected.customId == "profession") {
         currentProfessionValue = collected.values[0];
-      if (currentProfessionValue && currentProficiencyValue) {
         actionButton = "set";
-        if (currentProficiencyValue != "main")
+        if (currentProficiencyValue !== "main")
           actionButton = memberUtils.getRoleByNameAndColor(
             currentProfessionValue,
             currentProficiencyColor
@@ -42,41 +69,35 @@ exports.controlerGW2Professions = async (interaction, message) => {
         selectedProficiencyValue: currentProficiencyValue,
         selectedProfessionValue: currentProfessionValue,
         buttonAction: actionButton,
+        availableProfessions: availableProfessions,
       });
-      await collected.update({ components: professionesMenu });
     }
-
-    /**
-     * embed doesnt always change
-     * i think its do do with Promisses
-     */
-
+    let updateString = { components: professionesMenu };
     if (collected.isButton()) {
       const currentProfessionRole = utils.getRoleByNameAndColor(
         currentProfessionValue,
         currentProficiencyColor
       );
       if (collected.customId == "set") {
-        const roleToRemove = utils.getRoleByColor(currentProficiencyColor);
-        await memberUtils.removeRole(roleToRemove.id);
+        const roleToRemove = memberUtils.getRoleByColor(
+          currentProficiencyColor
+        );
+        if (roleToRemove) await memberUtils.removeRole(roleToRemove.id);
         await memberUtils.addRole(currentProfessionRole.id);
       }
       if (collected.customId == "add")
         await memberUtils.addRole(currentProfessionRole.id);
       if (collected.customId == "remove")
         await memberUtils.removeRole(currentProfessionRole.id);
-      if (collected.customId == "done") professionManageCollector.stop();
-
-      const newPlayerprofessionSummary = await embedGW2Professions(
-        interaction.member
-      );
-      professionesMenu = await menuGW2Profession();
-      // refactor to one collected.update
-      await collected.update({
-        components: professionesMenu,
-        embeds: [newPlayerprofessionSummary],
-      });
+      if (collected.customId == "done") return professionManageCollector.stop();
+      currentProfessionValue = null;
+      const professionSummary = await embedGW2Professions(interaction.member);
+      updateString = {
+        embeds: [professionSummary],
+        ...updateString,
+      };
     }
+    await collected.update(updateString);
   });
 
   professionManageCollector.on("end", async (collected, reason) => {

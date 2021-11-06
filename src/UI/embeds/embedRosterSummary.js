@@ -1,7 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const { memberNicknameMention } = require("@discordjs/builders");
 const DiscordUtils = require("../../utils/utilsDiscord");
-const { dataGW2Professions } = require("../dialogData/dataGW2Professions");
 const { fieldProfession } = require("./embedComponents/fieldProfession");
 
 exports.embedRosterSummary = (guild) => {
@@ -38,7 +37,7 @@ exports.embedRosterSummary = (guild) => {
   });
 
   embedObject.addField("Profession Breakdown:", "\u200B");
-  dataGW2Professions.forEach((professionItem) => {
+  guild.client.professionsData.forEach((professionItem) => {
     const professionFieldString = {
       ...fieldProfession(professionItem, guild),
       ...{ inline: true },

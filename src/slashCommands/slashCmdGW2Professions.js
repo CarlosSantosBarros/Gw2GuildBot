@@ -4,7 +4,6 @@ const {
 } = require("../UI/controlers/controlerGW2Professions");
 const { embedGW2Professions } = require("../UI/embeds/embedGW2Professions");
 const { menuGW2Profession } = require("../UI/menus/menuGW2Professions");
-const { MemberUtils } = require("../utils/utilsDiscord");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,14 +12,13 @@ module.exports = {
   guildCommand: true,
 
   async execute(interaction) {
+    console.log(`Profession command used by ${interaction.user.username}`);
     const playerProfessionSummary = await embedGW2Professions(
       interaction.member
     );
-    const memberUtils = new MemberUtils(interaction.member);
-    let hasMain;
-    if (!memberUtils.getRoleByColor("#000000")) hasMain = "main";
+
     const professionesMenu = await menuGW2Profession({
-      selectedProficiencyValue: hasMain,
+      selectedProficiencyValue: null,
       selectedProfessionValue: null,
       buttonAction: "done",
     });

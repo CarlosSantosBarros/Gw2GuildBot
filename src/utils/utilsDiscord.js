@@ -10,11 +10,15 @@ class GuildUtils {
   }
   getChannelByNameAndType(textName, type) {
     return this.guild.channels.cache.find(
-      (channel) => channel.name === `${textName}` && channel.type === type
+      (channel) => channel.name === textName && channel.type === type
     );
   }
   getRoleByName(roleName) {
-    return this.guild.roles.cache.find((role) => role.name === `${roleName}`);
+    return this.guild.roles.cache.find((role) => role.name === roleName);
+  }
+
+  getRolesByName(roleName) {
+    return this.guild.roles.cache.filter((role) => role.name === roleName);
   }
 
   getRoleByColor(colorHexValue) {
@@ -44,8 +48,9 @@ class GuildUtils {
   }
 
   getMembersByRoleName(roleName) {
-    return this.guild.roles.cache.find((role) => role.name === roleName)
-      .members;
+    return this.guild.members.cache.filter((member) =>
+      member.roles.cache.find((role) => role.name === roleName)
+    );
   }
 }
 
@@ -58,6 +63,12 @@ class MemberUtils {
   }
   getRoleByColor(colorHexValue) {
     return this.member.roles.cache.find(
+      (role) => role.hexColor === colorHexValue
+    );
+  }
+
+  getRolesByColor(colorHexValue) {
+    return this.member.roles.cache.filter(
       (role) => role.hexColor === colorHexValue
     );
   }
