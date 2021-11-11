@@ -11,8 +11,23 @@
     "discordGuildId": "294892279322378240",
     "gw2GuildId": "F7F37FC2-C23D-E411-A278-AC162DC0070D",
     "guildLeaderKey": "E1FECABE-9989-BA4A-A262-92D5233CD96143FA83FC-D1EB-49CB-9C6E-9A14BD453421",
-    "memberRole": "Chao Member"
+    "memberRole": "581597683597443073",
+    "officerRole": "618286301111910400"
   },
+  "rosterSummarySettings": [
+    {
+      "roleId": "581597683597443073",
+      "prefixString": "<:Chao:743800298560028672> **Total members**:"
+    },
+    {
+      "roleId": "618286716423372832",
+      "prefixString": "<:commander:888814161725886484> **Commanders**:"
+    },
+    {
+      "roleId": "816397178004045864",
+      "prefixString": "<:recruit:888815068983218186> **Recruits**:"
+    }
+  ],
   "professionsSettings": {
     "professionsData": [
       {

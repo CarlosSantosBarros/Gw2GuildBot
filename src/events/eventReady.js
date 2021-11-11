@@ -3,7 +3,7 @@ const { format, isMonday, isThursday, isTuesday } = require("date-fns");
 const { roleMention } = require("@discordjs/builders");
 const Discord = require("discord.js");
 const { createCollection } = require("../utils/utils");
-const { professionsSettings } = require("../config.json");
+const { professionsSettings, guildSettings } = require("../config.json");
 
 module.exports = {
   name: "ready",
@@ -33,7 +33,7 @@ module.exports = {
         );
 
         announcementChannel.send({
-          content: roleMention("581597683597443073") + message,
+          content: roleMention(guildSettings.memberRole) + message,
         });
       }
     }, 60000);

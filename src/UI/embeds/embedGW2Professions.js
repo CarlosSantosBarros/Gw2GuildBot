@@ -10,7 +10,7 @@ exports.embedGW2Professions = async (member) => {
     const embedObject = new MessageEmbed()
       .setAuthor(member.user.username)
       .setTitle("Player Summary")
-      .setDescription("Professiones:")
+      .setDescription("Professions:")
       .setThumbnail(member.user.avatarURL());
 
     const addFieldByProfessionName = (professionName) => {

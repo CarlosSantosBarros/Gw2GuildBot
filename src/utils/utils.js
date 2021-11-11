@@ -29,3 +29,12 @@ exports.createCollection = (collection, data) => {
     collection.set(entry.value, entry);
   });
 };
+
+exports.forEachToString = (data, itemFormat) => {
+  let returnString = "";
+  data.forEach((item) => {
+    const concatString = itemFormat(item);
+    returnString = returnString.concat(" ", concatString);
+  });
+  return returnString;
+};

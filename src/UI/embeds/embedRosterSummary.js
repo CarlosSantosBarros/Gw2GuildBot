@@ -1,7 +1,9 @@
 const { MessageEmbed } = require("discord.js");
 const { memberNicknameMention } = require("@discordjs/builders");
 const DiscordUtils = require("../../utils/utilsDiscord");
+const { forEachToString } = require("../../utils/utils");
 const { fieldProfession } = require("./embedComponents/fieldProfession");
+const { rosterSummarySettings, guildSettings } = require("../../config.json");
 
 exports.embedRosterSummary = (guild) => {
   const utils = new DiscordUtils.GuildUtils();
@@ -11,26 +13,27 @@ exports.embedRosterSummary = (guild) => {
     .setTitle("Roster Summary")
     .setDescription("Guild Breakdown");
 
-  let officerString = "";
-  const officerCollection = utils.getMembersByRoleId("618286301111910400");
-  officerCollection.forEach((officer) => {
-    const concatString = memberNicknameMention(officer.id);
-    officerString = officerString.concat(" ", concatString);
-  });
+  const officerFormat = (item) => {
+    return memberNicknameMention(item.id);
+  };
+  const membershipFormat = (item) => {
+    return `\n ${item.prefixString} ${
+      utils.getMembersByRoleId(item.roleId).size
+    }`;
+  };
 
+  const officerCollection = utils.getMembersByRoleId(guildSettings.officerRole);
+
+  const officerString = forEachToString(officerCollection, officerFormat);
+  const membershipString = forEachToString(
+    rosterSummarySettings,
+    membershipFormat
+  );
   // refactor getMembersByRoleId getMembersByRoleName use role name instead of id
   // and/or use config file
   embedObject.addFields({
     name: "Membership:",
-    value: `<:Chao:743800298560028672> **Total members**: ${
-      utils.getMembersByRoleId("581597683597443073").size
-    }
-      <:commander:888814161725886484> **Commanders**: ${
-        utils.getMembersByRoleId("618286716423372832").size
-      }
-      <:recruit:888815068983218186> **Recruits**: ${
-        utils.getMembersByRoleId("816397178004045864").size
-      }
+    value: `${membershipString}
       <:officer:888815047026032721> **Officers**:
       ${officerString}
       \u200B`,

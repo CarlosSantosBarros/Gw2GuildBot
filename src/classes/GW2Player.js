@@ -1,6 +1,7 @@
 const { getGW2AccountInfo, getGW2GuildInfo } = require("../utils/utilsGw2API");
 const InterfaceGW2Player = require("../database");
 const DiscordUtils = require("../utils/utilsDiscord");
+const { guildSettings } = require("../config.json");
 
 module.exports = class GW2Player {
   constructor(id) {
@@ -30,15 +31,10 @@ module.exports = class GW2Player {
       this.GW2Player.update(this.playerData);
     }
 
-    //import this from config
-    if (
-      this.accountData.guilds.includes("F7F37FC2-C23D-E411-A278-AC162DC0070D")
-    ) {
+    if (this.accountData.guilds.includes(guildSettings.gw2GuildId)) {
       const utils = new DiscordUtils.GuildUtils();
-      // import from config
-      const memberRole = utils.getRoleByName("Chao Member");
       const member = utils.getMemberById(this.id);
-      await member.roles.add(memberRole.id);
+      await member.roles.add(guildSettings.memberRole);
 
       const guildInfo = await getGW2GuildInfo();
       guildInfo.every(async (guildMember) => {

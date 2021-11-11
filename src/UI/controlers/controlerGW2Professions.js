@@ -12,7 +12,7 @@ exports.controlerGW2Professions = async (interaction, message) => {
   let currentProfessionValue;
 
   const professionManageCollector = message.createMessageComponentCollector({
-    idle: 600000,
+    idle: 60000,
   });
 
   const availableProfessionsFilter = () => {
