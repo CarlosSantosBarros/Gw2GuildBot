@@ -1,8 +1,5 @@
 const { MessageActionRow } = require("discord.js");
-const {
-  buildButtons,
-  buildSelectMenu,
-} = require("../../utils/utilsMessageComponents");
+const { buildButtons, buildSelectMenu } = require("./messageComponents");
 const { professionsSettings } = require("../../config.json");
 
 const buttonData = [

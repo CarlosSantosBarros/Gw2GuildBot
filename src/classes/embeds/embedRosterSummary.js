@@ -29,8 +29,7 @@ exports.embedRosterSummary = (guild) => {
     rosterSummarySettings,
     membershipFormat
   );
-  // refactor getMembersByRoleId getMembersByRoleName use role name instead of id
-  // and/or use config file
+
   embedObject.addFields({
     name: "Membership:",
     value: `${membershipString}

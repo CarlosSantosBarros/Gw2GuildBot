@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { embedRosterSummary } = require("../UI/embeds/embedRosterSummary");
+const GW2Professions = require("../classes/GW2Professions");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -8,7 +8,8 @@ module.exports = {
   guildCommand: true,
 
   async execute(interaction) {
-    const rosterEmbed = embedRosterSummary(interaction.guild);
+    const gw2Professions = new GW2Professions(interaction);
+    const rosterEmbed = gw2Professions.roster();
     await interaction.reply({
       embeds: [rosterEmbed],
       ephemeral: false,

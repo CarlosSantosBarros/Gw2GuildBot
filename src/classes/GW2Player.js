@@ -5,7 +5,6 @@ const { guildSettings } = require("../config.json");
 
 module.exports = class GW2Player {
   constructor(id) {
-    // refactor here to only use this.interaction
     this.GW2Player = new InterfaceGW2Player();
     this.GW2Player.setSelector({
       where: {
