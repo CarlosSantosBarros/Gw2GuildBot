@@ -20,5 +20,9 @@ const sequelize = new Sequelize("database", "user", "password", {
 })();
 
 exports.ModelGW2Player = require("./modelGW2Player")(sequelize, DataTypes);
+exports.ModelGuildApplication = require("./modelGuildApplication")(
+  sequelize,
+  DataTypes
+);
 // exports.ModelUser = require("./modelUser")(sequelize, DataTypes);
 // exports.ModelDiscordGuild = require("./modelGuild")(sequelize, DataTypes);

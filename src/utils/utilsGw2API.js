@@ -85,3 +85,12 @@ exports.getCharacters = async (apikey) => {
     });
   return returnData;
 };
+
+exports.getWorld = async (worldId) => {
+  let returnData;
+  await api
+    .worlds()
+    .get(worldId)
+    .then((result) => (returnData = result));
+  return returnData;
+};

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const GW2Player = require("../classes/GW2Player");
+const GW2Professions = require("../classes/GW2Professions");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -23,17 +24,29 @@ module.exports = {
       ephemeral: true,
     });
 
-    // const verifiedRole = utils.getRoleByName("Verified");
-    // await member.roles.add(verifiedRole.id);
+    if (player.getIsMember())
+      setTimeout(async () => {
+        const gw2Professions = new GW2Professions(interaction);
+        const playerProfessionSummary = await gw2Professions.embed();
+        const professionesMenu = await gw2Professions.menu();
 
-    /**
-     * getUserByRole
-     * if has role
-     * ask if want to apply
-     * if yes show embed with current information
-     * older than 18 dialog
-     * profession select dialog + willing to play other builds/professiones
-     * private message asking tell us more about your self
-     */
+        const collectorMessage = await interaction.editReply({
+          content: "Add classes that you play",
+          ephemeral: true,
+          components: professionesMenu,
+          embeds: [playerProfessionSummary],
+          fetchReply: true,
+        });
+        gw2Professions.controler(collectorMessage);
+      }, 1000);
+    else
+      interaction.member.send({
+        content:
+          "Thank you for verifying, I see that you are not a guild member, would you like to apply?",
+        ephemeral: true,
+        // components: yesno,
+        // embeds: [playerProfessionSummary],
+        fetchReply: true,
+      });
   },
 };

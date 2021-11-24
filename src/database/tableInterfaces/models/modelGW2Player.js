@@ -10,8 +10,5 @@ module.exports = (sequelize, DataTypes) => {
     accountName: {
       type: DataTypes.STRING,
     },
-    isMentor: {
-      type: DataTypes.BOOLEAN,
-    },
   });
 };

@@ -1,4 +1,5 @@
 const { guildObject } = require("./../");
+const { guildSettings } = require("../config.json");
 /**
  * juicy refactor here
  * base classe to extend/inherit from
@@ -15,6 +16,10 @@ class GuildUtils {
   }
   getRoleByName(roleName) {
     return this.guild.roles.cache.find((role) => role.name === roleName);
+  }
+
+  getRoleById(id) {
+    return this.guild.roles.cache.find((role) => role.id === id);
   }
 
   getRolesByName(roleName) {
@@ -50,6 +55,15 @@ class GuildUtils {
   getMembersByRoleName(roleName) {
     return this.guild.members.cache.filter((member) =>
       member.roles.cache.find((role) => role.name === roleName)
+    );
+  }
+
+  getGuildMembersByRoleName(roleName) {
+    return this.guild.members.cache.filter(
+      (member) =>
+        member.roles.cache.find(
+          (role) => role.id === guildSettings.memberRole
+        ) && member.roles.cache.find((role) => role.name === roleName)
     );
   }
 }
