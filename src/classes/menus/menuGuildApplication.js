@@ -30,8 +30,7 @@ const dataWillRoleSwap = [
 exports.menuIsLegal = () => {
   return [
     new MessageActionRow().addComponents(
-      new SelectMenu(
-        {
+      new SelectMenu({
           customId: "isLegal",
           placeholder: "Are you 18 or older?",
         },
@@ -45,8 +44,7 @@ exports.menuIsLegal = () => {
 exports.menuWillRoleSwap = () => {
   return [
     new MessageActionRow().addComponents(
-      new SelectMenu(
-        {
+      new SelectMenu({
           customId: "willRoleSwap",
           placeholder: "Are you willing to play other classes or builds?",
         },

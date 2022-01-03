@@ -1,13 +1,12 @@
 const { MessageActionRow } = require("discord.js");
-const { buildButtons, buildSelectMenu } = require("./messageComponents");
+const { buildButtons, SelectMenu } = require("./messageComponents");
 const { professionsSettings } = require("../../config.json");
 
 const buttonData = [
   { customId: "set", label: "Set", style: "PRIMARY", disabled: true },
   { customId: "add", label: "Add", style: "PRIMARY", disabled: true },
   { customId: "remove", label: "Remove", style: "PRIMARY", disabled: true },
-  {
-    customId: "done",
+  { customId: "done",
     label: "Done",
     style: "SUCCESS",
     emoji: "870320857837346887",
@@ -15,47 +14,46 @@ const buttonData = [
   },
 ];
 
-exports.menuGW2Profession = async (rebuildOptions) => {
-  if (!rebuildOptions)
-    rebuildOptions = {
-      selectedProficiencyValue: null,
-      selectedProfessionValue: null,
-      buttonAction: null,
-    };
-  const { selectedProficiencyValue, selectedProfessionValue, buttonAction } =
-    rebuildOptions;
-  let { professionsData } = professionsSettings;
+// This can be a class
 
-  const selectProficiency = buildSelectMenu(
-    {
-      customId: "proficiency",
-      placeholder: "Proficiency",
-    },
-    professionsSettings.proficiencyData,
-    selectedProficiencyValue
-  );
+module.exports = class MenuGW2Profession {
+  constructor() {
+    this.selectedProficiencyValue;
+    this.selectedProfessionValue;
+    this.buttonAction;
+    this.availableProfessions = professionsSettings.professionsData;
+  }
 
-  /**
-   * rebuild profession selection based on roles
-   * remove role if its selected in other tier
-   */
-  if (rebuildOptions.availableProfessions)
-    professionsData = rebuildOptions.availableProfessions;
-  const selectProfession = buildSelectMenu(
-    {
-      customId: "profession",
-      placeholder: "Select A profession",
-      disabled: selectedProficiencyValue ? false : true,
-    },
-    professionsData,
-    selectedProfessionValue
-  );
+  setProficiencyValue(value) { this.selectedProficiencyValue = value; }
+  setProfessionValue(value) { this.selectedProfessionValue = value; }
+  setButtonAction(value) { this.buttonAction = value; }
+  setAvailableProfessions(value) { this.availableProfessions = value; }
+  buildMenu() {
+    const selectProficiency = new SelectMenu(
+      {
+        customId: "proficiency",
+        placeholder: "Proficiency",
+      },
+      professionsSettings.proficiencyData,
+      this.selectedProficiencyValue
+    );
+    const selectProfession = new SelectMenu(
+      {
+        customId: "profession",
+        placeholder: "Select A profession",
+        // eslint-disable-next-line no-unneeded-ternary
+        disabled: this.selectedProficiencyValue ? false : true,
+      },
+      this.availableProfessions,
+      this.selectedProfessionValue
+    );
 
-  const buttons = buildButtons(buttonData, buttonAction);
+    const buttons = buildButtons(buttonData, this.buttonAction);
 
-  return [
-    new MessageActionRow().addComponents(selectProficiency),
-    new MessageActionRow().addComponents(selectProfession),
-    new MessageActionRow().addComponents(buttons),
-  ];
+    return [
+      new MessageActionRow().addComponents(selectProficiency),
+      new MessageActionRow().addComponents(selectProfession),
+      new MessageActionRow().addComponents(buttons),
+    ];
+  }
 };

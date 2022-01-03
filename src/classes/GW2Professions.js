@@ -1,4 +1,4 @@
-const { menuGW2Profession } = require("./menus/menuGW2Professions");
+const MenuGW2Profession = require("./menus/menuGW2Professions");
 const { embedGW2Professions } = require("./embeds/embedGW2Professions");
 const { embedRosterSummary } = require("./embeds/embedRosterSummary");
 const DiscordUtils = require("../utils/utilsDiscord");
@@ -7,6 +7,7 @@ const { professionsSettings } = require("../config.json");
 module.exports = class GW2Professions {
   constructor(interaction) {
     this.interaction = interaction;
+    this.isApplication;
   }
 
   async controler(message) {
@@ -42,46 +43,46 @@ module.exports = class GW2Professions {
       });
     };
 
+    // there must be a juicy refactor here somewhere
+
     professionManageCollector.on("collect", async (collected) => {
-      let professionesMenu = await menuGW2Profession();
+      const professionesMenu = new MenuGW2Profession();
       if (collected.isSelectMenu()) {
-        let actionButton = null;
-        let availableProfessions = null;
 
         if (collected.customId == "proficiency") {
           currentProfessionValue = null;
-          currentProficiencyValue = collected.values[0];
+          professionesMenu.setProficiencyValue(collected.values[0]);
           currentProficiencyColor = proficiencyCollection.get(
-            currentProficiencyValue
+            collected.values[0]
           ).color;
           const currentProficiency = memberUtils.getRolesByColor(
             currentProficiencyColor
           );
           const maxProficiency = proficiencyCollection.get(
-            currentProficiencyValue
+            collected.values[0]
           ).professionCap;
-          if (currentProficiency.size == maxProficiency)
-            availableProfessions = await availableProfessionsFilter();
+          if (currentProficiency.size == maxProficiency) {
+            const availableProfessions = await availableProfessionsFilter();
+            professionesMenu.setAvailableProfessions(availableProfessions);
+          }
         }
         if (collected.customId == "profession") {
           currentProfessionValue = collected.values[0];
-          actionButton = "set";
-          if (currentProficiencyValue !== "main")
+          professionesMenu.setProfessionValue(currentProfessionValue);
+          let actionButton = "set";
+          if (collected.values[0] !== "main") {
             actionButton = memberUtils.getRoleByNameAndColor(
               currentProfessionValue,
               currentProficiencyColor
             )
               ? "remove"
               : "add";
+            professionesMenu.setButtonAction(actionButton);
+          }
         }
-        professionesMenu = await menuGW2Profession({
-          selectedProficiencyValue: currentProficiencyValue,
-          selectedProfessionValue: currentProfessionValue,
-          buttonAction: actionButton,
-          availableProfessions: availableProfessions,
-        });
       }
-      let updateString = { components: professionesMenu };
+      const menu = professionesMenu.buildMenu();
+      let updateString = { components: menu };
       if (collected.isButton()) {
         const currentProfessionRole = utils.getRoleByNameAndColor(
           currentProfessionValue,
@@ -123,13 +124,11 @@ module.exports = class GW2Professions {
     });
   }
 
-  async menu(params) {
-    return await menuGW2Profession(params);
+  async menu() {
+    const menu = new MenuGW2Profession();
+    return menu.buildMenu();
   }
-  async embed() {
-    return await embedGW2Professions(this.interaction.member);
-  }
-  async roster() {
-    return embedRosterSummary(this.interaction.guild);
-  }
+  async embed() { return await embedGW2Professions(this.interaction.member); }
+  async roster() { return embedRosterSummary(this.interaction.guild); }
+  setApplication() { this.isApplication = true; }
 };
