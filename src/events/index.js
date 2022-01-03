@@ -5,11 +5,11 @@ module.exports = (client) => {
     const event = require(`./${fileItem}`);
     if (event.once) {
       client.once(event.name, (...args) => event.execute(...args));
-      log("Loaded: " + event.name);
+      log(`Loaded: ${ event.name}`);
       return;
     }
     client.on(event.name, (...args) => event.execute(...args));
-    log("Loaded: " + event.name);
+    log(`Loaded: ${ event.name}`);
   };
   findJSStartingWith_In_AndDo_("event", __dirname, loadEvent);
 

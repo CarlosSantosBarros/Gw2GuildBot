@@ -6,14 +6,11 @@ const { guildSettings } = require("../config.json");
 module.exports = class GW2Player {
   constructor(id) {
     this.GW2Player = new InterfaceGW2Player();
-    this.GW2Player.setSelector({
-      where: {
-        snowflake: id,
-      },
-    });
+    this.GW2Player.setSelector({ where: { snowflake: id, }, });
     this.id = id;
     this.playerData;
     this.accountData;
+    this.isMember;
   }
 
   async verify(key) {
@@ -34,16 +31,16 @@ module.exports = class GW2Player {
       const utils = new DiscordUtils.GuildUtils();
       const member = utils.getMemberById(this.id);
       await member.roles.add(guildSettings.memberRole);
+      this.isMember = true;
 
       const guildInfo = await getGW2GuildInfo();
+      // filter() or find() here
       guildInfo.every(async (guildMember) => {
         if (guildMember.name == this.accountData.name) {
           const rankRole = utils.getRoleByName(guildMember.rank);
           await member.roles.add(rankRole.id);
-          return;
         }
       });
-      return;
     }
   }
 
@@ -54,5 +51,9 @@ module.exports = class GW2Player {
       server: this.accountData.world,
       wvwRank: this.accountData.wvw_rank,
     };
+  }
+
+  getIsMember() {
+    return this.isMember;
   }
 };

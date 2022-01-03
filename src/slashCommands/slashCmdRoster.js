@@ -9,7 +9,7 @@ module.exports = {
 
   async execute(interaction) {
     const gw2Professions = new GW2Professions(interaction);
-    const rosterEmbed = gw2Professions.roster();
+    const rosterEmbed = await gw2Professions.roster();
     await interaction.reply({
       embeds: [rosterEmbed],
       ephemeral: false,

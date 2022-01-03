@@ -16,7 +16,7 @@ module.exports = {
       guildId: interaction.guildId,
     });
     commands.forEach((command) => {
-      log("Removing: " + command.name);
+      log(`Removing: ${ command.name}`);
       command.delete();
     });
     await interaction.editReply({

@@ -18,7 +18,7 @@ exports.fieldProfession = (professionItem) => {
   const mentorString = forEachToString(professionMentors, mentorformat);
 
   const fieldValueString = `**Players**: ${
-    utils.getMembersByRoleName(professionItem.value).size
+    utils.getGuildMembersByRoleName(professionItem.value).size
   }
     **Role**: ${professionItem.description} 
     **Build:** *[Here](${professionItem.build})* 

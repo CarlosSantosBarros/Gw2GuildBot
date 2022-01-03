@@ -1,6 +1,5 @@
 {
   "token": "BOT TOKEN HERE",
-  "prefix": "!",
   "logging": {
     "IsDebugging": false,
     "IsRaw": false,
@@ -111,5 +110,13 @@
       }
     ],
     "mentorColor": "#b45f06"
+  },
+  "eventReminders": [
+    { "day": 1 ,
+      "time": "1745",
+    "channelName": "rally_call",
+    "roleId": "581597683597443073",
+  "message" : ": Guild WvW Raid starts in 1h!"
   }
+  ]
 }

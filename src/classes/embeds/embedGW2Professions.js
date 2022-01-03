@@ -2,13 +2,15 @@ const { MessageEmbed } = require("discord.js");
 const { fieldProfession } = require("./embedComponents/fieldProfession");
 const DiscordUtils = require("../../utils/utilsDiscord");
 
+// if application dont show guild spesific stuff
+
 exports.embedGW2Professions = async (member) => {
   return new Promise((resolve) => {
     const professionsData = member.client.professionsData;
     const proficiencyData = member.client.proficiencyData;
     const memberUtils = new DiscordUtils.MemberUtils(member);
     const embedObject = new MessageEmbed()
-      .setAuthor(member.user.username)
+      .setAuthor({ name: member.user.username })
       .setTitle("Player Summary")
       .setDescription("Professions:")
       .setThumbnail(member.user.avatarURL());

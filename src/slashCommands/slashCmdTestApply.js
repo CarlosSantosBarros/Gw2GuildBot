@@ -20,6 +20,7 @@ module.exports = {
     const menu = application.menuShouldStart();
     const collectorMessage = await interaction.member.send({
       content:
+        // eslint-disable-next-line max-len
         "Thank you for verifying, I see that you are not a guild member, would you like to apply?",
       components: menu,
       fetchReply: true,

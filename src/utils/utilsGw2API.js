@@ -20,9 +20,7 @@ exports.getGW2TokenInfo = async (apikey) => {
       if (result.text) throw result.text;
       returnData = result;
     })
-    .catch((error) => {
-      throw error;
-    });
+    .catch((error) => { throw error; });
   return returnData;
 };
 /**

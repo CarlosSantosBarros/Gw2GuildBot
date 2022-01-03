@@ -6,7 +6,7 @@ module.exports = async (client) => {
 
   const loadSlashCommand = (fileItem) => {
     const slashCommand = require(`./${fileItem}`);
-    log("Loading: " + slashCommand.data.name);
+    log(`Loading: ${ slashCommand.data.name}`);
     client.slashCommands.set(slashCommand.data.name, slashCommand);
   };
   findJSStartingWith_In_AndDo_("slashCmd", __dirname, loadSlashCommand);
