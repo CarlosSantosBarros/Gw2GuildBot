@@ -1,8 +1,8 @@
 const { memberNicknameMention } = require("@discordjs/builders");
-const DiscordUtils = require("../../../utils/utilsDiscord");
-const { forEachToString } = require("../../../utils/utils");
+const DiscordUtils = require("../../utils/utilsDiscord");
+const { forEachToString } = require("../../utils/utils");
 const utils = new DiscordUtils.GuildUtils();
-const { professionsSettings } = require("../../../config.json");
+const { professionsSettings } = require("../../config.json");
 
 exports.fieldProfession = (professionItem) => {
   const emojiSting = `<:${professionItem.label}:${professionItem.emoji}>`;

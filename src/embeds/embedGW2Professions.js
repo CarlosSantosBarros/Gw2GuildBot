@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const { fieldProfession } = require("./embedComponents/fieldProfession");
-const DiscordUtils = require("../../utils/utilsDiscord");
+const DiscordUtils = require("../utils/utilsDiscord");
 
 // if application dont show guild spesific stuff
 

@@ -1,9 +1,9 @@
 const { MessageEmbed } = require("discord.js");
 const { memberNicknameMention } = require("@discordjs/builders");
-const DiscordUtils = require("../../utils/utilsDiscord");
-const { forEachToString } = require("../../utils/utils");
+const DiscordUtils = require("../utils/utilsDiscord");
+const { forEachToString } = require("../utils/utils");
 const { fieldProfession } = require("./embedComponents/fieldProfession");
-const { rosterSummarySettings, guildSettings } = require("../../config.json");
+const { rosterSummarySettings, guildSettings } = require("../config.json");
 
 exports.embedRosterSummary = (guild) => {
   const utils = new DiscordUtils.GuildUtils();
