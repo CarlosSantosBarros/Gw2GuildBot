@@ -12,6 +12,17 @@ module.exports = {
     log(`Logged in as ${client.user.tag}!`);
     log(`I serve "${client.guilds.cache.size}" servers.`);
     require("../slashCommands/index")(client);
+    require("./interactions/selectMenus/index")(client);
+    require("./interactions/buttons/index")(client);
+    client.professionsData = new Discord.Collection();
+    client.proficiencyData = new Discord.Collection();
+    client.gw2pState = new Discord.Collection();
+    const { professionsData, proficiencyData } = professionsSettings;
+    createCollection(client.professionsData, professionsData);
+    log("Profession data loaded");
+    createCollection(client.proficiencyData, proficiencyData);
+    log("Role data loaded");
+
     setInterval(() => {
       const date = new Date();
       const time = format(date, "HHmm");
@@ -37,12 +48,5 @@ module.exports = {
         });
       }
     }, 60000);
-    client.professionsData = new Discord.Collection();
-    client.proficiencyData = new Discord.Collection();
-    const { professionsData, proficiencyData } = professionsSettings;
-    createCollection(client.professionsData, professionsData);
-    log("Profession data loaded");
-    createCollection(client.proficiencyData, proficiencyData);
-    log("Role data loaded");
   },
 };

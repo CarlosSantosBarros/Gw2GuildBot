@@ -25,7 +25,7 @@ exports.fieldProfession = (professionItem) => {
     ${mentorString ? `**Mentor**: ${mentorString}` : ""}`;
 
   return {
-    name: emojiSting + professionItem.label + emojiSting,
+    name: `${emojiSting} ${professionItem.label} ${emojiSting}`,
     value: fieldValueString,
     inline: true,
   };

@@ -30,3 +30,7 @@ exports.buildButtons = (buttonDataArray, buttonAction) => {
   });
   return buttonArray;
 };
+
+exports.ButtonsGW2Professions = require("./buttons/componentButtonsGW2Professions");
+exports.SelectMenuProfessions = require("./selectMenus/componentSelectMenuProfession");
+exports.SelectMenuProficiency = require("./selectMenus/componentSelectMenuProficiency");

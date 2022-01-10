@@ -1,9 +1,9 @@
-const { embedGuildApplication } = require("./embeds/embedGuildApplication");
-const { menuYesNo } = require("./menus/menuYesNo");
+const { embedGuildApplication } = require("../embeds/embedGuildApplication");
+const { menuYesNo } = require("../menus/menuYesNo");
 const {
   menuIsLegal,
   menuWillRoleSwap,
-} = require("./menus/menuGuildApplication");
+} = require("../menus/menuGuildApplication");
 const { getWorld } = require("../utils/utilsGw2API");
 
 module.exports = class GuildApplication {
@@ -28,7 +28,8 @@ module.exports = class GuildApplication {
         if (collected.customId == "yes") {
           const serverInfo = await getWorld(this.applicationData.server);
           this.applicationData = {
-            ...this.applicationData, server: serverInfo
+            ...this.applicationData,
+            server: serverInfo,
           };
           embedApplication = await embedGuildApplication(
             collected.user,

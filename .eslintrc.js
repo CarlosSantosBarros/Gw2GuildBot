@@ -20,7 +20,7 @@ module.exports = {
     curly: ["error", "multi"],
     "dot-location": ["error", "property"],
     "handle-callback-err": "off",
-    "max-len": ["error", { "code": 80 }],
+    "max-len": ["error", { code: 100 }],
     "max-nested-callbacks": ["error", { max: 4 }],
     "max-statements-per-line": ["error", { max: 2 }],
     "no-console": "off",
@@ -52,6 +52,6 @@ module.exports = {
     yoda: "error",
     "no-unneeded-ternary": "error",
     "no-useless-return": "error",
-    "prefer-template": "error"
+    "prefer-template": "error",
   },
 };

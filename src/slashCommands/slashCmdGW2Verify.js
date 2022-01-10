@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const GW2Player = require("../classes/GW2Player");
-const GW2Professions = require("../classes/GW2Professions");
+const MenuGW2Profession = require("../menus/menuGW2Professions");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -26,27 +26,22 @@ module.exports = {
 
     if (player.getIsMember())
       setTimeout(async () => {
-        const gw2Professions = new GW2Professions(interaction);
-        const playerProfessionSummary = await gw2Professions.embed();
-        const professionesMenu = await gw2Professions.menu();
+        console.log(`Profession command used by ${interaction.user.username}`);
+        const menu = new MenuGW2Profession(interaction);
+        const embeds = menu.getEmbeds();
+        const components = menu.getComponents();
 
-        const collectorMessage = await interaction.editReply({
-          content: "Add classes that you play",
+        await interaction.reply({
           ephemeral: true,
-          components: professionesMenu,
-          embeds: [playerProfessionSummary],
-          fetchReply: true,
+          components: components,
+          embeds: embeds,
         });
-        gw2Professions.controler(collectorMessage);
       }, 1000);
     else
       interaction.member.send({
         content:
           "Thank you for verifying, I see that you are not a guild member, would you like to apply?",
         ephemeral: true,
-        // components: yesno,
-        // embeds: [playerProfessionSummary],
-        fetchReply: true,
       });
   },
 };
