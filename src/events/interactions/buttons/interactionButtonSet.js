@@ -1,5 +1,4 @@
 const MenuGW2Profession = require("../../../menus/menuGW2Professions");
-const { embedGW2Professions } = require("../../../embeds/embedGW2Professions");
 const DiscordUtils = require("../../../utils/utilsDiscord");
 module.exports = {
   customId: "set",
@@ -11,7 +10,7 @@ module.exports = {
       interaction.user.id
     );
     const currentMain = memberUtils.getRoleByColor(proficiency.color);
-    // terrible name "mainInOtherProficiency"
+    // terrible name "mainInOtherSlot"
     const mainInOtherSlot = memberUtils.getRoleByName(profession);
     const newMain = utils.getRoleByNameAndColor(profession, proficiency.color);
 
@@ -20,8 +19,9 @@ module.exports = {
     await memberUtils.addRole(newMain.id);
 
     await interaction.client.gw2pState.delete(interaction.user.id);
-    const menu = new MenuGW2Profession(interaction).buildMenu();
-    const embed = await embedGW2Professions(interaction.member);
-    interaction.update({ embeds: [embed], components: menu });
+    const menu = new MenuGW2Profession(interaction);
+    const components = menu.getComponents();
+    const embeds = menu.getEmbeds();
+    interaction.update({ embeds: embeds, components: components });
   },
 };

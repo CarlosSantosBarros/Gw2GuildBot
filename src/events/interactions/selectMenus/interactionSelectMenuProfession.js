@@ -8,7 +8,7 @@ module.exports = {
       ...currentUser,
       profession: currentValue,
     });
-    const menu = new MenuGW2Profession(interaction).buildMenu();
-    interaction.update({ components: menu });
+    const components = new MenuGW2Profession(interaction).getComponents();
+    interaction.update({ components: components });
   },
 };

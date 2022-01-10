@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const MenuGW2Profession = require("../menus/menuGW2Professions");
-const { embedGW2Professions } = require("../embeds/embedGW2Professions");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,13 +9,14 @@ module.exports = {
 
   async execute(interaction) {
     console.log(`Profession command used by ${interaction.user.username}`);
-    const embed = await embedGW2Professions(interaction.member);
-    const menu = new MenuGW2Profession(interaction).buildMenu();
+    const menu = new MenuGW2Profession(interaction);
+    const embeds = menu.getEmbeds();
+    const components = menu.getComponents();
 
     await interaction.reply({
       ephemeral: true,
-      components: menu,
-      embeds: [embed],
+      components: components,
+      embeds: embeds,
     });
   },
 };

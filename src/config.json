@@ -92,21 +92,21 @@
         "description": "This is the Profession you play the most",
         "value": "main",
         "color": "#3d85c6",
-        "professionCap": 1
+        "max": 1
       },
       {
         "label": "Alternative",
         "description": "These are your next most played Professiones",
         "value": "alt",
         "color": "#6fa8dc",
-        "professionCap": 2
+        "max": 2
       },
       {
         "label": "Learner",
         "description": "These are Professiones you are learning",
         "value": "learn",
         "color": "#9fc5e8",
-        "professionCap": 3
+        "max": 3
       }
     ],
     "mentorColor": "#b45f06"
