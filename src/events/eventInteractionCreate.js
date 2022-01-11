@@ -19,10 +19,11 @@ module.exports = {
         // eslint-disable-next-line no-ex-assign
         errorMsg = "There was an error trying to execute that action!";
       }
-      await interaction.update({
+      await interaction.reply({
         content: errorMsg,
         embeds: [],
         components: [],
+        ephemeral: true,
       });
     }
   },

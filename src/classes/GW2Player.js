@@ -6,26 +6,33 @@ const { guildSettings } = require("../config.json");
 module.exports = class GW2Player {
   constructor(id) {
     this.GW2Player = new InterfaceGW2Player();
-    this.GW2Player.setSelector({ where: { snowflake: id, }, });
+    this.GW2Player.setSelector({ where: { snowflake: id } });
     this.id = id;
     this.playerData;
     this.accountData;
+    this.apiKey;
     this.isMember;
   }
 
-  async verify(key) {
-    let queryKey = key;
+  async getPlayerData() {
     this.playerData = await this.GW2Player.get();
-    if (this.playerData) queryKey = this.playerData.apiKey;
-    this.accountData = await getGW2AccountInfo(queryKey);
-    if (!this.playerData) {
-      await this.GW2Player.create();
-      this.playerData = {
-        accountName: this.accountData.name,
-        apiKey: key,
-      };
-      this.GW2Player.update(this.playerData);
-    }
+    if (this.playerData) this.apiKey = this.playerData.apiKey;
+  }
+
+  async getAccountData() {
+    this.accountData = await getGW2AccountInfo(this.apiKey);
+  }
+
+  async verify(key) {
+    this.apiKey = key;
+    await this.getAccountData();
+    await this.getPlayerData();
+    if (!this.playerData) await this.GW2Player.create();
+    this.playerData = {
+      accountName: this.accountData.name,
+      apiKey: key,
+    };
+    this.GW2Player.update(this.playerData);
 
     if (this.accountData.guilds.includes(guildSettings.gw2GuildId)) {
       const utils = new DiscordUtils.GuildUtils();
@@ -52,7 +59,6 @@ module.exports = class GW2Player {
       wvwRank: this.accountData.wvw_rank,
     };
   }
-
   getIsMember() {
     return this.isMember;
   }
