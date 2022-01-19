@@ -6,7 +6,7 @@ const { fieldProfession } = require("./embedComponents/fieldProfession");
 const { rosterSummarySettings, guildSettings } = require("../../config.json");
 
 exports.embedRosterSummary = (guild) => {
-  const utils = new DiscordUtils.GuildUtils();
+  const utils = new DiscordUtils.ServerUtils();
   const embedObject = new MessageEmbed()
     .setThumbnail(guild.iconURL())
     .setAuthor("Ordo Ab [Chao]")

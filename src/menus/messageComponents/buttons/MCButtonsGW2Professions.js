@@ -16,12 +16,13 @@ const buttonData = [
 
 module.exports = class ButtonsGW2Professions extends MessageActionRow {
   // Refactor-here this can maybe take menu state instead ?
-  constructor(proficiency, profession, memberUtils) {
+  constructor(state, member) {
     super();
-    if (proficiency && profession) {
+    if (state.proficiency && state.profession) {
+      const { proficiency, profession } = state;
       this.buttonAction = "set";
       if (proficiency.value !== "main")
-        this.buttonAction = memberUtils.getRoleByNameAndColor(
+        this.buttonAction = member.getRoleByNameAndColor(
           profession,
           proficiency.color
         )

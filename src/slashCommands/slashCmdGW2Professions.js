@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const MenuGW2Profession = require("../menus/menuGW2Professions");
+const ClassGW2Profession = require("../classes/ClassGW2Profession");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -9,7 +10,10 @@ module.exports = {
 
   async execute(interaction) {
     console.log(`Profession command used by ${interaction.user.username}`);
-    const menu = new MenuGW2Profession(interaction);
+    const member = interaction.member;
+    const user = new ClassGW2Profession(member);
+    user.setEmptyState();
+    const menu = new MenuGW2Profession(member);
     const embeds = menu.getEmbeds();
     const components = menu.getComponents();
 

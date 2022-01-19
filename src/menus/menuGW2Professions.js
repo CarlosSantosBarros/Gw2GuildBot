@@ -1,4 +1,5 @@
 const DiscordUtils = require("../utils/utilsDiscord");
+const { client } = require("../index");
 const {
   ButtonsGW2Professions,
   SelectMenuProfessions,
@@ -8,33 +9,19 @@ const EmbedGW2Professions = require("./embeds/embedGW2Professions");
 const Menu = require("./Menu");
 
 module.exports = class MenuGW2Profession extends Menu {
-  constructor(interaction) {
+  constructor(member) {
     super();
-    this.interaction = interaction;
-    this.availableProfessions = interaction.client.professionsData;
-    this.menuState = this.interaction.client.gw2pState.get(
-      this.interaction.user.id
-    );
-    this.proficiency = this.menuState ? this.menuState.proficiency : null;
-    this.profession = this.menuState ? this.menuState.profession : null;
-    this.memberUtils = new DiscordUtils.MemberUtils(this.interaction.member);
+    this.state = client.gw2pState.get(member.user.id);
+    this.member = new DiscordUtils.MemberUtils(member);
     this.components = [
-      new SelectMenuProficiency(
-        this.proficiency,
-        this.interaction.client.proficiencyData
-      ),
+      new SelectMenuProficiency(this.state, client.proficiencyData),
       new SelectMenuProfessions(
-        this.proficiency,
-        this.profession,
-        this.memberUtils,
-        this.availableProfessions
+        this.state,
+        this.member,
+        client.professionsData
       ),
-      new ButtonsGW2Professions(
-        this.proficiency,
-        this.profession,
-        this.memberUtils
-      ),
+      new ButtonsGW2Professions(this.state, this.member),
     ];
-    this.embeds = [new EmbedGW2Professions(this.interaction.member)];
+    this.embeds = [new EmbedGW2Professions(member)];
   }
 };

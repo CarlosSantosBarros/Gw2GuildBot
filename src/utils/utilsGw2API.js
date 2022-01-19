@@ -5,6 +5,11 @@ const api = client();
 api.debugging(true);
 api.cacheStorage(cacheMemory());
 
+/*
+this could maybe be a class,
+authenticating for every query is probably bad and will get flagged in high trafic moments
+*/
+
 /**
  * Gets Guildwars 2 API key/token information.
  * @param {String} apikey - The api key of the user
@@ -20,7 +25,9 @@ exports.getGW2TokenInfo = async (apikey) => {
       if (result.text) throw result.text;
       returnData = result;
     })
-    .catch((error) => { throw error; });
+    .catch((error) => {
+      throw error;
+    });
   return returnData;
 };
 /**

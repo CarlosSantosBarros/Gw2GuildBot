@@ -1,25 +1,13 @@
 const MenuGW2Profession = require("../../../menus/menuGW2Professions");
-const DiscordUtils = require("../../../utils/utilsDiscord");
+const ClassGW2Profession = require("../../../classes/ClassGW2Profession");
+
 module.exports = {
   customId: "set",
   async execute(interaction) {
-    const memberUtils = new DiscordUtils.MemberUtils(interaction.member);
-    const utils = new DiscordUtils.GuildUtils();
-
-    const { proficiency, profession } = interaction.client.gw2pState.get(
-      interaction.user.id
-    );
-    const currentMain = memberUtils.getRoleByColor(proficiency.color);
-    // terrible name "mainInOtherSlot"
-    const mainInOtherSlot = memberUtils.getRoleByName(profession);
-    const newMain = utils.getRoleByNameAndColor(profession, proficiency.color);
-
-    if (currentMain) await memberUtils.removeRole(currentMain.id);
-    if (mainInOtherSlot) await memberUtils.removeRole(mainInOtherSlot.id);
-    await memberUtils.addRole(newMain.id);
-
-    await interaction.client.gw2pState.delete(interaction.user.id);
-    const menu = new MenuGW2Profession(interaction);
+    const member = interaction.member;
+    const user = new ClassGW2Profession(member);
+    await user.setProfession();
+    const menu = new MenuGW2Profession(member);
     const components = menu.getComponents();
     const embeds = menu.getEmbeds();
     interaction.update({ embeds: embeds, components: components });

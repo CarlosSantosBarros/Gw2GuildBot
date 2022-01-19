@@ -4,9 +4,8 @@ const { guildSettings } = require("../config.json");
  * juicy refactor here
  * base classe to extend/inherit from
  */
-class GuildUtils {
-  constructor(guild) {
-    // this.guild = guild;
+class ServerUtils {
+  constructor() {
     this.guild = guildObject();
   }
   getChannelByNameAndType(textName, type) {
@@ -105,6 +104,6 @@ class MemberUtils {
 }
 
 module.exports = {
-  GuildUtils: GuildUtils,
+  ServerUtils: ServerUtils,
   MemberUtils: MemberUtils,
 };

@@ -1,14 +1,14 @@
 const MenuGW2Profession = require("../../../menus/menuGW2Professions");
+const ClassGW2Profession = require("../../../classes/ClassGW2Profession");
+
 module.exports = {
   customId: "profession",
   async execute(interaction) {
     const currentValue = interaction.values[0];
-    const currentUser = interaction.client.gw2pState.get(interaction.user.id);
-    interaction.client.gw2pState.set(interaction.user.id, {
-      ...currentUser,
-      profession: currentValue,
-    });
-    const components = new MenuGW2Profession(interaction).getComponents();
+    const member = interaction.member;
+    const user = new ClassGW2Profession(member);
+    user.selectProfession(currentValue);
+    const components = new MenuGW2Profession(member).getComponents();
     interaction.update({ components: components });
   },
 };

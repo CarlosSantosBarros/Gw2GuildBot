@@ -1,7 +1,7 @@
 const { memberNicknameMention } = require("@discordjs/builders");
 const DiscordUtils = require("../../../utils/utilsDiscord");
 const { forEachToString } = require("../../../utils/utils");
-const utils = new DiscordUtils.GuildUtils();
+const utils = new DiscordUtils.ServerUtils();
 const { professionsSettings } = require("../../../config.json");
 
 exports.fieldProfession = (professionItem) => {
