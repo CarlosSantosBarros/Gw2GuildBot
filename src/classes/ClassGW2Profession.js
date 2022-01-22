@@ -1,12 +1,12 @@
 const { client } = require("../index");
-const DiscordUtils = require("../utils/utilsDiscord");
+const { ServerUtils, MemberUtils } = require("../utils/");
 
-module.exports = class ClassGW2Profession {
+exports.ClassGW2Profession = class {
   constructor(member) {
-    this.member = new DiscordUtils.MemberUtils(member);
-    this.utils = new DiscordUtils.ServerUtils();
+    this.member = new MemberUtils(member);
+    this.server = new ServerUtils();
     this.userId = member.user.id;
-    this.state = client.gw2pState.get(member.user.id);
+    this.state = client.gw2pState.get(this.userId);
   }
 
   selectProficiency(value) {
@@ -36,7 +36,7 @@ module.exports = class ClassGW2Profession {
     const currentMain = this.member.getRoleByColor(proficiency.color);
     // terrible name "mainInOtherSlot"
     const mainInOtherSlot = this.member.getRoleByName(profession);
-    const newMain = this.utils.getRoleByNameAndColor(
+    const newMain = this.server.getRoleByNameAndColor(
       profession,
       proficiency.color
     );
@@ -54,7 +54,7 @@ module.exports = class ClassGW2Profession {
     const roleInOtherSlot = this.member.getRoleByName(profession);
     if (roleInOtherSlot) await this.member.removeRole(roleInOtherSlot.id);
 
-    const role2Add = this.utils.getRoleByNameAndColor(
+    const role2Add = this.server.getRoleByNameAndColor(
       profession,
       proficiency.color
     );
@@ -64,7 +64,7 @@ module.exports = class ClassGW2Profession {
   }
   async removeProfession() {
     const { proficiency, profession } = this.state;
-    const professionRole = this.utils.getRoleByNameAndColor(
+    const professionRole = this.server.getRoleByNameAndColor(
       profession,
       proficiency.color
     );

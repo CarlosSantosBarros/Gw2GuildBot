@@ -1,5 +1,5 @@
 const MenuGW2Profession = require("../../../menus/menuGW2Professions");
-const ClassGW2Profession = require("../../../classes/ClassGW2Profession");
+const { ClassGW2Profession } = require("../../../classes/ClassGW2Profession");
 
 module.exports = {
   customId: "add",

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const GW2Player = require("../classes/GW2Player");
+const { GW2Player } = require("../classes/GW2Player");
+const { ClassGW2Profession } = require("../classes/ClassGW2Profession");
 const MenuGW2Profession = require("../menus/menuGW2Professions");
 
 module.exports = {
@@ -9,7 +10,7 @@ module.exports = {
     .addStringOption((option) =>
       option
         .setName("key")
-        .setDescription("Key requiers the *account* scope")
+        .setDescription("Key requiers the *account* and *progression* scopes")
         .setRequired(true)
     ),
   guildCommand: true,
@@ -20,12 +21,16 @@ module.exports = {
       ephemeral: true,
     });
     const key = interaction.options.getString("key");
-    const player = new GW2Player(interaction.user.id);
+    const player = new GW2Player(interaction.member);
     await player.verify(key);
 
     if (player.getIsMember()) {
       console.log(`Profession command used by ${interaction.user.username}`);
-      const menu = new MenuGW2Profession(interaction);
+
+      const user = new ClassGW2Profession(interaction.member);
+      user.setEmptyState();
+
+      const menu = new MenuGW2Profession(interaction.member);
       const embeds = menu.getEmbeds();
       const components = menu.getComponents();
 

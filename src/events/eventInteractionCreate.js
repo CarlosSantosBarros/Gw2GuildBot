@@ -18,13 +18,24 @@ module.exports = {
         console.log(error);
         // eslint-disable-next-line no-ex-assign
         errorMsg = "There was an error trying to execute that action!";
+        if (error.content) {
+          if (error.content.text === "Invalid access token")
+            errorMsg =
+              "There is something wrong with the API key you are using";
+          if (error.content.text === "invalid key")
+            errorMsg = "The API key you are using does not exist";
+          else errorMsg = error.content.text;
+        }
       }
-      await interaction.reply({
+      const reply = {
         content: errorMsg,
         embeds: [],
         components: [],
         ephemeral: true,
-      });
+      };
+      if (interaction.isApplicationCommand())
+        await interaction.editReply(reply);
+      else await interaction.update(reply);
     }
   },
 };

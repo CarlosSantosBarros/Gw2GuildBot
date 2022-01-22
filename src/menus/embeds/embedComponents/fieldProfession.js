@@ -1,32 +1,20 @@
-const { memberNicknameMention } = require("@discordjs/builders");
-const DiscordUtils = require("../../../utils/utilsDiscord");
-const { forEachToString } = require("../../../utils/utils");
-const utils = new DiscordUtils.ServerUtils();
-const { professionsSettings } = require("../../../config.json");
+const { ServerUtils } = require("../../../utils/");
+const { toEmoji, getMentorsAsString } = require("../../../utils/utils");
+const { client } = require("../../../index");
 
-exports.fieldProfession = (professionItem) => {
-  const emojiSting = `<:${professionItem.label}:${professionItem.emoji}>`;
-  const mentorRole = utils.getRoleByNameAndColor(
-    professionItem.value,
-    professionsSettings.mentorColor
-  );
-
-  const mentorformat = (item) => {
-    return memberNicknameMention(item.user.id);
-  };
-  const professionMentors = utils.getMembersByRoleId(mentorRole.id);
-  const mentorString = forEachToString(professionMentors, mentorformat);
-
-  const fieldValueString = `**Players**: ${
-    utils.getGuildMembersByRoleName(professionItem.value).size
+module.exports = class FieldProfession {
+  constructor(name) {
+    const profession = client.professionsData.get(name);
+    const emoji = toEmoji(profession);
+    const mentors = getMentorsAsString(profession.value);
+    const server = new ServerUtils();
+    return {
+      name: `${emoji} ${profession.label} ${emoji}`,
+      value: `**Players**: ${server.getPlayers(profession.value)}
+    **Role**: ${profession.description} 
+    **Build:** *[Here](${profession.build})* 
+    ${mentors ? `**Mentor**: ${mentors}` : ""}`,
+      inline: true,
+    };
   }
-    **Role**: ${professionItem.description} 
-    **Build:** *[Here](${professionItem.build})* 
-    ${mentorString ? `**Mentor**: ${mentorString}` : ""}`;
-
-  return {
-    name: `${emojiSting} ${professionItem.label} ${emojiSting}`,
-    value: fieldValueString,
-    inline: true,
-  };
 };

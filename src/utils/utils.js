@@ -1,4 +1,6 @@
 const { format } = require("date-fns");
+const { memberNicknameMention } = require("@discordjs/builders");
+const { ServerUtils } = require("./");
 const { logging } = require("../config.json");
 const { IsSuccessLogging, IsFailureLogging } = logging;
 const fs = require("fs");
@@ -37,4 +39,16 @@ exports.forEachToString = (data, itemFormat) => {
     returnString = returnString.concat(" ", concatString);
   });
   return returnString;
+};
+
+exports.toEmoji = (data) => {
+  return `<:${data.label}:${data.emoji}>`;
+};
+
+exports.getMentorsAsString = (name) => {
+  const mentorformat = (mentor) => {
+    return memberNicknameMention(mentor.user.id);
+  };
+  const server = new ServerUtils();
+  return this.forEachToString(server.getMentorsFor(name), mentorformat);
 };

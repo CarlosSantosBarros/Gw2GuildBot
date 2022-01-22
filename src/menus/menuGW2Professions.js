@@ -1,18 +1,18 @@
-const DiscordUtils = require("../utils/utilsDiscord");
+const Menu = require("./Menu");
 const { client } = require("../index");
+const { MemberUtils } = require("../utils/");
 const {
   ButtonsGW2Professions,
   SelectMenuProfessions,
   SelectMenuProficiency,
 } = require("./messageComponents/");
 const EmbedGW2Professions = require("./embeds/embedGW2Professions");
-const Menu = require("./Menu");
 
 module.exports = class MenuGW2Profession extends Menu {
   constructor(member) {
     super();
     this.state = client.gw2pState.get(member.user.id);
-    this.member = new DiscordUtils.MemberUtils(member);
+    this.member = new MemberUtils(member);
     this.components = [
       new SelectMenuProficiency(this.state, client.proficiencyData),
       new SelectMenuProfessions(
@@ -22,6 +22,6 @@ module.exports = class MenuGW2Profession extends Menu {
       ),
       new ButtonsGW2Professions(this.state, this.member),
     ];
-    this.embeds = [new EmbedGW2Professions(member)];
+    this.embeds = [new EmbedGW2Professions(this.member)];
   }
 };

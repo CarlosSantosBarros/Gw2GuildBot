@@ -1,12 +1,12 @@
 const { MessageEmbed } = require("discord.js");
 const { memberNicknameMention } = require("@discordjs/builders");
-const DiscordUtils = require("../../utils/utilsDiscord");
+const { ServerUtils } = require("../utils/");
 const { forEachToString } = require("../../utils/utils");
 const { fieldProfession } = require("./embedComponents/fieldProfession");
 const { rosterSummarySettings, guildSettings } = require("../../config.json");
 
 exports.embedRosterSummary = (guild) => {
-  const utils = new DiscordUtils.ServerUtils();
+  const server = new ServerUtils();
   const embedObject = new MessageEmbed()
     .setThumbnail(guild.iconURL())
     .setAuthor("Ordo Ab [Chao]")
@@ -18,11 +18,13 @@ exports.embedRosterSummary = (guild) => {
   };
   const membershipFormat = (item) => {
     return `\n ${item.prefixString} ${
-      utils.getMembersByRoleId(item.roleId).size
+      server.getMembersByRoleId(item.roleId).size
     }`;
   };
 
-  const officerCollection = utils.getMembersByRoleId(guildSettings.officerRole);
+  const officerCollection = server.getMembersByRoleId(
+    guildSettings.officerRole
+  );
 
   const officerString = forEachToString(officerCollection, officerFormat);
   const membershipString = forEachToString(

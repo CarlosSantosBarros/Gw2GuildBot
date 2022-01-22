@@ -1,11 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const MenuGW2Profession = require("../menus/menuGW2Professions");
-const ClassGW2Profession = require("../classes/ClassGW2Profession");
+const { ClassGW2Profession } = require("../classes/ClassGW2Profession");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("professions")
-    .setDescription("Add/Remove Professiones that you play"),
+    .setDescription("Add/Remove Professions that you play"),
   guildCommand: true,
 
   async execute(interaction) {
