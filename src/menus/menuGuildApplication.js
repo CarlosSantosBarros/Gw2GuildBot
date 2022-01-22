@@ -1,56 +1,17 @@
-const { MessageActionRow } = require("discord.js");
-const { SelectMenu } = require("./messageComponents");
+const Menu = require("./Menu");
+const { client } = require("../index");
+const {
+  SelectMenuWillRoleSwap,
+  SelectMenuIsLegal,
+} = require("./messageComponents/");
+const EmbedGuildApplication = require("./embeds/embedGuildApplication");
 
-const dataIsLegal = [
-  {
-    label: "Yes",
-    description: "Yes I am 18 or older",
-    value: "Yes",
-  },
-  {
-    label: "No",
-    description: "No I am younger than 18",
-    value: "No",
-  },
-];
-
-const dataWillRoleSwap = [
-  {
-    label: "Yes",
-    description: "Yes I'm willing to roleswap",
-    value: "Yes",
-  },
-  {
-    label: "No",
-    description: "No I'm not willing to roleswap",
-    value: "No",
-  },
-];
-
-exports.menuIsLegal = () => {
-  return [
-    new MessageActionRow().addComponents(
-      new SelectMenu({
-          customId: "isLegal",
-          placeholder: "Are you 18 or older?",
-        },
-        dataIsLegal,
-        null
-      )
-    ),
-  ];
-};
-
-exports.menuWillRoleSwap = () => {
-  return [
-    new MessageActionRow().addComponents(
-      new SelectMenu({
-          customId: "willRoleSwap",
-          placeholder: "Are you willing to play other classes or builds?",
-        },
-        dataWillRoleSwap,
-        null
-      )
-    ),
-  ];
+module.exports = class MenuGuildApplication extends Menu {
+  constructor(member) {
+    super();
+    this.state = client.guildAppState.get(member.user.id);
+    this.components = [new SelectMenuIsLegal(), new SelectMenuWillRoleSwap()];
+    this.embeds = [new EmbedGuildApplication(member.user, this.state)];
+    console.log(this.state);
+  }
 };

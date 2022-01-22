@@ -31,6 +31,8 @@ exports.buildButtons = (buttonDataArray, buttonAction) => {
   return buttonArray;
 };
 
-exports.ButtonsGW2Professions = require("./buttons/componentButtonsGW2Professions");
-exports.SelectMenuProfessions = require("./selectMenus/componentSelectMenuProfession");
-exports.SelectMenuProficiency = require("./selectMenus/componentSelectMenuProficiency");
+exports.ButtonsGW2Professions = require("./buttons/MCButtonsGW2Professions");
+exports.SelectMenuProfessions = require("./selectMenus/MCSelectMenuProfession");
+exports.SelectMenuProficiency = require("./selectMenus/MCSelectMenuProficiency");
+exports.SelectMenuWillRoleSwap = require("./selectMenus/MCSelectMenuWillRoleSwap");
+exports.SelectMenuIsLegal = require("./selectMenus/MCSelectMenuIsLegal");

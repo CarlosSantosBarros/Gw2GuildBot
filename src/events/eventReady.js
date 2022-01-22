@@ -17,6 +17,7 @@ module.exports = {
     client.professionsData = new Discord.Collection();
     client.proficiencyData = new Discord.Collection();
     client.gw2pState = new Discord.Collection();
+    client.guildAppState = new Discord.Collection();
     const { professionsData, proficiencyData } = professionsSettings;
     createCollection(client.professionsData, professionsData);
     log("Profession data loaded");
