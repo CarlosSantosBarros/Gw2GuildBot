@@ -13,7 +13,10 @@ clientIntents.add(
   Intents.FLAGS.DIRECT_MESSAGES,
   Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
 );
-exports.client = new Client({ intents: clientIntents });
+exports.client = new Client({
+  intents: clientIntents,
+  partials: ["MESSAGE", "CHANNEL", "REACTION"],
+});
 require("./events/index.js")(this.client);
 
 const config = require("./config.json");

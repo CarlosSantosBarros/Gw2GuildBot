@@ -1,26 +1,22 @@
-const { prefix } = require("../config.json");
+const ClassGuildApplication = require("../classes/ClassGuildApplication");
+const MenuGuildApplication = require("../menus/menuGuildApplication");
+const { ServerUtils } = require("../utils");
 
 module.exports = {
   name: "messageCreate",
   once: false,
   async execute(message) {
-    try {
-      if (!message.content.startsWith(prefix) || message.author.bot) return;
-      const { isValidCommand, isValidArgs } =
-        await require("../utils/utilsTextCommands")(message);
-      const commandName = message.content
-        .slice(prefix.length)
-        .split(/ +/)[0]
-        .toLowerCase();
-      const command = await isValidCommand(commandName);
-      const args = await isValidArgs(command);
-      await command.execute(message, args);
-    } catch (error) {
-      if (typeof error === "object") {
-        console.log(error);
-        error = "There was an error trying to execute that command!";
+    const server = new ServerUtils();
+    const appChan = server.getApplicationChan();
+    if (!message.author.bot) {
+      const application = new ClassGuildApplication(message.author);
+      if (application.hasDoneProfs() && message.channel.type === "DM") {
+        application.setPersonalMessage(message.content);
+        const member = server.getMemberById(message.author.id);
+        const menu = new MenuGuildApplication(member);
+        const embeds = menu.getEmbeds();
+        appChan.send({ embeds: embeds });
       }
-      message.reply(error);
-    }
+    } else if (message.channel == appChan) message.react("👍");
   },
 };

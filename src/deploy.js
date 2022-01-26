@@ -18,7 +18,7 @@ const guildId = "294892279322378240";
 for (const file of commandFiles) {
   const command = require(`./slashCommands/${file}`);
   if (!command.guildCommand) {
-    log("Deploying Global command: " + command.data.name);
+    log(`Deploying Global command: ${command.data.name}`);
     commands.push(command.data.toJSON());
   }
 }

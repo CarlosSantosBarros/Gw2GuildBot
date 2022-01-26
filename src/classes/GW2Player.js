@@ -12,7 +12,6 @@ exports.GW2Player = class {
     this.playerData;
     this.accountData;
     this.apiKey;
-    this.isMember;
   }
 
   async getPlayerData() {
@@ -40,16 +39,14 @@ exports.GW2Player = class {
 
     if (this.accountData.guilds.includes(guildSettings.gw2GuildId)) {
       await this.member.addMemberRole();
-      this.isMember = true;
 
       // Refactor here, extract to be used for auto role update
       const guildInfo = await getGW2GuildInfo();
       // filter() or find() here
       guildInfo.every(async (guildMember) => {
-        if (guildMember.name == this.accountData.name) {
-          const rankRole = server.getRoleByName(guildMember.rank);
-          await this.member.addRole(rankRole.id);
-        }
+        if (guildMember.name != this.accountData.name) return;
+        const rankRole = server.getRoleByName(guildMember.rank);
+        await this.member.addRole(rankRole.id);
       });
     } else await this.member.addVerifiedRole();
   }
@@ -62,8 +59,5 @@ exports.GW2Player = class {
       server: this.accountData.world,
       wvwRank: this.accountData.wvw_rank,
     };
-  }
-  getIsMember() {
-    return this.member.isMember();
   }
 };

@@ -5,7 +5,7 @@ module.exports = {
   async execute(interaction) {
     const isLegal = interaction.values[0];
     const member = interaction.member;
-    const stateClass = new ClassGuildApplication(member);
+    const stateClass = new ClassGuildApplication(member.user);
     stateClass.selectIsLegal(isLegal);
 
     const menu = new MenuGuildApplication(member);

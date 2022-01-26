@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const MenuGuildApplication = require("../menus/menuGuildApplication");
-const GW2Player = require("../classes/GW2Player");
+const { GW2Player } = require("../classes/GW2Player");
 const { getWorld } = require("../utils/utilsGw2API");
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
       ephemeral: true,
     });
 
-    const player = new GW2Player(interaction.user.id);
+    const player = new GW2Player(interaction.member);
     await player.getPlayerData();
     await player.setAccountData();
     const accountData = player.getAccountData();

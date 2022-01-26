@@ -20,6 +20,13 @@ exports.ServerUtils = class extends RoleUtils {
       (channel) => channel.name === textName && channel.type === type
     );
   }
+  getChannelById(id) {
+    return this.guild.channels.cache.find((channel) => channel.id === id);
+  }
+
+  getMemberById(id) {
+    return this.guild.members.cache.find((member) => member.user.id === id);
+  }
 
   getRoleByPermissions(permission) {
     return this.roles.cache.find((role) => !role.permissions.has(permission));
@@ -27,6 +34,10 @@ exports.ServerUtils = class extends RoleUtils {
 
   getMembers() {
     return this.getByRoleId(guildSettings.memberRole).members;
+  }
+
+  getApplicationChan() {
+    return this.getChannelById(guildSettings.applicationChannel);
   }
 
   getMentorsFor(value) {

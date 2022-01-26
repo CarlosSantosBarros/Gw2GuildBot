@@ -14,6 +14,7 @@ module.exports = {
     require("../slashCommands/index")(client);
     require("./interactions/selectMenus/index")(client);
     require("./interactions/buttons/index")(client);
+    require("../events/reactions/index")(client);
     client.professionsData = new Discord.Collection();
     client.proficiencyData = new Discord.Collection();
     client.gw2pState = new Discord.Collection();

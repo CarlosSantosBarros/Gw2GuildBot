@@ -36,3 +36,4 @@ exports.SelectMenuProfessions = require("./selectMenus/MCSelectMenuProfession");
 exports.SelectMenuProficiency = require("./selectMenus/MCSelectMenuProficiency");
 exports.SelectMenuWillRoleSwap = require("./selectMenus/MCSelectMenuWillRoleSwap");
 exports.SelectMenuIsLegal = require("./selectMenus/MCSelectMenuIsLegal");
+exports.ButtonsGuildApplication = require("./buttons/MCButtonsGuildApplication");

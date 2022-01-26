@@ -3,15 +3,22 @@ const { client } = require("../index");
 const {
   SelectMenuWillRoleSwap,
   SelectMenuIsLegal,
+  ButtonsGuildApplication,
 } = require("./messageComponents/");
 const EmbedGuildApplication = require("./embeds/embedGuildApplication");
+const { MemberUtils } = require("../utils");
 
 module.exports = class MenuGuildApplication extends Menu {
   constructor(member) {
     super();
     this.state = client.guildAppState.get(member.user.id);
-    this.components = [new SelectMenuIsLegal(), new SelectMenuWillRoleSwap()];
-    this.embeds = [new EmbedGuildApplication(member.user, this.state)];
+    this.components = [
+      new SelectMenuIsLegal(),
+      new SelectMenuWillRoleSwap(),
+      new ButtonsGuildApplication(this.state),
+    ];
+    this.member = new MemberUtils(member);
+    this.embeds = [new EmbedGuildApplication(this.member, this.state)];
     console.log(this.state);
   }
 };
