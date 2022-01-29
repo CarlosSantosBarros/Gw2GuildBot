@@ -15,7 +15,7 @@ module.exports = class MenuGuildApplication extends Menu {
     this.components = [
       new SelectMenuIsLegal(),
       new SelectMenuWillRoleSwap(),
-      new ButtonsGuildApplication(this.state),
+      new ButtonsGuildApplication(this.state.application),
     ];
     this.member = new MemberUtils(member);
     this.embeds = [new EmbedGuildApplication(this.member, this.state)];

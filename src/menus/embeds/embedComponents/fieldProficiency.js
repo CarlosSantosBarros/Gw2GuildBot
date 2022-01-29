@@ -9,7 +9,8 @@ module.exports = class FieldProficiency {
         ? `You do not have a ${proficiency.label}`
         : `Your ${proficiency.label} (${proficiencies.size}/${proficiency.max})`;
     let body = "-----------------";
-    if (!isMember) body = getProfessionsAsString(proficiencies);
+    if (!isMember && proficiencies.size != 0)
+      body = getProfessionsAsString(proficiencies);
 
     return {
       name: `${fieldHeading}`,

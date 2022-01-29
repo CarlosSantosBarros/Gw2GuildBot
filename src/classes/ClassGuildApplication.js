@@ -21,7 +21,10 @@ Feel free to reapply if/when the circumstances change`,
     this.meetsRequirement(value);
     client.guildAppState.set(this.userId, {
       ...this.state,
-      isLegal: value,
+      application: {
+        ...this.state.application,
+        isLegal: value,
+      },
     });
   }
 
@@ -29,14 +32,20 @@ Feel free to reapply if/when the circumstances change`,
     this.meetsRequirement(value);
     client.guildAppState.set(this.userId, {
       ...this.state,
-      willRoleSwap: value,
+      application: {
+        ...this.state.application,
+        willRoleSwap: value,
+      },
     });
   }
 
   async setHasDoneProfs(interaction) {
     client.guildAppState.set(this.userId, {
       ...this.state,
-      hasDoneProfs: true,
+      application: {
+        ...this.state.application,
+        hasDoneProfs: true,
+      },
     });
     await interaction.followUp({
       content: "You will shortly receive a Message from me...",
@@ -48,13 +57,16 @@ Feel free to reapply if/when the circumstances change`,
     });
   }
   hasDoneProfs() {
-    if (!this.state) return false;
-    return this.state.hasDoneProfs;
+    if (!this.state.application) return false;
+    return this.state.application.hasDoneProfs;
   }
   setPersonalMessage(message) {
     client.guildAppState.set(this.userId, {
       ...this.state,
-      personalMessage: message,
+      application: {
+        ...this.state.application,
+        personalMessage: message,
+      },
     });
   }
 };

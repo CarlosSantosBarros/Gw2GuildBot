@@ -20,10 +20,13 @@ module.exports = {
     await player.setAccountData();
     const accountData = player.getAccountData();
     // move into application class ----
-    const serverInfo = await getWorld(accountData.server);
+    const serverInfo = await getWorld(accountData.application.server);
     interaction.client.guildAppState.set(interaction.user.id, {
       ...accountData,
-      server: serverInfo,
+      application: {
+        ...accountData.application,
+        server: serverInfo,
+      },
     });
     //  -----
     const menu = new MenuGuildApplication(interaction);

@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { GW2Player } = require("../classes/GW2Player");
 const { ClassGW2Profession } = require("../classes/ClassGW2Profession");
 const MenuGW2Profession = require("../menus/menuGW2Professions");
+const { MemberUtils } = require("../utils/");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -24,7 +25,8 @@ module.exports = {
     const player = new GW2Player(interaction.member);
     await player.verify(key);
 
-    if (player.getIsMember()) {
+    const member = new MemberUtils(interaction.member);
+    if (member.isMember()) {
       console.log(`Profession command used by ${interaction.user.username}`);
 
       const user = new ClassGW2Profession(interaction.member);

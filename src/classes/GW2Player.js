@@ -56,8 +56,10 @@ exports.GW2Player = class {
     return {
       snowflake: this.id,
       accountName: this.accountData.name,
-      server: this.accountData.world,
-      wvwRank: this.accountData.wvw_rank,
+      application: {
+        server: this.accountData.world,
+        wvwRank: this.accountData.wvw_rank,
+      },
     };
   }
 };

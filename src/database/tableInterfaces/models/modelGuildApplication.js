@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define("GuildApplication", {
     applicationId: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      unique: true,
     },
     snowflake: {
       type: DataTypes.STRING,
@@ -10,20 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     accountName: {
       type: DataTypes.STRING,
     },
-    server: {
-      type: DataTypes.STRING,
-    },
-    wvwRank: {
-      type: DataTypes.STRING,
-    },
-    isLegal: {
-      type: DataTypes.STRING,
-    },
-    willRoleSwap: {
-      type: DataTypes.STRING,
-    },
-    personalMessage: {
-      type: DataTypes.STRING(2000),
+    application: {
+      type: DataTypes.JSON,
     },
     applicationStatus: {
       type: DataTypes.JSON,
