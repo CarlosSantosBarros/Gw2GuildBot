@@ -6,6 +6,7 @@ module.exports = class ClassGuildApplication {
     this.state = client.guildAppState.get(this.userId);
   }
 
+  // Refactor - move message to config
   meetsRequirement(value) {
     if (value == "No")
       throw {
@@ -51,6 +52,7 @@ Feel free to reapply if/when the circumstances change`,
       content: "You will shortly receive a Message from me...",
       ephemeral: true,
     });
+    // Refactor - move message to config
     interaction.member.send({
       content: `For the last part of your application, tell us anything about yourself you want us to know.
 (play style, experience, what you are looking for from the guild, irl info or anything else).`,

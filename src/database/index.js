@@ -1,2 +1,2 @@
-module.exports = require("./tableInterfaces/interfaceGW2Player");
-module.exports = require("./tableInterfaces/interfaceGuildApplication");
+exports.InterfaceGW2Player = require("./tableInterfaces/interfaceGW2Player");
+exports.InterfaceGuildApplication = require("./tableInterfaces/interfaceGuildApplication");

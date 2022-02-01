@@ -1,5 +1,5 @@
 const { getGW2AccountInfo, getGW2GuildInfo } = require("../utils/utilsGw2API");
-const InterfaceGW2Player = require("../database");
+const { InterfaceGW2Player } = require("../database");
 const { ServerUtils, MemberUtils } = require("../utils/");
 const { guildSettings } = require("../config.json");
 
