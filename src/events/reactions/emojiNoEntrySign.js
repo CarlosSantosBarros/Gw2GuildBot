@@ -1,5 +1,5 @@
 const { ServerUtils } = require("../../utils");
-const InterfaceGuildApplication = require("../../database/");
+const { InterfaceGuildApplication } = require("../../database/");
 module.exports = {
   name: "🚫",
   async execute(messageReaction, user) {

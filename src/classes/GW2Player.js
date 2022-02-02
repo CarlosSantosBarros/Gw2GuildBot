@@ -3,6 +3,7 @@ const { InterfaceGW2Player } = require("../database");
 const { ServerUtils, MemberUtils } = require("../utils/");
 const { guildSettings } = require("../config.json");
 
+// refactor - maybe extend db interface
 exports.GW2Player = class {
   constructor(member) {
     this.member = new MemberUtils(member);

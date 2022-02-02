@@ -9,8 +9,8 @@ module.exports = class Interface {
     this.querySelector = selector;
   }
 
-  async getAll() {
-    return await this.interfaceModel.findAll();
+  async getAll(query) {
+    return await this.interfaceModel.findAll(query);
   }
 
   async get() {

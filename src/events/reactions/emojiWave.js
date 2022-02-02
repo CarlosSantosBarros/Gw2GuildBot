@@ -4,6 +4,6 @@ module.exports = {
   async execute(messageReaction, user) {
     const server = new ServerUtils();
     const appChan = server.getApplicationChan();
-    if (messageReaction.message.channel == appChan) console.log("denied");
+    if (messageReaction.message.channel == appChan) console.log("left");
   },
 };

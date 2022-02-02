@@ -29,6 +29,8 @@ module.exports = {
       },
     });
     //  -----
+
+    // something is wrong here, should pass member not interaction
     const menu = new MenuGuildApplication(interaction);
     const components = menu.getComponents();
     const embeds = menu.getEmbeds();
