@@ -6,8 +6,8 @@ module.exports = {
   async execute(interaction) {
     const member = interaction.member;
     const user = new ClassGW2Profession(member);
-    user.setEmptyState();
-    const menu = new MenuGW2Profession(member);
+    const state = user.setEmptyState();
+    const menu = new MenuGW2Profession(member, state);
     const components = menu.getComponents();
     const embeds = menu.getEmbeds();
     interaction.update({ embeds: embeds, components: components });

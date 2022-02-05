@@ -1,4 +1,4 @@
-const { log } = require("../../../utils/utils");
+const { log } = require("../../../../utils/utils");
 const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize("database", "user", "password", {
@@ -6,7 +6,7 @@ const sequelize = new Sequelize("database", "user", "password", {
   dialect: "sqlite",
   logging: console.log,
   // SQLite only
-  storage: "./src/database/database.sqlite",
+  storage: "./src/classes/database/database.sqlite",
 });
 
 (async () => {

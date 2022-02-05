@@ -9,18 +9,13 @@ const {
 const EmbedGW2Professions = require("./embeds/embedGW2Professions");
 
 module.exports = class MenuGW2Profession extends Menu {
-  constructor(member) {
+  constructor(member, state) {
     super();
-    this.state = client.gw2pState.get(member.user.id);
     this.member = new MemberUtils(member);
     this.components = [
-      new SelectMenuProficiency(this.state, client.proficiencyData),
-      new SelectMenuProfessions(
-        this.state,
-        this.member,
-        client.professionsData
-      ),
-      new ButtonsGW2Professions(this.state, this.member),
+      new SelectMenuProficiency(state, client.proficiencyData),
+      new SelectMenuProfessions(state, this.member, client.professionsData),
+      new ButtonsGW2Professions(state, this.member),
     ];
     this.embeds = [new EmbedGW2Professions(this.member)];
   }

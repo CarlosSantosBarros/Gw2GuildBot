@@ -1,7 +1,7 @@
 const { ServerUtils } = require("../../utils");
 const ClassGuildApplication = require("../../classes/ClassGuildApplication");
 const MenuGuildApplication = require("../../menus/menuGuildApplication");
-const { InterfaceGuildApplication } = require("../../database/");
+const { InterfaceGuildApplication } = require("../../classes/database");
 const { client } = require("../../index");
 
 module.exports = {

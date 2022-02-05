@@ -1,9 +1,11 @@
 const { getGW2AccountInfo, getGW2GuildInfo } = require("../utils/utilsGw2API");
-const { InterfaceGW2Player } = require("../database");
+const { InterfaceGW2Player } = require("./database");
 const { ServerUtils, MemberUtils } = require("../utils/");
 const { guildSettings } = require("../config.json");
 
 // refactor - maybe extend db interface
+// or maybe extend the api util as a class and have that extend the db interface?
+// refactor - maybe param should be Id/snowflake
 exports.GW2Player = class {
   constructor(member) {
     this.member = new MemberUtils(member);
@@ -23,7 +25,7 @@ exports.GW2Player = class {
   async setAccountData() {
     this.accountData = await getGW2AccountInfo(this.apiKey);
   }
-
+  // refactor - this is messy
   async verify(key) {
     this.apiKey = key;
     await this.setAccountData();

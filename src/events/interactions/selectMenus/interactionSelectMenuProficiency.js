@@ -7,8 +7,8 @@ module.exports = {
     const currentValue = interaction.values[0];
     const member = interaction.member;
     const user = new ClassGW2Profession(member);
-    user.selectProficiency(currentValue);
-    const components = new MenuGW2Profession(member).getComponents();
+    const state = user.selectProficiency(currentValue);
+    const components = new MenuGW2Profession(member, state).getComponents();
     interaction.update({ components: components });
   },
 };

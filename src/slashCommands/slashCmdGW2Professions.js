@@ -12,8 +12,8 @@ module.exports = {
     console.log(`Profession command used by ${interaction.user.username}`);
     const member = interaction.member;
     const user = new ClassGW2Profession(member);
-    user.setEmptyState();
-    const menu = new MenuGW2Profession(member);
+    const state = user.setEmptyState();
+    const menu = new MenuGW2Profession(member, state);
     const embeds = menu.getEmbeds();
     const components = menu.getComponents();
 

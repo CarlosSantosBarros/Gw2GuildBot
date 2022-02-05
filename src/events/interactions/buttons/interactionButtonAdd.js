@@ -7,7 +7,8 @@ module.exports = {
     const member = interaction.member;
     const user = new ClassGW2Profession(member);
     await user.addProfession();
-    const menu = new MenuGW2Profession(member);
+    const state = user.getState();
+    const menu = new MenuGW2Profession(member, state);
     const components = menu.getComponents();
     const embeds = menu.getEmbeds();
     interaction.update({ embeds: embeds, components: components });

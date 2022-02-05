@@ -8,7 +8,8 @@ module.exports = {
   guildCommand: true,
 
   async execute(interaction) {
-    const embeds = new MenuGW2Profession.getEmbeds();
+    // refactor - this is broken
+    const embeds = new MenuGW2Profession().getEmbeds();
     await interaction.reply({
       embeds: embeds,
       ephemeral: false,
