@@ -1,49 +1,34 @@
-const { getGW2AccountInfo, getGW2GuildInfo } = require("../utils/utilsGw2API");
+const { getGW2GuildInfo } = require("../utils/utilsGw2API");
 const { InterfaceGW2Player } = require("./database");
 const { ServerUtils, MemberUtils } = require("../utils/");
 const { guildSettings } = require("../config.json");
 
-// refactor - maybe extend db interface
 // or maybe extend the api util as a class and have that extend the db interface?
 // refactor - maybe param should be Id/snowflake
-exports.GW2Player = class {
+exports.GW2Player = class extends InterfaceGW2Player {
   constructor(member) {
+    super(member.user.id);
     this.member = new MemberUtils(member);
-    this.id = member.user.id;
-    this.GW2Player = new InterfaceGW2Player();
-    this.GW2Player.setSelector({ where: { snowflake: this.id } });
-    this.playerData;
-    this.accountData;
-    this.apiKey;
   }
 
-  async getPlayerData() {
-    this.playerData = await this.GW2Player.get();
-    if (this.playerData) this.apiKey = this.playerData.apiKey;
+  async init() {
+    await this.getPlayerData();
+    await this.getAccountData();
   }
 
-  async setAccountData() {
-    this.accountData = await getGW2AccountInfo(this.apiKey);
-  }
-  // refactor - this is messy
   async verify(key) {
     this.apiKey = key;
-    await this.setAccountData();
+    await this.getAccountData();
     if (!this.accountData.wvw_rank)
       throw "This key is missing the *progression* scope";
-    await this.getPlayerData();
-    if (!this.playerData) await this.GW2Player.create();
-    this.playerData = {
-      accountName: this.accountData.name,
-      apiKey: key,
-    };
-    this.GW2Player.update(this.playerData);
+    this.updatePlayer();
+
     const server = new ServerUtils();
 
     if (this.accountData.guilds.includes(guildSettings.gw2GuildId)) {
       await this.member.addMemberRole();
 
-      // Refactor here, extract to be used for auto role update
+      // Refactor - extract to be used for auto role update
       const guildInfo = await getGW2GuildInfo();
       // filter() or find() here
       guildInfo.every(async (guildMember) => {
@@ -54,7 +39,7 @@ exports.GW2Player = class {
     } else await this.member.addVerifiedRole();
   }
 
-  getAccountData() {
+  getApplicationData() {
     console.log(this.accountData);
     return {
       snowflake: this.id,

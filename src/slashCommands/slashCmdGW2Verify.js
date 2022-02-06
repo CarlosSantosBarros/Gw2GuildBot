@@ -31,7 +31,6 @@ module.exports = {
 
       const user = new ClassGW2Profession(interaction.member);
       const state = user.setEmptyState();
-
       const menu = new MenuGW2Profession(interaction.member, state);
       const embeds = menu.getEmbeds();
       const components = menu.getComponents();

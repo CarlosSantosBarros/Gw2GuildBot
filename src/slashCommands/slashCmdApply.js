@@ -16,9 +16,9 @@ module.exports = {
     });
 
     const player = new GW2Player(interaction.member);
-    await player.getPlayerData();
-    await player.setAccountData();
-    const accountData = player.getAccountData();
+    await player.init();
+    const accountData = player.getApplicationData();
+
     // move into application class ----
     const serverInfo = await getWorld(accountData.application.server);
     interaction.client.guildAppState.set(interaction.user.id, {
@@ -30,8 +30,7 @@ module.exports = {
     });
     //  -----
 
-    // something is wrong here, should pass member not interaction
-    const menu = new MenuGuildApplication(interaction);
+    const menu = new MenuGuildApplication(interaction.member);
     const components = menu.getComponents();
     const embeds = menu.getEmbeds();
     await interaction.editReply({

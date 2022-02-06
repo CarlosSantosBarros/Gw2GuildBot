@@ -30,6 +30,15 @@ module.exports = class Interface {
       });
   }
 
+  async findOrCreate() {
+    return await this.interfaceModel
+      .findOrCreate(this.querySelector.where)
+      .catch((error) => {
+        if (error instanceof UniqueConstraintError)
+          throw "Entry already exists";
+      });
+  }
+
   async update(newValue) {
     return await this.interfaceModel.update(newValue, this.querySelector);
   }
