@@ -3,7 +3,6 @@ const { InterfaceGW2Player } = require("./database");
 const { ServerUtils, MemberUtils } = require("../utils/");
 const { guildSettings } = require("../config.json");
 
-// or maybe extend the api util as a class and have that extend the db interface?
 // refactor - maybe param should be Id/snowflake
 exports.GW2Player = class extends InterfaceGW2Player {
   constructor(member) {
@@ -28,7 +27,7 @@ exports.GW2Player = class extends InterfaceGW2Player {
     if (this.accountData.guilds.includes(guildSettings.gw2GuildId)) {
       await this.member.addMemberRole();
 
-      // Refactor - extract to be used for auto role update
+      // Refactor - extract to be used for auto role update ---
       const guildInfo = await getGW2GuildInfo();
       // filter() or find() here
       guildInfo.every(async (guildMember) => {
@@ -36,6 +35,7 @@ exports.GW2Player = class extends InterfaceGW2Player {
         const rankRole = server.getRoleByName(guildMember.rank);
         await this.member.addRole(rankRole.id);
       });
+      // -----------------------------------------------------
     } else await this.member.addVerifiedRole();
   }
 

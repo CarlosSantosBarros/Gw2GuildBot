@@ -24,5 +24,3 @@ exports.ModelGuildApplication = require("./modelGuildApplication")(
   sequelize,
   DataTypes
 );
-// exports.ModelUser = require("./modelUser")(sequelize, DataTypes);
-// exports.ModelDiscordGuild = require("./modelGuild")(sequelize, DataTypes);

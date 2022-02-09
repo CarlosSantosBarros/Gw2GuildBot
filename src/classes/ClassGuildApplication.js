@@ -1,74 +1,35 @@
-const { client } = require("../index");
+const StateGuildApplication = require("./state/StateGuildApplication");
 
-module.exports = class ClassGuildApplication {
+exports.ClassGuildApplication = class extends StateGuildApplication {
   constructor(user) {
-    this.userId = user.id;
-    this.state = client.guildAppState.get(this.userId);
+    super(user.id);
+  }
+  //
+
+  async submit(msgId) {
+    const app = this.getAppState();
+    this.selectApplication(msgId);
+    await this.create();
+    await this.update(app);
+    this.removeState(this.userId);
   }
 
-  // Refactor - move message to config
-  meetsRequirement(value) {
-    if (value == "No")
-      throw {
-        content: {
-          text: `Unfortunately this is a requirement to join the guild.
-Failure to meet this criteria means you have been unsuccessful in your application.
-Feel free to reapply if/when the circumstances change`,
-        },
-      };
+  async onGuildText(message) {
+    this.getAppStatus();
+    if (!this.state) return await message.delete();
+    this.setApplicationReason(message.content);
   }
-
-  selectIsLegal(value) {
-    this.meetsRequirement(value);
-    client.guildAppState.set(this.userId, {
-      ...this.state,
-      application: {
-        ...this.state.application,
-        isLegal: value,
-      },
-    });
-  }
-
-  selectWillRoleSwap(value) {
-    this.meetsRequirement(value);
-    client.guildAppState.set(this.userId, {
-      ...this.state,
-      application: {
-        ...this.state.application,
-        willRoleSwap: value,
-      },
-    });
-  }
-
-  async setHasDoneProfs(interaction) {
-    client.guildAppState.set(this.userId, {
-      ...this.state,
-      application: {
-        ...this.state.application,
-        hasDoneProfs: true,
-      },
-    });
-    await interaction.followUp({
-      content: "You will shortly receive a Message from me...",
-      ephemeral: true,
-    });
-    // Refactor - move message to config
-    interaction.member.send({
-      content: `For the last part of your application, tell us anything about yourself you want us to know.
-(play style, experience, what you are looking for from the guild, irl info or anything else).`,
-    });
-  }
-  hasDoneProfs() {
-    if (!this.state.application) return false;
-    return this.state.application.hasDoneProfs;
-  }
-  setPersonalMessage(message) {
-    client.guildAppState.set(this.userId, {
-      ...this.state,
-      application: {
-        ...this.state.application,
-        personalMessage: message,
-      },
-    });
+  async onWhiteCheckMark(message) {
+    const app = this.getAppStatus();
+    let appId = message.id;
+    let reason = "Met requirements";
+    if (app) {
+      appId = app.appId;
+      reason = app.applicationStatus.reason;
+      await message.delete();
+    }
+    this.selectApplication(appId);
+    this.accept(reason);
+    this.removeStatus(this.userId);
   }
 };

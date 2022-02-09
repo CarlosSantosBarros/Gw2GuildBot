@@ -2,11 +2,6 @@ const { client } = require("..");
 const { guildSettings, professionsSettings } = require("../config.json");
 const { RoleUtils } = require("./utilsRole");
 
-/**
- * juicy refactor here
- * base classe to extend/inherit from
- * extend discord guild class
- */
 exports.ServerUtils = class extends RoleUtils {
   constructor() {
     super();
@@ -15,9 +10,9 @@ exports.ServerUtils = class extends RoleUtils {
     );
     this.roles = this.guild.roles;
   }
-  getChannelByNameAndType(textName, type) {
+  getChannelByNameAndType(name, type) {
     return this.guild.channels.cache.find(
-      (channel) => channel.name === textName && channel.type === type
+      (channel) => channel.name === name && channel.type === type
     );
   }
   getChannelById(id) {
@@ -33,17 +28,25 @@ exports.ServerUtils = class extends RoleUtils {
   }
 
   getMembers() {
-    return this.getByRoleId(guildSettings.memberRole).members;
+    return this.getRoleById(guildSettings.memberRole).members;
   }
 
   getApplicationChan() {
     return this.getChannelById(guildSettings.applicationChannel);
   }
 
+  isApplicationChan(value) {
+    if (value == this.getChannelById(guildSettings.applicationChannel))
+      return true;
+    return false;
+  }
+
   getMentorsFor(value) {
     return this.getRoleByNameAndColor(value, professionsSettings.mentorColor)
       .members;
   }
+
+  // refactor - 2 finds inside of a filter is maybe bad
   getPlayers(value) {
     return this.guild.members.cache.filter(
       (member) =>
