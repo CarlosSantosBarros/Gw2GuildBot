@@ -6,9 +6,7 @@ module.exports = {
     if (user.bot) return;
     const collection = client.emoji;
     const key = messageReaction.emoji.name;
-    console.log(key);
     if (!collection.has(key)) return;
-    console.log(`Reaction ${key}`);
     await collection.get(key).execute(messageReaction, user);
   },
 };

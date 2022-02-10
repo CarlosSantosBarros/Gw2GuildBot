@@ -12,7 +12,7 @@ module.exports = {
         await message.react("👍");
       } else {
         const application = new ClassGuildApplication(message.author);
-        application.onGuildText(message);
+        application.addReason(message);
       }
       await message.react("✅");
       await message.react("🚫");

@@ -10,7 +10,9 @@ module.exports = {
     // refactor - change to is application chan and pass channel
     if (server.isApplicationChan(messageReaction.message.channel)) {
       const application = new ClassGuildApplication(user);
-      application.onWhiteCheckMark(messageReaction.message);
+      application.accept(messageReaction.message);
+      const data = await application.get();
+      console.log(data);
     }
   },
 };

@@ -100,7 +100,7 @@ Feel free to reapply if/when the circumstances change`,
     return newState;
   }
 
-  removeState(id) {
+  removeAppState(id) {
     client.guildAppState.delete(id);
   }
   // AppState functions --- End ---
@@ -120,7 +120,7 @@ Feel free to reapply if/when the circumstances change`,
     });
   }
 
-  removeStatus(id) {
+  removeAppStatus(id) {
     client.guildAppStatus.delete(id);
   }
   // AppStatus functions --- End ---

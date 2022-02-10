@@ -11,9 +11,21 @@ module.exports = class InterfaceGuildApplication extends Interface {
     });
   }
 
-  async accept(reason) {
+  updateStatus(status, reason) {
     this.update({
-      applicationStatus: { status: "accepted", reason: reason },
+      applicationStatus: { status: status, reason: reason },
     });
+  }
+
+  async acceptApplication(reason) {
+    this.updateStatus("accepted", reason);
+  }
+
+  async denyApplication(reason) {
+    this.updateStatus("denied", reason);
+  }
+
+  async blackListApplication(reason) {
+    this.updateStatus("blacklisted", reason);
   }
 };
