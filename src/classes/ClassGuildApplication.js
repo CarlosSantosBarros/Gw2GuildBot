@@ -35,19 +35,16 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
 
   async accept(message) {
     const reason = await this.processApplication(message, "Met requirements");
-    this.acceptApplication(reason);
-    return reason;
+    return await this.updateStatus("accepted", reason);
   }
 
   async deny(message) {
     const reason = await this.processApplication(message, "Nope");
-    this.denyApplication(reason);
-    return reason;
+    return await this.updateStatus("denied", reason);
   }
 
   async blackList(message) {
     const reason = await this.processApplication(message, "HELL NO");
-    this.blackListApplication(reason);
-    return reason;
+    return await this.updateStatus("blacklisted", reason);
   }
 };

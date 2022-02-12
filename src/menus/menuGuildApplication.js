@@ -10,7 +10,6 @@ const { MemberUtils } = require("../utils");
 module.exports = class MenuGuildApplication extends Menu {
   /**
    * @param {import("discord.js").GuildMember} member
-   * @param {{ application: any; }} state
    */
   constructor(member, state) {
     super();

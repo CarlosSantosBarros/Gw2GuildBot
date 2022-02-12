@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("GuildApplication", {
     applicationId: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       unique: true,
     },
     snowflake: {

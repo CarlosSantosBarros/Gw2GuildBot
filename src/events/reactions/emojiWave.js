@@ -3,7 +3,7 @@ module.exports = {
   name: "👋",
   async execute(messageReaction, user) {
     const server = new ServerUtils();
-    const appChan = server.getApplicationChan();
-    if (messageReaction.message.channel == appChan) console.log("left");
+    if (server.isApplicationChan(messageReaction.message.channel))
+      console.log("left");
   },
 };

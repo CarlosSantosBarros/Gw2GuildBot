@@ -1,17 +1,26 @@
+const { ServerUtils } = require("../../utils");
 const {
   ClassGuildApplication,
 } = require("../../classes/ClassGuildApplication");
-const { ServerUtils } = require("../../utils");
+const MenuGuildApplication = require("../../menus/menuGuildApplication");
+
 module.exports = {
   name: "🚫",
   async execute(messageReaction, user) {
     const server = new ServerUtils();
-    const appChan = server.getApplicationChan();
-    if (messageReaction.message.channel == appChan) {
+    const message = messageReaction.message;
+    if (server.isApplicationChan(message.channel)) {
       const application = new ClassGuildApplication(user);
-      application.deny(messageReaction.message);
-      const data = await application.get();
-      console.log(data.snowflake);
+      await application.deny(message);
+      const state = await application.getApplication();
+
+      const member = server.getMemberById(state.snowflake);
+      const menu = new MenuGuildApplication(member, state);
+      const embeds = menu.getEmbeds();
+      const appMessage = await message.channel.messages.fetch(
+        state.applicationId
+      );
+      await appMessage.edit({ embeds: embeds });
     }
   },
 };
