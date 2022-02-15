@@ -1,7 +1,7 @@
 const { guildSettings, professionsSettings } = require("../config.json");
 const { RoleUtils } = require("./utilsRole");
 /**
- * Juicy refactor here,
+ // refactor -
  * extend GuildMember class
  * super(client, member, guild)
  * cant do this, .filter() breaks,
@@ -13,6 +13,7 @@ exports.MemberUtils = class extends RoleUtils {
     super(member.roles);
     this.member = member;
   }
+  // refactor - maybe add getUserId() ?
   async addRole(id) {
     await this.roles.add(id);
   }

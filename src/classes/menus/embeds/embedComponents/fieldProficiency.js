@@ -1,4 +1,4 @@
-const { getProfessionsAsString } = require("../../../utils/utils");
+const { getProfessionsAsString } = require("../../../../utils/utils");
 
 module.exports = class FieldProficiency {
   constructor(proficiency, member) {

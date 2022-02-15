@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const MenuGW2Profession = require("../menus/menuGW2Professions");
+const MenuGW2Profession = require("../classes/menus/menuGW2Professions");
 
 module.exports = {
   data: new SlashCommandBuilder()

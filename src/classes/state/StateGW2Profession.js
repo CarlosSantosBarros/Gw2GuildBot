@@ -4,35 +4,35 @@ module.exports = class StateGW2Profession {
     this.userId = userId;
     this.state = client.gw2pState.get(this.userId);
   }
+  setState() {
+    client.gw2pState.set(this.userId, this.state);
+  }
   getState() {
     return client.gw2pState.get(this.userId);
   }
   selectProficiency(value) {
     const object = client.proficiencyData.get(value);
-    const newState = {
+    this.state = {
       ...this.state,
       proficiency: object,
     };
-    client.gw2pState.set(this.userId, newState);
-    return newState;
+    this.setState();
   }
 
   selectProfession(value) {
-    const newState = {
+    this.state = {
       ...this.state,
       profession: value,
     };
-    client.gw2pState.set(this.userId, newState);
-    return newState;
+    this.setState();
   }
 
   async setEmptyState() {
-    const newState = {
+    this.state = {
       profession: null,
       proficiency: null,
     };
-    client.gw2pState.set(this.userId, newState);
-    return newState;
+    this.setState();
   }
   finishSelection() {
     client.gw2pState.delete(this.userId);

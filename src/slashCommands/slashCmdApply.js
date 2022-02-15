@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const MenuGuildApplication = require("../menus/menuGuildApplication");
+const MenuGuildApplication = require("../classes/menus/menuGuildApplication");
 const { GW2Player } = require("../classes/GW2Player");
 const { getWorld } = require("../utils/utilsGw2API");
 const { ClassGuildApplication } = require("../classes/ClassGuildApplication");

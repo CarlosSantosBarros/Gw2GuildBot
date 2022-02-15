@@ -11,22 +11,27 @@ module.exports = class StateGW2Profession extends InterfaceGuildApplication {
     this.state = client.guildAppState.get(this.userId);
     return this.state;
   }
+  setAppState() {
+    client.guildAppState.set(this.userId, this.state);
+  }
   getAppStatus() {
     this.state = client.guildAppStatus.get(this.userId);
     return this.state;
   }
+  setAppStatus() {
+    client.guildAppStatus.set(this.userId, this.state);
+  }
 
   // AppState functions --- Start ---
   setAccountData(accountData, serverInfo) {
-    const newState = {
+    this.state = {
       ...accountData,
       application: {
         ...accountData.application,
         server: serverInfo,
       },
     };
-    client.guildAppState.set(this.userId, newState);
-    return newState;
+    this.setAppState();
   }
   // Refactor - move message to config
   meetsRequirement(value) {
@@ -42,42 +47,39 @@ Feel free to reapply if/when the circumstances change`,
   selectIsLegal(value) {
     this.meetsRequirement(value);
     this.getAppState();
-    const newState = {
+    this.state = {
       ...this.state,
       application: {
         ...this.state.application,
         isLegal: value,
       },
     };
-    client.guildAppState.set(this.userId, newState);
-    return newState;
+    this.setAppState();
   }
 
   selectWillRoleSwap(value) {
     this.meetsRequirement(value);
     this.getAppState();
-    const newState = {
+    this.state = {
       ...this.state,
       application: {
         ...this.state.application,
         willRoleSwap: value,
       },
     };
-    client.guildAppState.set(this.userId, newState);
-    return newState;
+    this.setAppState();
   }
 
   async setHasDoneProfs() {
     this.getAppState();
-    const newState = {
+    this.state = {
       ...this.state,
       application: {
         ...this.state.application,
         hasDoneProfs: true,
       },
     };
-    client.guildAppState.set(this.userId, newState);
-    return newState;
+    this.setAppState();
   }
 
   hasDoneProfs() {
@@ -89,15 +91,14 @@ Feel free to reapply if/when the circumstances change`,
 
   setPersonalMessage(message) {
     this.getAppState();
-    const newState = {
+    this.state = {
       ...this.state,
       application: {
         ...this.state.application,
         personalMessage: message,
       },
     };
-    client.guildAppState.set(this.userId, newState);
-    return newState;
+    this.setAppState();
   }
 
   removeAppState(id) {
@@ -108,16 +109,18 @@ Feel free to reapply if/when the circumstances change`,
   // AppStatus functions --- Start ---
   // refactor - bad name
   toggleApplicationReason(applicationId) {
-    client.guildAppStatus.set(this.userId, {
+    this.state = {
       appId: applicationId,
-    });
+    };
+    this.setAppStatus();
   }
 
   setApplicationReason(message) {
-    client.guildAppStatus.set(this.userId, {
+    this.state = {
       ...this.state,
       applicationStatus: { reason: message },
-    });
+    };
+    this.setAppStatus();
   }
 
   removeAppStatus(id) {

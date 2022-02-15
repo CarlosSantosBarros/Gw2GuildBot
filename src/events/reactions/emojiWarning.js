@@ -7,10 +7,11 @@ module.exports = {
   name: "⚠️",
   async execute(messageReaction, user) {
     const server = new ServerUtils();
-    if (server.isApplicationChan(messageReaction.message.channel)) {
-      const application = new ClassGuildApplication(user);
-      const data = await application.blackList(messageReaction.message);
-      console.log(data);
+    const message = messageReaction.message;
+    if (server.isApplicationChan(message.channel)) {
+      const application = new ClassGuildApplication(message.member);
+      await application.blackList(message);
+      application.updateMessage(messageReaction);
     }
   },
 };

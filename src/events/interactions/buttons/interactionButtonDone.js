@@ -13,12 +13,11 @@ module.exports = {
       content: "Finished Profession selection...",
       embeds: [],
       components: [],
-      ephemeral: true,
     });
     const member = new MemberUtils(interaction.member);
     if (member.isMember()) return;
 
-    const application = new ClassGuildApplication(interaction.member.user);
+    const application = new ClassGuildApplication(interaction.member);
     await application.setHasDoneProfs();
     if (application.hasDoneProfs()) {
       await interaction.followUp({

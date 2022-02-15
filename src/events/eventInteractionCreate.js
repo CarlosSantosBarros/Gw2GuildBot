@@ -6,7 +6,7 @@ module.exports = {
       let collection = interaction.client.slashCommands;
       let key = interaction.commandName;
       if (interaction.isButton()) collection = interaction.client.buttons;
-      if (interaction.isSelectMenu())
+      else if (interaction.isSelectMenu())
         collection = interaction.client.selectMenus;
       if (interaction.isMessageComponent()) key = interaction.customId;
 
@@ -18,14 +18,13 @@ module.exports = {
         console.log(error);
         // eslint-disable-next-line no-ex-assign
         errorMsg = "There was an error trying to execute that action!";
-        if (error.content) {
+        if (error.content)
           if (error.content.text === "Invalid access token")
             errorMsg =
               "There is something wrong with the API key you are using";
-          if (error.content.text === "invalid key")
+          else if (error.content.text === "invalid key")
             errorMsg = "The API key you are using does not exist";
           else errorMsg = error.content.text;
-        }
       }
       const reply = {
         content: errorMsg,

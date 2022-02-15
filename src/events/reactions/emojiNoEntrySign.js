@@ -2,7 +2,6 @@ const { ServerUtils } = require("../../utils");
 const {
   ClassGuildApplication,
 } = require("../../classes/ClassGuildApplication");
-const MenuGuildApplication = require("../../menus/menuGuildApplication");
 
 module.exports = {
   name: "🚫",
@@ -12,15 +11,7 @@ module.exports = {
     if (server.isApplicationChan(message.channel)) {
       const application = new ClassGuildApplication(user);
       await application.deny(message);
-      const state = await application.getApplication();
-
-      const member = server.getMemberById(state.snowflake);
-      const menu = new MenuGuildApplication(member, state);
-      const embeds = menu.getEmbeds();
-      const appMessage = await message.channel.messages.fetch(
-        state.applicationId
-      );
-      await appMessage.edit({ embeds: embeds });
+      application.updateMessage(messageReaction);
     }
   },
 };

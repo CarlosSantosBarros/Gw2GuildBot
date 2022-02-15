@@ -1,7 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 const FieldProfession = require("./embedComponents/fieldProfession");
 const FieldProficiency = require("./embedComponents/fieldProficiency");
-const { client } = require("../../index");
+const { client } = require("../../../index");
 
 // if application dont show guild spesific stuff
 

@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const FieldProficiency = require("./embedComponents/fieldProficiency");
-const { client } = require("../../index");
+const { client } = require("../../../index");
 const { memberNicknameMention } = require("@discordjs/builders");
 const FieldAppStatus = require("./embedComponents/fieldAppStatus");
 

@@ -1,6 +1,6 @@
-const { ServerUtils } = require("../../../utils/");
-const { toEmoji, getMentorsAsString } = require("../../../utils/utils");
-const { client } = require("../../../index");
+const { ServerUtils } = require("../../../../utils/");
+const { toEmoji, getMentorsAsString } = require("../../../../utils/utils");
+const { client } = require("../../../../index");
 
 module.exports = class FieldProfession {
   constructor(name) {
