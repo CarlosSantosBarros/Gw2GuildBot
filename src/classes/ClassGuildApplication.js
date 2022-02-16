@@ -70,4 +70,32 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
     } else if (message.isSelectMenu())
       await message.update({ components: components, embeds: embeds });
   }
+
+  async notify() {
+    const server = new ServerUtils();
+    const member = server.getMemberById(this.state.snowflake);
+    let replyMessage;
+    if (this.state.applicationStatus) {
+      const status = this.state.applicationStatus;
+      // refactor - move these a config file
+      switch (status.status) {
+        case "accepted":
+          replyMessage =
+            "Your have been successfull in your application, please check ingame for a guild invitation";
+          break;
+        case "denied":
+          replyMessage =
+            "Unfortunatly you have been unsuccessfull in your application, please try againt in the future";
+          break;
+        case "blacklisted":
+          replyMessage = "You gone done fucked up, dont bother trying again";
+          break;
+
+        default:
+          break;
+      }
+    }
+    // member.send({ content: this.state.applicationStatus.reason });
+    member.send({ content: replyMessage });
+  }
 };

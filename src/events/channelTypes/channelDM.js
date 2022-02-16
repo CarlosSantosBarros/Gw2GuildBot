@@ -14,6 +14,7 @@ module.exports = {
       if (application.hasDoneProfs()) {
         const state = application.setPersonalMessage(message.content);
 
+        // refactor - something can be done here, maybe move the sending of the message to submit()
         const menu = new MenuGuildApplication(member, state);
         const embeds = menu.getEmbeds();
 

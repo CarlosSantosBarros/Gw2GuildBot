@@ -12,6 +12,7 @@ module.exports = {
       const application = new ClassGuildApplication(user);
       await application.accept(message);
       await application.updateMessage(messageReaction);
+      await application.notify();
     }
   },
 };

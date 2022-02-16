@@ -11,7 +11,8 @@ module.exports = {
     if (server.isApplicationChan(message.channel)) {
       const application = new ClassGuildApplication(user);
       await application.deny(message);
-      application.updateMessage(messageReaction);
+      await application.updateMessage(messageReaction);
+      await application.notify();
     }
   },
 };
