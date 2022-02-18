@@ -15,7 +15,6 @@ module.exports = class EmbedGuildApplication extends MessageEmbed {
     );
     this.setThumbnail(this.user.avatarURL());
     let embedColour = "YELLOW";
-    console.log(state);
     if (state.applicationStatus) {
       const status = state.applicationStatus;
       switch (status.status) {

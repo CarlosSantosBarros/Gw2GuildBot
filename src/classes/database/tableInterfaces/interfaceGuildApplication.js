@@ -10,12 +10,23 @@ module.exports = class InterfaceGuildApplication extends Interface {
       where: { applicationId: id },
     });
   }
+  selectUser(id) {
+    this.setSelector({
+      where: {
+        snowflake: id,
+        applicationStatus: null,
+      },
+    });
+  }
 
   async updateStatus(status, reason) {
-    const updateString = {
+    await this.update({
       applicationStatus: { status: status, reason: reason },
-    };
-    await this.update(updateString);
+    });
+  }
+
+  async updateAppication(application) {
+    await this.update(application);
   }
 
   async getApplication() {

@@ -4,15 +4,15 @@ const MenuGuildApplication = require("./menus/menuGuildApplication");
 const { GW2Player } = require("./GW2Player");
 const { getWorld } = require("../utils/utilsGw2API");
 
-exports.ClassGuildApplication = class extends StateGuildApplication {
+exports.ClassGuildApplication = class {
   constructor(user) {
-    super(user.id);
     this.server = new ServerUtils();
-    this.member = this.getMember();
+    this.member = this.getMember(user);
+    this.state = new StateGuildApplication(user.id);
   }
 
-  getMember() {
-    const member = this.server.getMemberById(this.userId);
+  getMember(user) {
+    const member = this.server.getMemberById(user.id);
     return new MemberUtils(member);
   }
 
@@ -21,7 +21,7 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
     await player.init();
     const accountData = player.getApplicationData();
     const serverInfo = await getWorld(accountData.application.server);
-    this.setAccountData(accountData, serverInfo);
+    this.state = await this.state.setAccountData(accountData, serverInfo);
   }
 
   async submit() {
@@ -32,7 +32,6 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
 
     const app = this.getAppState();
     this.selectApplication(msg.id);
-    await this.create();
     await this.update(app);
     this.removeAppState(this.userId);
   }

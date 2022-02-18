@@ -1,17 +1,17 @@
 const { client } = require("../../index");
 const { InterfaceGuildApplication } = require("../database");
-module.exports = class StateGW2Profession extends InterfaceGuildApplication {
+module.exports = class StateGW2Profession {
   constructor(userId) {
-    super();
     this.userId = userId;
     this.state;
+    this.interface = new InterfaceGuildApplication();
   }
 
   getAppState() {
     this.state = client.guildAppState.get(this.userId);
     return this.state;
   }
-  setAppState() {
+  storeAppState() {
     client.guildAppState.set(this.userId, this.state);
   }
   getAppStatus() {
@@ -22,16 +22,31 @@ module.exports = class StateGW2Profession extends InterfaceGuildApplication {
     client.guildAppStatus.set(this.userId, this.state);
   }
 
+  async hasOpenApplication(id) {
+    this.interface.selectUser(id);
+    return await this.interface.getApplication();
+  }
+
   // AppState functions --- Start ---
-  setAccountData(accountData, serverInfo) {
-    this.state = {
-      ...accountData,
-      application: {
-        ...accountData.application,
-        server: serverInfo,
-      },
-    };
-    this.setAppState();
+  async setAccountData(accountData, serverInfo) {
+    this.interface.selectUser(this.userId);
+    this.getAppState();
+    if (!this.state) {
+      this.state = await this.interface.getApplication();
+      if (!this.state) {
+        await this.interface.create();
+        this.state = {
+          ...accountData,
+          application: {
+            ...accountData.application,
+            server: serverInfo,
+          },
+        };
+        await this.interface.updateAppication(this.state);
+      }
+      this.storeAppState();
+      return this.state;
+    }
   }
   // Refactor - move message to config
   meetsRequirement(value) {
