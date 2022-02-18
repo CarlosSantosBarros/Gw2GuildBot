@@ -15,16 +15,17 @@ module.exports = class EmbedGuildApplication extends MessageEmbed {
     );
     this.setThumbnail(this.user.avatarURL());
     let embedColour = "YELLOW";
+    console.log(state);
     if (state.applicationStatus) {
       const status = state.applicationStatus;
       switch (status.status) {
-        case "accepted":
+        case "Accepted":
           embedColour = "GREEN";
           break;
-        case "denied":
+        case "Denied":
           embedColour = "RED";
           break;
-        case "blacklisted":
+        case "Blacklisted":
           embedColour = "NOT_QUITE_BLACK";
           break;
 

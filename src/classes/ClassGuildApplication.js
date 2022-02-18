@@ -1,21 +1,37 @@
 const StateGuildApplication = require("./state/StateGuildApplication");
 const { ServerUtils, MemberUtils } = require("../utils/");
 const MenuGuildApplication = require("./menus/menuGuildApplication");
+const { GW2Player } = require("./GW2Player");
+const { getWorld } = require("../utils/utilsGw2API");
 
 exports.ClassGuildApplication = class extends StateGuildApplication {
   constructor(user) {
     super(user.id);
+    this.server = new ServerUtils();
     this.member = this.getMember();
   }
+
   getMember() {
-    const server = new ServerUtils();
-    const member = server.getMemberById(this.userId);
+    const member = this.server.getMemberById(this.userId);
     return new MemberUtils(member);
   }
 
-  async submit(msgId) {
+  async startApplication(member) {
+    const player = new GW2Player(member);
+    await player.init();
+    const accountData = player.getApplicationData();
+    const serverInfo = await getWorld(accountData.application.server);
+    this.setAccountData(accountData, serverInfo);
+  }
+
+  async submit() {
+    const menu = new MenuGuildApplication(this.member, this.state);
+    const embeds = menu.getEmbeds();
+    const appChan = this.server.getApplicationChan();
+    const msg = await appChan.send({ embeds: embeds });
+
     const app = this.getAppState();
-    this.selectApplication(msgId);
+    this.selectApplication(msg.id);
     await this.create();
     await this.update(app);
     this.removeAppState(this.userId);
@@ -42,22 +58,33 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
   }
 
   async accept(message) {
-    const reason = await this.processApplication(message, "Met requirements");
-    return await this.updateStatus("accepted", reason);
+    const reason = await this.processApplication(
+      message,
+      "default Accepted reason for database"
+    );
+    await this.updateStatus("Accepted", reason);
+    this.state = await this.getApplication();
   }
 
   async deny(message) {
-    const reason = await this.processApplication(message, "Nope");
-    return await this.updateStatus("denied", reason);
+    const reason = await this.processApplication(
+      message,
+      "default Denied reason for database"
+    );
+    await this.updateStatus("Denied", reason);
+    this.state = await this.getApplication();
   }
 
   async blackList(message) {
-    const reason = await this.processApplication(message, "HELL NO");
-    return await this.updateStatus("blacklisted", reason);
+    const reason = await this.processApplication(
+      message,
+      "default Blacklisted reason for database"
+    );
+    await this.updateStatus("Blacklisted", reason);
+    this.state = await this.getApplication();
   }
 
   async updateMessage(message) {
-    this.state = await this.getApplication();
     const menu = new MenuGuildApplication(this.member, this.state);
     const embeds = menu.getEmbeds();
     const components = menu.getComponents();
@@ -69,6 +96,12 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
       await appMessage.edit({ embeds: embeds });
     } else if (message.isSelectMenu())
       await message.update({ components: components, embeds: embeds });
+    else if (message.isApplicationCommand())
+      await message.editReply({
+        content: "Please select the approriate answers and click continue",
+        components: components,
+        embeds: embeds,
+      });
   }
 
   async notify() {
@@ -79,16 +112,14 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
       const status = this.state.applicationStatus;
       // refactor - move these a config file
       switch (status.status) {
-        case "accepted":
-          replyMessage =
-            "Your have been successfull in your application, please check ingame for a guild invitation";
+        case "Accepted":
+          replyMessage = "default **Accepted** message sent to applicant";
           break;
-        case "denied":
-          replyMessage =
-            "Unfortunatly you have been unsuccessfull in your application, please try againt in the future";
+        case "Denied":
+          replyMessage = "default **Denied** message sent to applicant";
           break;
-        case "blacklisted":
-          replyMessage = "You gone done fucked up, dont bother trying again";
+        case "Blacklisted":
+          replyMessage = "default **Blacklisted** message sent to applicant";
           break;
 
         default:

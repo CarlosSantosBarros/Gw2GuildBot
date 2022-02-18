@@ -16,7 +16,6 @@ module.exports = class InterfaceGuildApplication extends Interface {
       applicationStatus: { status: status, reason: reason },
     };
     await this.update(updateString);
-    return updateString;
   }
 
   async getApplication() {
