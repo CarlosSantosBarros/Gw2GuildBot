@@ -3,6 +3,8 @@ const { ServerUtils, MemberUtils } = require("../utils/");
 const MenuGuildApplication = require("./menus/menuGuildApplication");
 const { GW2Player } = require("./GW2Player");
 const { getWorld } = require("../utils/utilsGw2API");
+const { accepted, denied, blacklisted } =
+  require("../config.json").applicationSettings;
 
 exports.ClassGuildApplication = class extends StateGuildApplication {
   constructor(user) {
@@ -43,7 +45,6 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
     this.setApplicationReason(message.content);
   }
 
-  // refactor - config value for default messages
   async processApplication(message, reason) {
     const app = await this.getAppStatus();
     let appId = message.id;
@@ -58,19 +59,13 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
   }
 
   async accept(message) {
-    const reason = await this.processApplication(
-      message,
-      "default Accepted reason for database"
-    );
+    const reason = await this.processApplication(message, accepted.dbMessage);
     await this.updateStatus("Accepted", reason);
     this.state = await this.getApplication();
   }
 
   async deny(message) {
-    const reason = await this.processApplication(
-      message,
-      "default Denied reason for database"
-    );
+    const reason = await this.processApplication(message, denied.dbMessage);
     await this.updateStatus("Denied", reason);
     this.state = await this.getApplication();
   }
@@ -78,7 +73,7 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
   async blackList(message) {
     const reason = await this.processApplication(
       message,
-      "default Blacklisted reason for database"
+      blacklisted.dbMessage
     );
     await this.updateStatus("Blacklisted", reason);
     this.state = await this.getApplication();
@@ -89,6 +84,7 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
     const embeds = menu.getEmbeds();
     const components = menu.getComponents();
     // If statement to filter what kinda of change needs to be done
+    // refactor - this is probs bad, message.message?
     if (message.emoji) {
       const appMessage = await message.message.channel.messages.fetch(
         this.state.applicationId
@@ -110,23 +106,18 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
     let replyMessage;
     if (this.state.applicationStatus) {
       const status = this.state.applicationStatus;
-      // refactor - move these a config file
       switch (status.status) {
-        case "Accepted":
-          replyMessage = "default **Accepted** message sent to applicant";
-          break;
         case "Denied":
-          replyMessage = "default **Denied** message sent to applicant";
+          replyMessage = denied.dmMessage;
           break;
         case "Blacklisted":
-          replyMessage = "default **Blacklisted** message sent to applicant";
+          replyMessage = blacklisted.dmMessage;
           break;
-
         default:
+          replyMessage = accepted.dmMessage;
           break;
       }
     }
-    // member.send({ content: this.state.applicationStatus.reason });
     member.send({ content: replyMessage });
   }
 };

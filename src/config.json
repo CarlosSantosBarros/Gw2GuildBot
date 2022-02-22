@@ -15,6 +15,19 @@
     "verifiedRole": "816395563696259112",
     "applicationChannel": "935857898943299625"
   },
+  "applicationSettings": {
+    "willRoleSwapMessage": "default **willRoleSwap** reason message",
+    "isLegalMessage": "default **isLegal** reason message",
+    "accepted":{ 
+      "dbMessage": "default Accepted reason for database in settings" , 
+      "dmMessage": "default **Accepted** message sent to applicant in settings"},
+    "denied":{ 
+      "dbMessage": "default Denied reason for database in settings" , 
+      "dmMessage": "default **Denied** message sent to applicant in settings"},
+    "blacklisted":{ 
+      "dbMessage": "default Accepted reason for database in settings" , 
+      "dmMessage": "default **Blacklisted** message sent to applicant in settings"}
+  },
   "rosterSummarySettings": [
     {
       "roleId": "581597683597443073",
@@ -112,13 +125,5 @@
       }
     ],
     "mentorColor": "#b45f06"
-  },
-  "eventReminders": [
-    { "day": 1 ,
-      "time": "1745",
-    "channelName": "rally_call",
-    "roleId": "581597683597443073",
-  "message" : ": Guild WvW Raid starts in 1h!"
   }
-  ]
 }

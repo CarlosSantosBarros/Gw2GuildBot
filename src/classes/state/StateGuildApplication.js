@@ -1,5 +1,7 @@
 const { client } = require("../../index");
 const { InterfaceGuildApplication } = require("../database");
+const { isLegalMessage, willRoleSwapMessage } =
+  require("../../config.json").applicationSettings;
 module.exports = class StateGW2Profession extends InterfaceGuildApplication {
   constructor(userId) {
     super();
@@ -33,19 +35,13 @@ module.exports = class StateGW2Profession extends InterfaceGuildApplication {
     };
     this.setAppState();
   }
-  // Refactor - move message to config
-  meetsRequirement(value) {
-    if (value == "No")
-      throw {
-        content: {
-          text: `Unfortunately this is a requirement to join the guild.
-Failure to meet this criteria means you have been unsuccessful in your application.
-Feel free to reapply if/when the circumstances change`,
-        },
-      };
+
+  meetsRequirement(value, message) {
+    if (value == "No") throw { content: { text: message } };
   }
+
   selectIsLegal(value) {
-    this.meetsRequirement(value);
+    this.meetsRequirement(value, isLegalMessage);
     this.getAppState();
     this.state = {
       ...this.state,
@@ -58,7 +54,7 @@ Feel free to reapply if/when the circumstances change`,
   }
 
   selectWillRoleSwap(value) {
-    this.meetsRequirement(value);
+    this.meetsRequirement(value, willRoleSwapMessage);
     this.getAppState();
     this.state = {
       ...this.state,
