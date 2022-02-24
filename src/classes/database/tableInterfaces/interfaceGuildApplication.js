@@ -11,11 +11,10 @@ module.exports = class InterfaceGuildApplication extends Interface {
     });
   }
 
-  async updateStatus(status, reason) {
-    const updateString = {
-      applicationStatus: { status: status, reason: reason },
-    };
-    await this.update(updateString);
+  async updateStatus(status, reason, username) {
+    await this.update({
+      applicationStatus: { status: status, reason: reason, user: username },
+    });
   }
 
   async getApplication() {

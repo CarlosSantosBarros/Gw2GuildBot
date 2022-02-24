@@ -10,7 +10,7 @@ module.exports = {
     const message = messageReaction.message;
     if (server.isApplicationChan(message.channel)) {
       const application = new ClassGuildApplication(user);
-      await application.deny(message);
+      await application.deny(message, user);
       await application.updateMessage(messageReaction);
       await application.notify();
     }

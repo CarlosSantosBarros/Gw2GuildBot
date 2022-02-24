@@ -58,24 +58,24 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
     return reason;
   }
 
-  async accept(message) {
+  async accept(message, user) {
     const reason = await this.processApplication(message, accepted.dbMessage);
-    await this.updateStatus("Accepted", reason);
+    await this.updateStatus("Accepted", reason, user.username);
     this.state = await this.getApplication();
   }
 
-  async deny(message) {
+  async deny(message, user) {
     const reason = await this.processApplication(message, denied.dbMessage);
-    await this.updateStatus("Denied", reason);
+    await this.updateStatus("Denied", reason, user.username);
     this.state = await this.getApplication();
   }
 
-  async blackList(message) {
+  async blackList(message, user) {
     const reason = await this.processApplication(
       message,
       blacklisted.dbMessage
     );
-    await this.updateStatus("Blacklisted", reason);
+    await this.updateStatus("Blacklisted", reason, user.username);
     this.state = await this.getApplication();
   }
 
@@ -89,6 +89,7 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
       const appMessage = await message.message.channel.messages.fetch(
         this.state.applicationId
       );
+      await appMessage.reactions.removeAll();
       await appMessage.edit({ embeds: embeds });
     } else if (message.isSelectMenu())
       await message.update({ components: components, embeds: embeds });
