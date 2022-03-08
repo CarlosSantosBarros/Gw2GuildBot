@@ -24,13 +24,28 @@ exports.MemberUtils = class extends RoleUtils {
     return this.member.user;
   }
   async addMemberRole() {
-    await this.addRole(guildSettings.memberRole);
+    if (!this.isMember()) await this.addRole(guildSettings.memberRole);
   }
   async addVerifiedRole() {
     await this.addRole(guildSettings.verifiedRole);
   }
+  async addRecruitRole() {
+    if (!this.isRecuit) await this.addRole(guildSettings.recuitRole);
+  }
+  async removeMemberRole() {
+    await this.removeRole(guildSettings.memberRole);
+  }
+  async removeVerifiedRole() {
+    await this.removeRole(guildSettings.verifiedRole);
+  }
   isMember() {
     return this.getRoleById(guildSettings.memberRole);
+  }
+  isVerified() {
+    return this.getRoleById(guildSettings.verifiedRole);
+  }
+  isRecuit() {
+    return this.getRoleById(guildSettings.recuitRole);
   }
   getProficiencies(color) {
     return this.getAllRolesByColor(color);

@@ -70,17 +70,19 @@ exports.getGW2GuildInfo = async () => {
 };
 
 /**
- * Gets Guildwars 2 characters information.
- * @param {String} apikey - The api key of the user
- * @return {Promise<JSON>} Characters
+ *
+ * @param {number} id String
+ * @returns {Promise<any[]>}
  */
-exports.getCharacters = async (apikey) => {
-  api.authenticate(apikey);
+
+exports.getGW2GuildLog = async (id) => {
+  const { guildLeaderKey, gw2GuildId } = guildSettings;
+  api.authenticate(guildLeaderKey);
   let returnData;
   await api
-    .account()
-    .characters()
-    .all()
+    .guild(gw2GuildId)
+    .log()
+    .since(id)
     .then((result) => {
       if (result.text) throw result.text;
       returnData = result;

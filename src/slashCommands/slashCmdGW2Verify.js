@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { GW2Player } = require("../classes/GW2Player");
 const { ClassGW2Profession } = require("../classes/ClassGW2Profession");
 const { MemberUtils } = require("../utils/");
+const { verifyMessage } = require("../config.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -33,8 +34,7 @@ module.exports = {
       user.updateMessage(interaction);
     } else
       interaction.editReply({
-        content: `Thank you for verifying, 
-          I see that you are not a guild member, use /apply if you would like to join`,
+        content: verifyMessage,
       });
   },
 };

@@ -32,7 +32,7 @@ module.exports = class Interface {
 
   async findOrCreate() {
     return await this.interfaceModel
-      .findOrCreate(this.querySelector.where)
+      .findOrCreate(this.querySelector)
       .catch((error) => {
         if (error instanceof UniqueConstraintError)
           throw "Entry already exists";

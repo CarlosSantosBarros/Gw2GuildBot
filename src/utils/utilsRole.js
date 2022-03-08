@@ -26,7 +26,8 @@ exports.RoleUtils = class {
     );
   }
 
-  hasRoleByName(roleName) {
-    return this.roles.cache.has(roleName);
-  }
+  // Maybe bin this
+  // hasRoleByName(roleName) {
+  //   return this.roles.cache.has(roleName);
+  // }
 };

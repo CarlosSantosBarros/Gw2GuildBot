@@ -1,4 +1,4 @@
-const { log } = require("./utils/utilsDiscord");
+const { log } = require("./utils/utils");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 
@@ -27,13 +27,13 @@ const rest = new REST({ version: "9" }).setToken(token);
 
 (async () => {
   try {
-    console.log("Started refreshing application (/) commands.");
+    console.log("Started deploying application (/) commands.");
 
     await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
       body: commands,
     });
 
-    console.log("Successfully reloaded application (/) commands.");
+    console.log("Successfully deployed application (/) commands.");
   } catch (error) {
     console.error(error);
   }

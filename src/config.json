@@ -1,16 +1,25 @@
 {
   "token": "BOT TOKEN HERE",
+  "clientId": "CLIENT ID FROM DICORD DASHBOARD",
   "logging": {
     "IsDebugging": false,
     "IsRaw": false,
     "IsSuccessLogging": false,
     "IsFailureLogging": true
   },
+  "errors":{
+    "default": "There was an error trying to execute that action!",
+    "badApiKey": "There is something wrong with the API key you are using, please re-verify using /verify"
+  },
+  "verifyMessage": "Thank you for verifying,'\n'I see that you are not a guild member, use /apply if you would like to join",
   "guildSettings": {
+    "scyncTimerInMins": 5,
     "discordGuildId": "294892279322378240",
     "gw2GuildId": "F7F37FC2-C23D-E411-A278-AC162DC0070D",
     "guildLeaderKey": "4611873E-8158-A04A-9C37-CEC53DA6EAAF436D4FD8-A5C2-415A-BA21-C05215589F56",
     "memberRole": "581597683597443073",
+    "gw2RankColour": "#c12d2b",
+    "recuitRole": "816397178004045864",
     "officerRole": "618286301111910400",
     "verifiedRole": "816395563696259112",
     "applicationChannel": "935857898943299625"

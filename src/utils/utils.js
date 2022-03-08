@@ -63,3 +63,12 @@ exports.getProfessionsAsString = (proficiencies) => {
   };
   return this.forEachToString(proficiencies, professionFormat);
 };
+
+exports.isErrorBadApiKey = (errorContent) => {
+  if (
+    errorContent.text === "Invalid access token" ||
+    errorContent.text === "invalid key"
+  )
+    return true;
+  else return false;
+};

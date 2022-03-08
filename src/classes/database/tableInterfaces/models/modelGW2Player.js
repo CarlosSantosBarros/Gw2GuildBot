@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("GW2Player", {
     snowflake: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       unique: true,
     },
     apiKey: {

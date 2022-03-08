@@ -1,44 +1,41 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
 const { findJSStartingWith_In_AndDo_ } = require("./utils");
 const { log } = require("./utils");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const path = require("path");
+const { client } = require("../index");
+const Discord = require("discord.js");
 
-exports.createCommandData = (config) => {
-  const { subfolder, name, description, subCommandCollection } = config;
-  const commandObj = new SlashCommandBuilder()
-    .setName(name)
-    .setDescription(description);
+// ------ uncomment the next line
+// const { token, clientId } = require("../config.json");
 
-  const loadSubcommands = (fileItem) => {
-    const subCom = require(subfolder + fileItem);
-    commandObj.addSubcommand((subcommand) => subCom.configure(subcommand));
-    subCommandCollection.set(subCom.config.name, subCom);
-  };
-  findJSStartingWith_In_AndDo_("slashSub", subfolder, loadSubcommands);
-  return commandObj;
-};
-
+// ------ comment the next two lines
 const token = process.env.DISCORD_TOKEN;
 const clientId = process.env.CLIENT_ID;
+
 const rest = new REST({ version: "9" }).setToken(token);
 
 exports.refreshGuildCommands = async (fileFilter, dir, guildId) => {
   const commands = [];
+  const permedCommands = new Discord.Collection();
   const loadCommand = (fileItem) => {
     const filePath = path.join(dir, `./${fileItem}`);
     const command = require(filePath);
     if (command.guildCommand) {
-      log("Refreshing: Guild " + command.data.name);
+      log(`Refreshing: Guild ${command.data.name}`);
       commands.push(command.data.toJSON());
     }
+    if (command.perms) permedCommands.set(command.data.name, command.perms);
   };
   findJSStartingWith_In_AndDo_(fileFilter, dir, loadCommand);
   await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
     body: commands,
-    defaultPermission: false,
   });
+  const registeredCommands = await client.application.commands.fetch({
+    guildId: guildId,
+  });
+  console.log(permedCommands);
+  await setCommandPermissions(registeredCommands, permedCommands);
 };
 
 exports.refreshGlobalCommands = async (fileFilter, dir) => {
@@ -47,7 +44,7 @@ exports.refreshGlobalCommands = async (fileFilter, dir) => {
     const filePath = path.join(dir, `./${fileItem}`);
     const command = require(filePath);
     if (!command.guildCommand) {
-      log("Refreshing: Global " + command.data.name);
+      log(`Refreshing: Global ${command.data.name}`);
       commands.push(command.data.toJSON());
     }
   };
@@ -55,5 +52,12 @@ exports.refreshGlobalCommands = async (fileFilter, dir) => {
 
   await rest.put(Routes.applicationCommands(clientId), {
     body: commands,
+  });
+};
+
+const setCommandPermissions = async (commands, perms) => {
+  perms.forEach(async (permissions, key) => {
+    const command = commands.find((entry) => entry.name == key);
+    await command.permissions.add({ permissions });
   });
 };

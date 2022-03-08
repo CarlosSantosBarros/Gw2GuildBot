@@ -1,3 +1,7 @@
+const { MemberUtils } = require("../utils");
+const { isErrorBadApiKey } = require("../utils/utils");
+const { errors } = require("../config.json");
+
 module.exports = {
   name: "interactionCreate",
   once: false,
@@ -16,15 +20,13 @@ module.exports = {
       let errorMsg = error;
       if (typeof error === "object") {
         console.log(error);
-        // eslint-disable-next-line no-ex-assign
-        errorMsg = "There was an error trying to execute that action!";
+        errorMsg = errors.default;
         if (error.content)
-          if (error.content.text === "Invalid access token")
-            errorMsg =
-              "There is something wrong with the API key you are using";
-          else if (error.content.text === "invalid key")
-            errorMsg = "The API key you are using does not exist";
-          else errorMsg = error.content.text;
+          if (isErrorBadApiKey(error.content)) {
+            errorMsg = errors.badApiKey;
+            const member = new MemberUtils(interaction.member);
+            if (member.isVerified()) member.removeVerifiedRole();
+          } else errorMsg = error.content.text;
       }
       const reply = {
         content: errorMsg,

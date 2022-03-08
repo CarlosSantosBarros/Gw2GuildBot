@@ -11,7 +11,7 @@ exports.GW2Player = class extends InterfaceGW2Player {
   }
 
   async init() {
-    await this.getPlayerData();
+    await this.getPlayerDataById();
     await this.getAccountData();
   }
 
@@ -19,7 +19,7 @@ exports.GW2Player = class extends InterfaceGW2Player {
     this.apiKey = key;
     await this.getAccountData();
     if (!this.accountData.wvw_rank)
-      throw "This key is missing the *progression* scope";
+      throw "This key is missing the **progression** scope";
     this.updatePlayer();
 
     const server = new ServerUtils();

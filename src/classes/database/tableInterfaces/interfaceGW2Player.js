@@ -11,9 +11,14 @@ module.exports = class InterfaceGW2Player extends Interface {
     this.accountData;
     this.apiKey;
   }
-  async getPlayerData() {
+  async getPlayerDataById() {
     this.playerData = await this.get();
     this.apiKey = this.playerData.apiKey;
+  }
+
+  async getPlayerDataByIgn(ign) {
+    this.setSelector({ where: { accountName: ign } });
+    return await this.get();
   }
 
   async getAccountData() {
@@ -21,7 +26,7 @@ module.exports = class InterfaceGW2Player extends Interface {
   }
   async updatePlayer() {
     await this.findOrCreate();
-    this.update({
+    await this.update({
       accountName: this.accountData.name,
       apiKey: this.apiKey,
     });
