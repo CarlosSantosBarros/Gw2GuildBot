@@ -34,7 +34,7 @@
       "dbMessage": "default Denied reason for database in settings" , 
       "dmMessage": "default **Denied** message sent to applicant in settings"},
     "blacklisted":{ 
-      "dbMessage": "default Accepted reason for database in settings" , 
+      "dbMessage": "default Blacklisted reason for database in settings" , 
       "dmMessage": "default **Blacklisted** message sent to applicant in settings"}
   },
   "rosterSummarySettings": [

@@ -98,9 +98,7 @@ module.exports = {
               const memberObj = server.getMemberById(userId.snowflake);
               const member = new MemberUtils(memberObj);
               await member.roles.remove(member.roles.cache);
-              console.log(
-                `${entry.user} Left guild, i have removed roles them roles`
-              );
+              console.log(`${entry.user} Left guild, i have removed roles`);
             }
           });
 

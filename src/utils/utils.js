@@ -2,7 +2,7 @@ const { format } = require("date-fns");
 const { memberNicknameMention } = require("@discordjs/builders");
 const { ServerUtils } = require("./");
 const { client } = require("../index");
-const { logging } = require("../config.json");
+const { logging, guildSettings } = require("../config.json");
 const { IsSuccessLogging, IsFailureLogging } = logging;
 const fs = require("fs");
 
@@ -71,4 +71,10 @@ exports.isErrorBadApiKey = (errorContent) => {
   )
     return true;
   else return false;
+};
+
+exports.isProtectedRole = (role) => {
+  if (role.id === guildSettings.memberRole) return true;
+  if (role.hexColor === guildSettings.gw2RankColour) return true;
+  return false;
 };
