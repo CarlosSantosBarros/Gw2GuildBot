@@ -1,5 +1,4 @@
-const { findJSStartingWith_In_AndDo_ } = require("./utils");
-const { log } = require("./utils");
+const { findJSStartingWith_In_AndDo_, log } = require("./utils");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const path = require("path");
@@ -34,7 +33,6 @@ exports.refreshGuildCommands = async (fileFilter, dir, guildId) => {
   const registeredCommands = await client.application.commands.fetch({
     guildId: guildId,
   });
-  console.log(permedCommands);
   await setCommandPermissions(registeredCommands, permedCommands);
 };
 
@@ -57,7 +55,7 @@ exports.refreshGlobalCommands = async (fileFilter, dir) => {
 
 const setCommandPermissions = async (commands, perms) => {
   perms.forEach(async (permissions, key) => {
-    const command = commands.find((entry) => entry.name == key);
+    const command = commands.find((entry) => entry.name === key);
     await command.permissions.add({ permissions });
   });
 };

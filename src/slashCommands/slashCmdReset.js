@@ -1,11 +1,14 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { log } = require("../utils/utils");
+const { botAdminPerms } = require("../config.json");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("reset")
     .setDescription("Remove all commands!")
-    .setDefaultPermission(true),
-  guildCommand: false,
+    .setDefaultPermission(false),
+  guildCommand: true,
+  perms: botAdminPerms,
 
   async execute(interaction) {
     await interaction.reply({

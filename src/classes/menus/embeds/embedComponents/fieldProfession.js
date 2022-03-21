@@ -1,10 +1,8 @@
 const { ServerUtils } = require("../../../../utils/");
 const { toEmoji, getMentorsAsString } = require("../../../../utils/utils");
-const { client } = require("../../../../index");
 
 module.exports = class FieldProfession {
-  constructor(name) {
-    const profession = client.professionsData.get(name);
+  constructor(profession) {
     const emoji = toEmoji(profession);
     const mentors = getMentorsAsString(profession.value);
     const server = new ServerUtils();

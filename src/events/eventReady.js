@@ -1,4 +1,5 @@
 const { log } = require("../utils/utils");
+const Discord = require("discord.js");
 const { format, isMonday, isThursday, isTuesday } = require("date-fns");
 const { roleMention } = require("@discordjs/builders");
 const { createCollection } = require("../utils/utils");
@@ -7,6 +8,7 @@ const { getGW2GuildLog } = require("../utils/utilsGw2API");
 const { ServerUtils, MemberUtils } = require("../utils");
 const { InterfaceGW2Player } = require("../classes/database");
 const fs = require("fs");
+const EmbedRosterSummary = require("../classes/menus/embeds/embedRosterSummary");
 
 module.exports = {
   name: "ready",
@@ -22,11 +24,17 @@ module.exports = {
     require("./interactions/buttons/index")(client);
     require("../events/reactions/index")(client);
     require("./channelTypes/index")(client);
+    client.professionsData = new Discord.Collection();
+    client.proficiencyData = new Discord.Collection();
+    client.gw2pState = new Discord.Collection();
+    client.guildAppState = new Discord.Collection();
+    client.guildAppStatus = new Discord.Collection();
     const { professionsData, proficiencyData } = professionsSettings;
     createCollection(client.professionsData, professionsData);
     log("Profession data loaded");
     createCollection(client.proficiencyData, proficiencyData);
     log("Role data loaded");
+    const server = new ServerUtils();
 
     setInterval(() => {
       const date = new Date();
@@ -44,11 +52,11 @@ module.exports = {
         }
         if (channelName == null) return;
 
-        // refactor - move to util getChannelByName()
-        const announcementChannel = client.channels.cache.find(
-          (channel) =>
-            channel.name === `${channelName}` && channel.type === "GUILD_TEXT"
+        const announcementChannel = server.getChannelByNameAndType(
+          channelName,
+          "GUILD_TEXT"
         );
+
         announcementChannel.send({
           content: roleMention(guildSettings.memberRole) + message,
         });
@@ -57,6 +65,11 @@ module.exports = {
 
     const intervalTime = guildSettings.scyncTimerInMins * 60000;
     setInterval(async () => {
+      const { rosterSummaryChannel, rosterSummaryMsg } = guildSettings;
+      const summaryChan = server.getChannelById(rosterSummaryChannel);
+      const summaryMessage = await summaryChan.messages.fetch(rosterSummaryMsg);
+      const summaryEmbed = new EmbedRosterSummary();
+      summaryMessage.edit({ embeds: [summaryEmbed] });
       try {
         const path = "/scyncLog.json";
         const readData = fs.readFileSync(__dirname + path, "utf8");
@@ -64,7 +77,6 @@ module.exports = {
         const guildLog = await getGW2GuildLog(json.lastId);
         if (guildLog.length === 0) return;
         else {
-          const server = new ServerUtils();
           const gw2db = new InterfaceGW2Player();
           guildLog.reverse().forEach(async (entry) => {
             if (entry.type == "joined") {

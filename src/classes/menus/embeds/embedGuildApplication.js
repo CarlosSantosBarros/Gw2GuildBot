@@ -28,6 +28,7 @@ module.exports = class EmbedGuildApplication extends MessageEmbed {
           embedColour = "GREEN";
           break;
       }
+      // @ts-ignore
       this.addFields(new FieldAppStatus(state.applicationStatus));
     } else {
       const application = state.application;
@@ -42,7 +43,7 @@ module.exports = class EmbedGuildApplication extends MessageEmbed {
         );
       if (application.hasDoneProfs)
         client.proficiencyData.forEach((proficiency) =>
-          // refactor - return correct type
+          // @ts-ignore
           this.addFields(new FieldProficiency(proficiency, member))
         );
       if (application.personalMessage)

@@ -1,17 +1,20 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const MenuGW2Profession = require("../classes/menus/menuGW2Professions");
+const EmbedRosterSummary = require("../classes/menus/embeds/embedRosterSummary");
+const { botAdminPerms } = require("../config.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("roster")
-    .setDescription("show profession roster!"),
+    .setDescription("show profession roster!")
+    .setDefaultPermission(false),
   guildCommand: true,
+  perms: botAdminPerms,
 
   async execute(interaction) {
-    // refactor - this is broken
-    const embeds = new MenuGW2Profession().getEmbeds();
+    const embeds = new EmbedRosterSummary();
+    console.log(embeds);
     await interaction.reply({
-      embeds: embeds,
+      embeds: [embeds],
       ephemeral: false,
     });
   },

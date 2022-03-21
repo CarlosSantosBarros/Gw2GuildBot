@@ -1,6 +1,6 @@
 {
-  "token": "BOT TOKEN HERE",
-  "clientId": "CLIENT ID FROM DICORD DASHBOARD",
+  "token": "bot token here",
+  "clientId": "client id here",
   "logging": {
     "IsDebugging": false,
     "IsRaw": false,
@@ -11,6 +11,18 @@
     "default": "There was an error trying to execute that action!",
     "badApiKey": "There is something wrong with the API key you are using, please re-verify using /verify"
   },
+  "botAdminPerms": [
+    {
+      "id": "106799270820052992",
+      "type": "USER",
+      "permission": true
+    },
+    {
+      "id": "132892131374268416",
+      "type": "USER",
+      "permission": true
+    }
+  ],
   "verifyMessage": "Thank you for verifying,'\n'I see that you are not a guild member, use /apply if you would like to join",
   "guildSettings": {
     "scyncTimerInMins": 5,
@@ -22,7 +34,9 @@
     "recuitRole": "816397178004045864",
     "officerRole": "618286301111910400",
     "verifiedRole": "816395563696259112",
-    "applicationChannel": "935857898943299625"
+    "applicationChannel": "935857898943299625",
+    "rosterSummaryChannel": "886280778600808448",
+    "rosterSummaryMsg": "953673304441491476"
   },
   "applicationSettings": {
     "willRoleSwapMessage": "default **willRoleSwap** reason message",

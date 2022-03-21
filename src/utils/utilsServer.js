@@ -28,7 +28,11 @@ exports.ServerUtils = class extends RoleUtils {
   }
 
   getMembers() {
-    return this.getRoleById(guildSettings.memberRole).members;
+    return this.getMembersByRoleId(guildSettings.memberRole);
+  }
+
+  getOfficers() {
+    return this.getMembersByRoleId(guildSettings.officerRole);
   }
 
   getApplicationChan() {
@@ -44,6 +48,10 @@ exports.ServerUtils = class extends RoleUtils {
   getMentorsFor(value) {
     return this.getRoleByNameAndColor(value, professionsSettings.mentorColor)
       .members;
+  }
+
+  getMembersByRoleId(roleId) {
+    return this.getRoleById(roleId).members;
   }
 
   // refactor - 2 finds inside of a filter is maybe bad
