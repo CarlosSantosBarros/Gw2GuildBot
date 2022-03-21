@@ -1,4 +1,3 @@
-// refactor - maybe make some sort link with state?
 module.exports = class Menu {
   constructor() {
     this.components;

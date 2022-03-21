@@ -2,7 +2,7 @@ const { client } = require("../../index");
 const { InterfaceGuildApplication } = require("../database");
 const { isLegalMessage, willRoleSwapMessage } =
   require("../../config.json").applicationSettings;
-module.exports = class StateGW2Profession extends InterfaceGuildApplication {
+module.exports = class StateGuildApplication extends InterfaceGuildApplication {
   constructor(userId) {
     super();
     this.userId = userId;
@@ -79,7 +79,6 @@ module.exports = class StateGW2Profession extends InterfaceGuildApplication {
   }
 
   hasDoneProfs() {
-    // refactor - ternery operator?
     this.getAppState();
     if (!this.state.application) return false;
     return this.state.application.hasDoneProfs;
@@ -103,7 +102,6 @@ module.exports = class StateGW2Profession extends InterfaceGuildApplication {
   // AppState functions --- End ---
 
   // AppStatus functions --- Start ---
-  // refactor - bad name
   toggleApplicationReason(applicationId) {
     this.state = {
       appId: applicationId,

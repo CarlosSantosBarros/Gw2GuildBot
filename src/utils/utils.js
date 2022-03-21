@@ -1,7 +1,6 @@
 const { format } = require("date-fns");
 const { memberNicknameMention } = require("@discordjs/builders");
 const { ServerUtils } = require("./");
-const { client } = require("../index");
 const { logging, guildSettings } = require("../config.json");
 const { IsSuccessLogging, IsFailureLogging } = logging;
 const fs = require("fs");
@@ -9,8 +8,7 @@ const fs = require("fs");
 // terrible name, call this something else
 exports.findJSStartingWith_In_AndDo_ = (prefix, path, action) => {
   fs.readdirSync(path)
-    .filter((file) => file.endsWith(".js"))
-    .filter((file) => file.startsWith(prefix))
+    .filter((file) => file.endsWith(".js") && file.startsWith(prefix))
     .forEach((file) => action(file));
 };
 
@@ -55,6 +53,7 @@ exports.getMentorsAsString = (name) => {
 };
 
 exports.getProfessionsAsString = (proficiencies) => {
+  const { client } = require("../index");
   const professionFormat = (profession) => {
     const prof = client.professionsData.get(profession.name);
     const emoji = this.toEmoji(prof);

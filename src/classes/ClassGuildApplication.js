@@ -83,9 +83,8 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
     const menu = new MenuGuildApplication(this.member, this.state);
     const embeds = menu.getEmbeds();
     const components = menu.getComponents();
-    // If statement to filter what kinda of change needs to be done
-    // refactor - this is probs bad, message.message?
     if (message.emoji) {
+      // refactor - this is probs bad, message.message?
       const appMessage = await message.message.channel.messages.fetch(
         this.state.applicationId
       );

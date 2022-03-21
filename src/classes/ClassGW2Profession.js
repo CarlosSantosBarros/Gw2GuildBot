@@ -16,7 +16,6 @@ exports.ClassGW2Profession = class extends StateGW2Profession {
     );
   }
 
-  // refactor - bad name?
   async removeRoleInOtherSlot() {
     const roleInOtherSlot = this.member.getRoleByName(this.state.profession);
     if (roleInOtherSlot) await this.member.removeRole(roleInOtherSlot.id);
@@ -43,7 +42,6 @@ exports.ClassGW2Profession = class extends StateGW2Profession {
     return this.setEmptyState();
   }
 
-  // refactor - this can maybe go in the menu class?
   async updateMessage(message) {
     const menu = new MenuGW2Profession(this.member, this.state);
     const embeds = menu.getEmbeds();

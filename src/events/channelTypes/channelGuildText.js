@@ -8,7 +8,6 @@ module.exports = {
     const server = new ServerUtils();
     if (server.isApplicationChan(message.channel)) {
       if (message.author.bot) await message.react("📝");
-      // await message.react("👍");
       else {
         const application = new ClassGuildApplication(message.member);
         application.addReason(message);
