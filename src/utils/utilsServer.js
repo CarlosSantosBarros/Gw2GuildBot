@@ -5,10 +5,14 @@ const { RoleUtils } = require("./utilsRole");
 exports.ServerUtils = class extends RoleUtils {
   constructor() {
     super();
+    this.roles;
     this.guild = client.guilds.cache.find(
       (guildEntry) => guildEntry.id === guildSettings.discordGuildId
     );
-    this.roles = this.guild.roles;
+    this.init();
+  }
+  init() {
+    if (this.guild) this.roles == this.guild.roles;
   }
   getChannelByNameAndType(name, type) {
     return this.guild.channels.cache.find(
@@ -46,8 +50,11 @@ exports.ServerUtils = class extends RoleUtils {
   }
 
   getMentorsFor(value) {
-    return this.getRoleByNameAndColor(value, professionsSettings.mentorColor)
-      .members;
+    const mentors = this.getRoleByNameAndColor(
+      value,
+      professionsSettings.mentorColor
+    );
+    return mentors ? mentors.members : mentors;
   }
 
   getMembersByRoleId(roleId) {

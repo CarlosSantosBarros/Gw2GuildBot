@@ -49,7 +49,8 @@ exports.getMentorsAsString = (name) => {
     return memberNicknameMention(mentor.user.id);
   };
   const server = new ServerUtils();
-  return this.forEachToString(server.getMentorsFor(name), mentorformat);
+  const mentors = server.getMentorsFor(name);
+  return mentors ? this.forEachToString(mentors, mentorformat) : mentors;
 };
 
 exports.getProfessionsAsString = (proficiencies) => {

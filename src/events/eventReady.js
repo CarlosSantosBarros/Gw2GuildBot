@@ -67,6 +67,7 @@ module.exports = {
     setInterval(async () => {
       const { rosterSummaryChannel, rosterSummaryMsg } = guildSettings;
       const summaryChan = server.getChannelById(rosterSummaryChannel);
+      if (!summaryChan) return;
       const summaryMessage = await summaryChan.messages.fetch(rosterSummaryMsg);
       const summaryEmbed = new EmbedRosterSummary();
       summaryMessage.edit({ embeds: [summaryEmbed] });
