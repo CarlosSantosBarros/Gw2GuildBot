@@ -1,5 +1,8 @@
 exports.RoleUtils = class {
-  constructor(roles) {
+  constructor() {
+    this.roles;
+  }
+  init(roles) {
     this.roles = roles;
   }
   getRoleByName(roleName) {

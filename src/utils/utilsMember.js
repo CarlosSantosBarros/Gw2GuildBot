@@ -9,8 +9,9 @@ const { RoleUtils } = require("./utilsRole");
 
 exports.MemberUtils = class extends RoleUtils {
   constructor(member) {
-    super(member.roles);
+    super();
     this.member = member;
+    this.init(member.roles);
   }
   async addRole(id) {
     await this.roles.add(id);

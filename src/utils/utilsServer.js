@@ -5,15 +5,12 @@ const { RoleUtils } = require("./utilsRole");
 exports.ServerUtils = class extends RoleUtils {
   constructor() {
     super();
-    this.roles;
     this.guild = client.guilds.cache.find(
       (guildEntry) => guildEntry.id === guildSettings.discordGuildId
     );
-    this.init();
+    this.init(this.guild.roles);
   }
-  init() {
-    if (this.guild) this.roles == this.guild.roles;
-  }
+
   getChannelByNameAndType(name, type) {
     return this.guild.channels.cache.find(
       (channel) => channel.name === name && channel.type === type
