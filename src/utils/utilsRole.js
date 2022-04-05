@@ -28,9 +28,4 @@ exports.RoleUtils = class {
       (role) => role.hexColor === colorHexValue && role.name === roleName
     );
   }
-
-  // Maybe bin this
-  // hasRoleByName(roleName) {
-  //   return this.roles.cache.has(roleName);
-  // }
 };

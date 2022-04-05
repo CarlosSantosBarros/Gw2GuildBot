@@ -19,7 +19,8 @@ module.exports = class EmbedGW2Professions extends MessageEmbed {
       const proficiencies = member.getProficiencies(proficiency.color);
       if (member.isMember())
         proficiencies.forEach((item) => {
-          this.addFields(new FieldProfession(item.name));
+          const profession = client.professionsData.get(item.name);
+          this.addFields(new FieldProfession(profession));
         });
     });
   }
