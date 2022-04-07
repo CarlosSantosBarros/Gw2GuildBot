@@ -69,6 +69,7 @@ module.exports = {
       const summaryChan = server.getChannelById(rosterSummaryChannel);
       if (!summaryChan) return;
       const summaryMessage = await summaryChan.messages.fetch(rosterSummaryMsg);
+      if (!summaryMessage) return;
       const summaryEmbed = new EmbedRosterSummary();
       summaryMessage.edit({ embeds: [summaryEmbed] });
       try {
