@@ -39,7 +39,7 @@ module.exports = {
     setInterval(() => {
       const date = new Date();
       const time = format(date, "HHmm");
-      if (time == "1745") {
+      if (time == "1645") {
         let channelName;
         let message;
         if (isMonday(date) || isThursday(date)) {
