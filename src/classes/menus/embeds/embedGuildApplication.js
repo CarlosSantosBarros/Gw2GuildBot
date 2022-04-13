@@ -15,6 +15,23 @@ module.exports = class EmbedGuildApplication extends MessageEmbed {
     );
     this.setThumbnail(this.user.avatarURL());
     let embedColour = "YELLOW";
+    const application = state.application;
+    this.addField("Server:", `${application.server.name}`);
+    this.addField("WvW Rank:", `${application.wvwRank}`);
+    if (application.isLegal)
+      this.addField("Are you over 18?", application.isLegal);
+    if (application.willRoleSwap)
+      this.addField(
+        "Are you willing to play other classes or builds?",
+        application.willRoleSwap
+      );
+    if (application.hasDoneProfs)
+      client.proficiencyData.forEach((proficiency) =>
+        // @ts-ignore
+        this.addFields(new FieldProficiency(proficiency, member))
+      );
+    if (application.personalMessage)
+      this.addField("Personal Message", application.personalMessage);
     if (state.applicationStatus) {
       const status = state.applicationStatus;
       switch (status.status) {
@@ -30,24 +47,6 @@ module.exports = class EmbedGuildApplication extends MessageEmbed {
       }
       // @ts-ignore
       this.addFields(new FieldAppStatus(state.applicationStatus));
-    } else {
-      const application = state.application;
-      this.addField("Server:", `${application.server.name}`);
-      this.addField("WvW Rank:", `${application.wvwRank}`);
-      if (application.isLegal)
-        this.addField("Are you over 18?", application.isLegal);
-      if (application.willRoleSwap)
-        this.addField(
-          "Are you willing to play other classes or builds?",
-          application.willRoleSwap
-        );
-      if (application.hasDoneProfs)
-        client.proficiencyData.forEach((proficiency) =>
-          // @ts-ignore
-          this.addFields(new FieldProficiency(proficiency, member))
-        );
-      if (application.personalMessage)
-        this.addField("Personal Message", application.personalMessage);
     }
     this.setColor(embedColour);
   }
