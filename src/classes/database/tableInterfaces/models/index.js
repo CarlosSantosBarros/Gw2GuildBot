@@ -1,4 +1,3 @@
-const { log } = require("../../../../utils/utils");
 const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize("database", "user", "password", {
@@ -13,7 +12,7 @@ const sequelize = new Sequelize("database", "user", "password", {
   try {
     await sequelize.sync();
     await sequelize.authenticate();
-    log("Connected to database.");
+    console.log("Connected to database.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }
