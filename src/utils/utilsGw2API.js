@@ -77,6 +77,7 @@ exports.getGW2GuildInfo = async () => {
 
 exports.getGW2GuildLog = async (id) => {
   const { guildLeaderKey, gw2GuildId } = guildSettings;
+  api.debugging(false);
   api.authenticate(guildLeaderKey);
   let returnData;
   await api
