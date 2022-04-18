@@ -1,4 +1,4 @@
-const { log } = require("../utils/utils");
+const { log, isVerifiedMember } = require("../utils/utils");
 const Discord = require("discord.js");
 const { format, isMonday, isThursday, isTuesday } = require("date-fns");
 const { roleMention } = require("@discordjs/builders");
@@ -84,21 +84,16 @@ module.exports = {
         const guildLog = await getGW2GuildLog(json.lastId);
         if (guildLog.length === 0) console.log("No new guild events");
         else {
-          const gw2db = new InterfaceGW2Player();
           guildLog.reverse().forEach(async (entry) => {
             if (entry.type == "joined") {
-              const userId = await gw2db.getPlayerDataByIgn(entry.user);
-              const memberObj = server.getMemberById(userId.snowflake);
-              const member = new MemberUtils(memberObj);
+              const member = await isVerifiedMember(entry);
               await member.addMemberRole();
               await member.addRecruitRole();
               console.log(
                 `${entry.user} Joined guild, i have given them roles`
               );
             } else if (entry.type == "rank_change") {
-              const userId = await gw2db.getPlayerDataByIgn(entry.user);
-              const memberObj = server.getMemberById(userId.snowflake);
-              const member = new MemberUtils(memberObj);
+              const member = await isVerifiedMember(entry);
 
               const oldRank = server.getRoleByNameAndColor(
                 entry.old_rank,
@@ -113,9 +108,7 @@ module.exports = {
               await member.addRole(newRank.id);
               console.log(`${entry.user} has had roles changed`);
             } else if (entry.type == "kick") {
-              const userId = await gw2db.getPlayerDataByIgn(entry.user);
-              const memberObj = server.getMemberById(userId.snowflake);
-              const member = new MemberUtils(memberObj);
+              const member = await isVerifiedMember(entry);
               await member.roles.remove(member.roles.cache);
               console.log(`${entry.user} Left guild, i have removed roles`);
             }
