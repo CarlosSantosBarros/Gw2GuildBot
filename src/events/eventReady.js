@@ -67,17 +67,22 @@ module.exports = {
     setInterval(async () => {
       const { rosterSummaryChannel, rosterSummaryMsg } = guildSettings;
       const summaryChan = server.getChannelById(rosterSummaryChannel);
-      if (!summaryChan) return;
-      const summaryMessage = await summaryChan.messages.fetch(rosterSummaryMsg);
-      if (!summaryMessage) return;
-      const summaryEmbed = new EmbedRosterSummary();
-      summaryMessage.edit({ embeds: [summaryEmbed] });
+      if (summaryChan) {
+        const summaryMessage = await summaryChan.messages.fetch(
+          rosterSummaryMsg
+        );
+        if (summaryMessage) {
+          const summaryEmbed = new EmbedRosterSummary();
+          summaryMessage.edit({ embeds: [summaryEmbed] });
+        }
+      }
       try {
+        console.log("Checking guild log for new events");
         const path = "/scyncLog.json";
         const readData = fs.readFileSync(__dirname + path, "utf8");
         const json = JSON.parse(readData);
         const guildLog = await getGW2GuildLog(json.lastId);
-        if (guildLog.length === 0) return;
+        if (guildLog.length === 0) console.log("No new guild events");
         else {
           const gw2db = new InterfaceGW2Player();
           guildLog.reverse().forEach(async (entry) => {
