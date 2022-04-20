@@ -86,7 +86,7 @@ module.exports = {
         else {
           guildLog.reverse().forEach(async (entry) => {
             if (entry.type == "joined") {
-              const member = await isVerifiedMember(entry);
+              const member = await isVerifiedMember(entry.user);
               if (!member) return;
 
               await member.addMemberRole();
@@ -95,22 +95,15 @@ module.exports = {
                 `${entry.user} Joined guild, i have given them roles`
               );
             } else if (entry.type == "rank_change") {
-              const member = await isVerifiedMember(entry);
+              const member = await isVerifiedMember(entry.user);
               if (!member) return;
 
-              const oldRank = server.getRoleByNameAndColor(
-                entry.old_rank,
-                guildSettings.gw2RankColour
-              );
-              await member.removeRole(oldRank.id);
-              const newRank = server.getRoleByNameAndColor(
-                entry.new_rank,
-                guildSettings.gw2RankColour
-              );
-              await member.addRole(newRank.id);
+              const oldRank = server.getGw2RankByName(entry.old_rank);
+              const newRank = server.getGw2RankByName(entry.new_rank);
+              await member.replaceRoleWith(oldRank.id, newRank.id);
               console.log(`${entry.user} has had roles changed`);
             } else if (entry.type == "kick") {
-              const member = await isVerifiedMember(entry);
+              const member = await isVerifiedMember(entry.user);
               if (!member) return;
 
               await member.roles.remove(member.roles.cache);

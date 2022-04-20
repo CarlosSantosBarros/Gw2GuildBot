@@ -1,3 +1,4 @@
+const { ServerUtils } = require(".");
 const { guildSettings, professionsSettings } = require("../config.json");
 const { RoleUtils } = require("./utilsRole");
 /**
@@ -12,6 +13,7 @@ exports.MemberUtils = class extends RoleUtils {
     super();
     this.member = member;
     this.init(member.roles);
+    this.server = new ServerUtils();
   }
   async addRole(id) {
     await this.roles.add(id);
@@ -51,5 +53,16 @@ exports.MemberUtils = class extends RoleUtils {
   }
   isMentorFor(value) {
     return this.getRoleByNameAndColor(value, professionsSettings.mentorColor);
+  }
+  async addRankrole(rank) {
+    const rankRole = this.server.getRoleByName(rank);
+    if (!rankRole)
+      throw "The role for your rank does not exist, please contact a mod or guild officer";
+    if (this.getRoleById(rankRole.id)) return;
+    await this.addRole(rankRole.id);
+  }
+  async replaceRoleWith(oldRole, newRole) {
+    await this.member.removeRole(oldRole.id);
+    await this.member.addRole(newRole.id);
   }
 };

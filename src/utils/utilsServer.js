@@ -1,12 +1,18 @@
 const { client } = require("..");
 const { guildSettings, professionsSettings } = require("../config.json");
 const { RoleUtils } = require("./utilsRole");
-
+const {
+  discordGuildId,
+  memberRole,
+  officerRole,
+  applicationChannel,
+  gw2RankColour,
+} = guildSettings;
 exports.ServerUtils = class extends RoleUtils {
   constructor() {
     super();
     this.guild = client.guilds.cache.find(
-      (guildEntry) => guildEntry.id === guildSettings.discordGuildId
+      (guildEntry) => guildEntry.id === discordGuildId
     );
     this.init(this.guild.roles);
   }
@@ -29,20 +35,19 @@ exports.ServerUtils = class extends RoleUtils {
   }
 
   getMembers() {
-    return this.getMembersByRoleId(guildSettings.memberRole);
+    return this.getMembersByRoleId(memberRole);
   }
 
   getOfficers() {
-    return this.getMembersByRoleId(guildSettings.officerRole);
+    return this.getMembersByRoleId(officerRole);
   }
 
   getApplicationChan() {
-    return this.getChannelById(guildSettings.applicationChannel);
+    return this.getChannelById(applicationChannel);
   }
 
   isApplicationChan(value) {
-    if (value == this.getChannelById(guildSettings.applicationChannel))
-      return true;
+    if (value == this.getChannelById(applicationChannel)) return true;
     return false;
   }
 
@@ -62,9 +67,11 @@ exports.ServerUtils = class extends RoleUtils {
   getPlayers(value) {
     return this.guild.members.cache.filter(
       (member) =>
-        member.roles.cache.find(
-          (role) => role.id === guildSettings.memberRole
-        ) && member.roles.cache.find((role) => role.name === value)
+        member.roles.cache.find((role) => role.id === memberRole) &&
+        member.roles.cache.find((role) => role.name === value)
     ).size;
+  }
+  getGw2RankByName(rankName) {
+    return this.getRoleByNameAndColor(rankName, gw2RankColour);
   }
 };

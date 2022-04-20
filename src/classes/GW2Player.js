@@ -1,6 +1,6 @@
 const { getGW2GuildInfo } = require("../utils/utilsGw2API");
 const { InterfaceGW2Player } = require("./database");
-const { ServerUtils, MemberUtils } = require("../utils/");
+const { MemberUtils } = require("../utils/");
 const { guildSettings } = require("../config.json");
 
 exports.GW2Player = class extends InterfaceGW2Player {
@@ -21,8 +21,6 @@ exports.GW2Player = class extends InterfaceGW2Player {
       throw "This key is missing the **progression** scope";
     this.updatePlayer();
 
-    const server = new ServerUtils();
-
     if (this.accountData.guilds.includes(guildSettings.gw2GuildId)) {
       await this.member.addMemberRole();
 
@@ -30,8 +28,7 @@ exports.GW2Player = class extends InterfaceGW2Player {
       const guildMember = guildInfo.find(
         (gMember) => gMember.name === this.accountData.name
       );
-      const rankRole = server.getRoleByName(guildMember.rank);
-      await this.member.addRole(rankRole.id);
+      await this.member.addRankrole(guildMember.rank);
     } else await this.member.addVerifiedRole();
   }
 
