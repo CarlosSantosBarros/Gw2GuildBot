@@ -5,13 +5,9 @@ const { guildSettings } = require("../config.json");
 
 exports.GW2Player = class extends InterfaceGW2Player {
   constructor(member) {
-    super(member.user.id);
+    super();
+    this.id = member.user.id;
     this.member = new MemberUtils(member);
-  }
-
-  async init() {
-    await this.getPlayerDataById();
-    await this.getAccountData();
   }
 
   async verify(key) {
@@ -32,8 +28,9 @@ exports.GW2Player = class extends InterfaceGW2Player {
     } else await this.member.addVerifiedRole();
   }
 
-  getApplicationData() {
-    console.log(this.accountData);
+  async getApplicationData() {
+    await this.getPlayerDataById(this.id);
+    await this.getAccountData();
     return {
       snowflake: this.id,
       accountName: this.accountData.name,

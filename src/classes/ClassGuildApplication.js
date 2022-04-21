@@ -20,8 +20,7 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
 
   async startApplication(member) {
     const player = new GW2Player(member);
-    await player.init();
-    const accountData = player.getApplicationData();
+    const accountData = await player.getApplicationData();
     const serverInfo = await getWorld(accountData.application.server);
     this.setAccountData(accountData, serverInfo);
   }

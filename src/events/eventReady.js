@@ -63,7 +63,7 @@ module.exports = {
       }
     }, 60000);
 
-    const intervalTime = guildSettings.scyncTimerInMins * 60000;
+    const intervalTime = guildSettings.syncTimerInMins * 60000;
     setInterval(async () => {
       const { rosterSummaryChannel, rosterSummaryMsg } = guildSettings;
       const summaryChan = server.getChannelById(rosterSummaryChannel);
@@ -78,7 +78,7 @@ module.exports = {
       }
       try {
         console.log("Checking guild log for new events");
-        const path = "/scyncLog.json";
+        const path = "/SyncLog.json";
         const readData = fs.readFileSync(__dirname + path, "utf8");
         const json = JSON.parse(readData);
         const guildLog = await getGW2GuildLog(json.lastId);

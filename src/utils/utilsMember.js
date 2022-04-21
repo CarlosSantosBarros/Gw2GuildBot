@@ -24,6 +24,9 @@ exports.MemberUtils = class extends RoleUtils {
   getUser() {
     return this.member.user;
   }
+  getId() {
+    return this.member.user.id;
+  }
   async addMemberRole() {
     if (!this.isMember()) await this.addRole(guildSettings.memberRole);
   }

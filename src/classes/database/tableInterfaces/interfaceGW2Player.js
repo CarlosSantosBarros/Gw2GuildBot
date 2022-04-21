@@ -2,16 +2,16 @@ const Interface = require("./Interface");
 const { ModelGW2Player } = require("./models");
 const { getGW2AccountInfo } = require("../../../utils/utilsGw2API");
 
+// refactor - bad smell here
 module.exports = class InterfaceGW2Player extends Interface {
-  constructor(id) {
+  constructor() {
     super(ModelGW2Player);
-    this.id = id;
-    this.setSelector({ where: { snowflake: this.id } });
     this.playerData;
     this.accountData;
     this.apiKey;
   }
-  async getPlayerDataById() {
+  async getPlayerDataById(id) {
+    this.setSelector({ where: { snowflake: id } });
     this.playerData = await this.get();
     this.apiKey = this.playerData.apiKey;
   }
