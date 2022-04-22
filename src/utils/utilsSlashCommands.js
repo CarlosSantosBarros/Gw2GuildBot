@@ -5,12 +5,7 @@ const path = require("path");
 const { client } = require("../index");
 const Discord = require("discord.js");
 
-// ------ uncomment the next line
-// const { token, clientId } = require("../config.json");
-
-// ------ comment the next two lines
-const token = process.env.DISCORD_TOKEN;
-const clientId = process.env.CLIENT_ID;
+const { token, clientId } = require("../config.json");
 
 const rest = new REST({ version: "9" }).setToken(token);
 
