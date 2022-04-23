@@ -39,13 +39,5 @@ module.exports = {
       content: `**Verified** ${verifiedString} **Not Verified** ${notVerifiedMembers}`,
       ephemeral: true,
     });
-
-    if (this.accountData.guilds.includes(guildSettings.gw2GuildId)) {
-      await this.member.addMemberRole();
-      const guildMember = guildInfo.find(
-        (gMember) => gMember.name === this.accountData.name
-      );
-      await this.member.addRankrole(guildMember.rank);
-    } else await this.member.addVerifiedRole();
   },
 };
