@@ -4,6 +4,8 @@ module.exports = {
   name: "guildMemberUpdate",
   once: false,
   async execute(oldMember, newMember) {
+    const roleProtection = false;
+    if (!roleProtection) return;
     const logs = await oldMember.guild.fetchAuditLogs({
       limit: 1,
       type: "MEMBER_ROLE_UPDATE",
