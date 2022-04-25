@@ -1,4 +1,4 @@
-const { ServerUtils } = require(".");
+const { ServerUtils } = require("./");
 const { guildSettings, professionsSettings } = require("../config.json");
 const { RoleUtils } = require("./utilsRole");
 /**

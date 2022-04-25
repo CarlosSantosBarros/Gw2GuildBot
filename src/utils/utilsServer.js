@@ -8,6 +8,7 @@ const {
   applicationChannel,
   gw2RankColour,
 } = guildSettings;
+
 exports.ServerUtils = class extends RoleUtils {
   constructor() {
     super();
