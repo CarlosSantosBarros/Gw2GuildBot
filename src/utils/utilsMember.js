@@ -13,7 +13,6 @@ exports.MemberUtils = class extends RoleUtils {
     super();
     this.member = member;
     this.init(member.roles);
-    this.server = new ServerUtils();
   }
   async addRole(id) {
     await this.roles.add(id);
@@ -58,7 +57,8 @@ exports.MemberUtils = class extends RoleUtils {
     return this.getRoleByNameAndColor(value, professionsSettings.mentorColor);
   }
   async addRankrole(rank) {
-    const rankRole = this.server.getRoleByName(rank);
+    const server = new ServerUtils();
+    const rankRole = server.getRoleByName(rank);
     if (!rankRole)
       throw "The role for your rank does not exist, please contact a mod or guild officer";
     if (this.getRoleById(rankRole.id)) return;
