@@ -24,7 +24,8 @@ module.exports = class InterfaceGW2Player extends Interface {
   async getAccountData() {
     this.accountData = await getGW2AccountInfo(this.apiKey);
   }
-  async updatePlayer() {
+  async updatePlayer(id) {
+    this.setSelector({ where: { snowflake: id } });
     await this.findOrCreate();
     await this.update({
       accountName: this.accountData.name,

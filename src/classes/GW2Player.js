@@ -15,7 +15,7 @@ exports.GW2Player = class extends InterfaceGW2Player {
     await this.getAccountData();
     if (!this.accountData.wvw_rank)
       throw "This key is missing the **progression** scope";
-    this.updatePlayer();
+    this.updatePlayer(this.id);
 
     if (this.accountData.guilds.includes(guildSettings.gw2GuildId)) {
       await this.member.addMemberRole();
