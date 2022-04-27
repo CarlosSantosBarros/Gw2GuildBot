@@ -5,8 +5,7 @@ const { roleMention } = require("@discordjs/builders");
 const { createCollection } = require("../utils/utils");
 const { professionsSettings, guildSettings } = require("../config.json");
 const { getGW2GuildLog } = require("../utils/utilsGw2API");
-const { ServerUtils, MemberUtils } = require("../utils");
-const { InterfaceGW2Player } = require("../classes/database");
+const { ServerUtils } = require("../utils");
 const fs = require("fs");
 const EmbedRosterSummary = require("../classes/menus/embeds/embedRosterSummary");
 

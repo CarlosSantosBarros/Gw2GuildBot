@@ -1,4 +1,4 @@
-exports.RoleUtils = class {
+module.exports = class RoleUtils {
   constructor() {
     this.roles;
   }

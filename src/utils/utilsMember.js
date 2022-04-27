@@ -1,6 +1,6 @@
-const { ServerUtils } = require("./");
+const ServerUtils = require("./utilsServer");
 const { guildSettings, professionsSettings } = require("../config.json");
-const { RoleUtils } = require("./utilsRole");
+const RoleUtils = require("./utilsRole");
 /**
  * extend GuildMember class
  * super(client, member, guild)
@@ -8,7 +8,7 @@ const { RoleUtils } = require("./utilsRole");
  * something to do with the role manager
  */
 
-exports.MemberUtils = class extends RoleUtils {
+module.exports = class MemberUtils extends RoleUtils {
   constructor(member) {
     super();
     this.member = member;

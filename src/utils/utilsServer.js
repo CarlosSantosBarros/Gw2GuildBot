@@ -1,6 +1,6 @@
 const { client } = require("..");
 const { guildSettings, professionsSettings } = require("../config.json");
-const { RoleUtils } = require("./utilsRole");
+const RoleUtils = require("./utilsRole");
 const {
   discordGuildId,
   memberRole,
@@ -9,7 +9,7 @@ const {
   gw2RankColour,
 } = guildSettings;
 
-exports.ServerUtils = class extends RoleUtils {
+module.exports = class ServerUtils extends RoleUtils {
   constructor() {
     super();
     this.guild = client.guilds.cache.find(
