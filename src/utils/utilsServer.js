@@ -1,21 +1,11 @@
-const { client } = require("..");
 const { guildSettings, professionsSettings } = require("../config.json");
 const RoleUtils = require("./utilsRole");
-const {
-  discordGuildId,
-  memberRole,
-  officerRole,
-  applicationChannel,
-  gw2RankColour,
-} = guildSettings;
+const { memberRole, officerRole, applicationChannel, gw2RankColour } =
+  guildSettings;
 
 module.exports = class ServerUtils extends RoleUtils {
   constructor() {
     super();
-    this.guild = client.guilds.cache.find(
-      (guildEntry) => guildEntry.id === discordGuildId
-    );
-    this.init(this.guild.roles);
   }
 
   getChannelByNameAndType(name, type) {

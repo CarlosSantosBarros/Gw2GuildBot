@@ -1,6 +1,5 @@
 const Menu = require("./Menu");
 const { client } = require("../../index");
-// const { MemberUtils } = require("../utils/");
 const {
   ButtonsGW2Professions,
   SelectMenuProfessions,

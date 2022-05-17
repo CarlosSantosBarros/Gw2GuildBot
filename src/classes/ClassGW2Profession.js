@@ -7,10 +7,11 @@ exports.ClassGW2Profession = class extends StateGW2Profession {
     super(member.user.id);
     this.member = new MemberUtils(member);
     this.server = new ServerUtils();
+    this.selectedRole = undefined;
   }
 
-  getSelectedRole() {
-    return this.server.getRoleByNameAndColor(
+  async getSelectedRole() {
+    this.selectedRole = await this.server.getRoleByNameAndColor(
       this.state.profession,
       this.state.proficiency.color
     );
@@ -26,19 +27,22 @@ exports.ClassGW2Profession = class extends StateGW2Profession {
       this.state.proficiency.color
     );
     if (currentMain) await this.member.removeRole(currentMain.id);
-    this.removeRoleInOtherSlot();
-    await this.member.addRole(this.getSelectedRole().id);
+    await this.removeRoleInOtherSlot();
+    await this.getSelectedRole();
+    await this.member.addRole(this.selectedRole.id);
     return this.setEmptyState();
   }
 
   async addProfession() {
-    this.removeRoleInOtherSlot();
-    await this.member.addRole(this.getSelectedRole().id);
+    await this.removeRoleInOtherSlot();
+    await this.getSelectedRole();
+    await this.member.addRole(this.selectedRole.id);
     return this.setEmptyState();
   }
 
   async removeProfession() {
-    await this.member.removeRole(this.getSelectedRole().id);
+    await this.getSelectedRole();
+    await this.member.removeRole(this.selectedRole.id);
     return this.setEmptyState();
   }
 

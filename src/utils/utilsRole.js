@@ -1,5 +1,12 @@
+const { client } = require("..");
+const { guildSettings } = require("../config.json");
+
 module.exports = class RoleUtils {
   constructor() {
+    this.guild = client.guilds.cache.find(
+      (guildEntry) => guildEntry.id === guildSettings.discordGuildId
+    );
+    this.init(this.guild.roles);
     this.roles;
   }
   init(roles) {
@@ -23,9 +30,15 @@ module.exports = class RoleUtils {
     return this.roles.cache.filter((role) => role.hexColor === colorHexValue);
   }
 
-  getRoleByNameAndColor(roleName, colorHexValue) {
-    return this.roles.cache.find(
-      (role) => role.hexColor === colorHexValue && role.name === roleName
+  async getRoleByNameAndColor(name, color) {
+    const roleTarget = this.roles.cache.find(
+      (role) => role.hexColor === color && role.name === name
     );
+    if (!roleTarget)
+      return await this.guild.roles.create({
+        name,
+        color,
+      });
+    return roleTarget;
   }
 };

@@ -9,10 +9,13 @@ module.exports = class SelectMenuProfession extends MessageActionRow {
       const proficiency = state.proficiency;
       const proficiencyRoles = member.getProficiencies(proficiency.color);
       if (proficiencyRoles.size == proficiency.max)
-        this.availableProfessions = professionsData.filter((profItem) =>
+        this.availableProfessions = professionsData.filter(async (profItem) =>
           proficiency.value === "main"
             ? !member.isMentorFor(profItem.value)
-            : member.getRoleByNameAndColor(profItem.value, proficiency.color)
+            : await member.getRoleByNameAndColor(
+                profItem.value,
+                proficiency.color
+              )
         );
     }
     this.addComponents(

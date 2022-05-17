@@ -25,10 +25,10 @@ exports.refreshGuildCommands = async (fileFilter, dir, guildId) => {
   await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
     body: commands,
   });
-  const registeredCommands = await client.application.commands.fetch({
-    guildId: guildId,
-  });
-  await setCommandPermissions(registeredCommands, permedCommands);
+  // const registeredCommands = await client.application.commands.fetch({
+  //   guildId: guildId,
+  // });
+  // await setCommandPermissions(registeredCommands, permedCommands);
 };
 
 exports.refreshGlobalCommands = async (fileFilter, dir) => {

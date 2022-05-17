@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { guildSettings, botAdminPerms } = require("../config.json");
+const { botAdminPerms } = require("../config.json");
 const { ServerUtils } = require("../utils");
 const { isVerifiedMember, forEachToString } = require("../utils/utils");
 const { getGW2GuildInfo } = require("../utils/utilsGw2API");
@@ -19,10 +19,10 @@ module.exports = {
     });
     const server = new ServerUtils();
 
-    const guildInfo = await getGW2GuildInfo();
+    const guildMembers = await getGW2GuildInfo();
     const discordMembers = server.getMembers();
     let verifiedString = "";
-    guildInfo.every(async (entry) => {
+    guildMembers.forEach(async (entry) => {
       const verifiedMember = await isVerifiedMember(entry.name);
       if (!verifiedMember) return;
       // await this.member.addRankrole(entry.rank);
@@ -35,9 +35,17 @@ module.exports = {
     };
     const notVerifiedMembers = forEachToString(discordMembers, formatString);
 
-    interaction.update({
+    interaction.editReply({
       content: `**Verified** ${verifiedString} **Not Verified** ${notVerifiedMembers}`,
       ephemeral: true,
     });
   },
 };
+
+/**
+ * verified users
+ *
+ * guild members
+ *
+ * discord users
+ */

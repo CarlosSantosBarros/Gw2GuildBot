@@ -10,12 +10,12 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
   constructor(user) {
     super(user.id);
     this.server = new ServerUtils();
-    this.member = this.getMember();
+    this.member;
   }
 
   getMember() {
-    const member = this.server.getMemberById(this.userId);
-    return new MemberUtils(member);
+    const member = this.server.getMemberById(this.state.snowflake);
+    this.member = new MemberUtils(member);
   }
 
   async startApplication(member) {
@@ -26,6 +26,7 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
   }
 
   async submit() {
+    this.getMember();
     const menu = new MenuGuildApplication(this.member, this.state);
     const embeds = menu.getEmbeds();
     const appChan = this.server.getApplicationChan();
@@ -79,6 +80,7 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
   }
 
   async updateMessage(message) {
+    this.getMember();
     const menu = new MenuGuildApplication(this.member, this.state);
     const embeds = menu.getEmbeds();
     const components = menu.getComponents();
@@ -100,8 +102,7 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
   }
 
   async notify() {
-    const server = new ServerUtils();
-    const member = server.getMemberById(this.state.snowflake);
+    const member = this.server.getMemberById(this.state.snowflake);
     let replyMessage;
     if (this.state.applicationStatus) {
       const status = this.state.applicationStatus;
