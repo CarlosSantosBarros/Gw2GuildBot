@@ -1,11 +1,17 @@
 const { guildSettings, professionsSettings } = require("../config.json");
 const RoleUtils = require("./utilsRole");
+const { client } = require("..");
 const { memberRole, officerRole, applicationChannel, gw2RankColour } =
   guildSettings;
+
+const serverSearch = (guildEntry) =>
+  guildEntry.id === guildSettings.discordGuildId;
 
 module.exports = class ServerUtils extends RoleUtils {
   constructor() {
     super();
+    this.guild = client.guilds.cache.find(serverSearch);
+    this.init(this.guild.roles);
   }
 
   getChannelByNameAndType(name, type) {
@@ -64,5 +70,12 @@ module.exports = class ServerUtils extends RoleUtils {
   }
   getGw2RankByName(rankName) {
     return this.getRoleByNameAndColor(rankName, gw2RankColour);
+  }
+
+  async createRole(name, color) {
+    return await this.guild.roles.create({
+      name,
+      color,
+    });
   }
 };

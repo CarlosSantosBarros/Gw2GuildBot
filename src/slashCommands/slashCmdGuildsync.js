@@ -32,22 +32,26 @@ module.exports = {
       const rankRole = member.hasRankRole();
       if (index > 0) {
         const verifiedGuildMember = guildMembers.splice(index, 1)[0];
-        member.addMemberRole();
+        await member.addMemberRole();
         await member.addRankrole(verifiedGuildMember.rank);
       } else {
-        if (rankRole) member.removeRole(rankRole);
+        if (rankRole) await member.removeRole(rankRole);
         // Notes - this is maybe bad because removeMemberRole() already checks for isMember()
         if (member.isMember()) {
           await gw2db.deletePlayer(verifiedUser.snowflake);
           const proficiencies = member.getAllProficiencies();
-          member.removeRole(proficiencies);
+          if (proficiencies) await member.removeRole(proficiencies);
         }
         await member.removeMemberRole();
       }
     }
+    const getAccNames = (item) => {
+      return `${item.name}\n`;
+    };
+    const notVeried = forEachToString(guildMembers, getAccNames);
 
     interaction.editReply({
-      content: `**Finished**`,
+      content: `**Finished**\nThe following have not verified:\n${notVeried}`,
       ephemeral: true,
     });
   },

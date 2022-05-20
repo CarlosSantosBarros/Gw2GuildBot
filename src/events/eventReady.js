@@ -28,12 +28,24 @@ module.exports = {
     client.gw2pState = new Discord.Collection();
     client.guildAppState = new Discord.Collection();
     client.guildAppStatus = new Discord.Collection();
-    const { professionsData, proficiencyData } = professionsSettings;
+    const { professionsData, proficiencyData, mentorColor } =
+      professionsSettings;
     createCollection(client.professionsData, professionsData);
     log("Profession data loaded");
     createCollection(client.proficiencyData, proficiencyData);
-    log("Role data loaded");
     const server = new ServerUtils();
+    professionsData.forEach(async (profession) => {
+      const name = profession.value;
+      proficiencyData.forEach(async (proficiency) => {
+        const color = proficiency.color;
+        const targetRole = server.getRoleByNameAndColor(name, color);
+        if (!targetRole) await server.createRole(name, color);
+      });
+      const targetRole = server.getRoleByNameAndColor(name, mentorColor);
+      if (!targetRole) await server.createRole(name, mentorColor);
+    });
+
+    log("Role data loaded");
 
     setInterval(() => {
       const date = new Date();

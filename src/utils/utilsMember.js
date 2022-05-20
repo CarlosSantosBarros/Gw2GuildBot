@@ -1,6 +1,12 @@
 const ServerUtils = require("./utilsServer");
 const { guildSettings, professionsSettings } = require("../config.json");
 const RoleUtils = require("./utilsRole");
+const { memberRole, recuitRole, gw2RankColour, verifiedRole } = guildSettings;
+const {
+  Collection,
+  GuildMember,
+  GuildMemberRoleManager,
+} = require("discord.js");
 /**
  * extend GuildMember class
  * super(client, member, guild)
@@ -9,16 +15,20 @@ const RoleUtils = require("./utilsRole");
  */
 
 module.exports = class MemberUtils extends RoleUtils {
+  /**
+   * @param {GuildMember} member
+   */
   constructor(member) {
     super();
     this.member = member;
     this.init(member.roles);
   }
   async addRole(id) {
-    await this.roles.add(id);
+    if (this.roles instanceof GuildMemberRoleManager) await this.roles.add(id);
   }
   async removeRole(id) {
-    await this.roles.remove(id);
+    if (this.roles instanceof GuildMemberRoleManager)
+      await this.roles.remove(id);
   }
   getUser() {
     return this.member.user;
@@ -27,45 +37,57 @@ module.exports = class MemberUtils extends RoleUtils {
     return this.member.user.id;
   }
   async addMemberRole() {
-    if (!this.isMember()) await this.addRole(guildSettings.memberRole);
+    if (!this.isMember()) await this.addRole(memberRole);
   }
   async addVerifiedRole() {
-    await this.addRole(guildSettings.verifiedRole);
+    await this.addRole(verifiedRole);
   }
   async addRecruitRole() {
-    if (!this.isRecuit) await this.addRole(guildSettings.recuitRole);
+    if (!this.isRecuit) await this.addRole(recuitRole);
   }
   async removeMemberRole() {
-    await this.removeRole(guildSettings.memberRole);
+    if (this.isMember()) await this.removeRole(memberRole);
   }
   async removeVerifiedRole() {
-    await this.removeRole(guildSettings.verifiedRole);
+    if (this.isVerified()) await this.removeRole(verifiedRole);
   }
   isMember() {
-    return this.getRoleById(guildSettings.memberRole);
+    return this.getRoleById(memberRole);
   }
   isVerified() {
-    return this.getRoleById(guildSettings.verifiedRole);
+    return this.getRoleById(verifiedRole);
   }
   isRecuit() {
-    return this.getRoleById(guildSettings.recuitRole);
+    return this.getRoleById(recuitRole);
   }
   getProficiencies(color) {
     return this.getAllRolesByColor(color);
   }
+  getAllProficiencies() {
+    let proficiencies = new Collection();
+    professionsSettings.proficiencyData.forEach((entry) => {
+      const currentCollection = this.getProficiencies(entry.color);
+      console.log(currentCollection);
+      proficiencies = proficiencies.concat(currentCollection);
+    });
+    return proficiencies;
+  }
+
   isMentorFor(value) {
     return this.getRoleByNameAndColor(value, professionsSettings.mentorColor);
   }
+  hasRankRole() {
+    return this.getRoleByColor(gw2RankColour);
+  }
   async addRankrole(rank) {
-    const server = new ServerUtils();
-    const rankRole = server.getRoleByName(rank);
-    if (!rankRole)
-      throw "The role for your rank does not exist, please contact a mod or guild officer";
-    if (this.getRoleById(rankRole.id)) return;
-    await this.addRole(rankRole.id);
+    if (this.hasRankRole.name !== rank) {
+      const server = new ServerUtils();
+      const rankRole = await server.createRole(rank, gw2RankColour);
+      await this.addRole(rankRole.id);
+    }
   }
   async replaceRoleWith(oldRole, newRole) {
-    await this.member.removeRole(oldRole.id);
-    await this.member.addRole(newRole.id);
+    await this.removeRole(oldRole.id);
+    await this.addRole(newRole.id);
   }
 };

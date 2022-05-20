@@ -1,14 +1,14 @@
-const { client } = require("..");
-const { guildSettings } = require("../config.json");
+// eslint-disable-next-line no-unused-vars
+const { RoleManager, GuildMemberRoleManager } = require("discord.js");
 
 module.exports = class RoleUtils {
   constructor() {
-    this.guild = client.guilds.cache.find(
-      (guildEntry) => guildEntry.id === guildSettings.discordGuildId
-    );
-    this.init(this.guild.roles);
     this.roles;
   }
+  /**
+   *
+   * @param {(RoleManager|GuildMemberRoleManager)} roles
+   */
   init(roles) {
     this.roles = roles;
   }
@@ -30,15 +30,8 @@ module.exports = class RoleUtils {
     return this.roles.cache.filter((role) => role.hexColor === colorHexValue);
   }
 
-  async getRoleByNameAndColor(name, color) {
-    const roleTarget = this.roles.cache.find(
-      (role) => role.hexColor === color && role.name === name
-    );
-    if (!roleTarget)
-      return await this.guild.roles.create({
-        name,
-        color,
-      });
-    return roleTarget;
+  getRoleByNameAndColor(name, color) {
+    const search = (role) => role.hexColor === color && role.name === name;
+    return this.roles.cache.find(search);
   }
 };
