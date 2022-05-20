@@ -32,4 +32,8 @@ module.exports = class InterfaceGW2Player extends Interface {
       apiKey: this.apiKey,
     });
   }
+  async deletePlayer(id) {
+    this.setSelector({ where: { snowflake: id } });
+    await this.deleted();
+  }
 };

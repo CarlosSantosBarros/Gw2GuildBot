@@ -9,8 +9,11 @@ module.exports = class Interface {
     this.querySelector = selector;
   }
 
-  async getAll(query) {
-    return await this.interfaceModel.findAll(query);
+  /**
+   * @return {Promise<Array>}
+   */
+  async getAll() {
+    return await this.interfaceModel.findAll();
   }
 
   async get() {

@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { ClassGW2Profession } = require("../classes/ClassGW2Profession");
-const { guildSettings } = require("../config.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -8,13 +7,6 @@ module.exports = {
     .setDescription("Add/Remove Professions that you play")
     .setDefaultPermission(false),
   guildCommand: true,
-  perms: [
-    {
-      id: guildSettings.memberRole,
-      type: "ROLE",
-      permission: true,
-    },
-  ],
 
   async execute(interaction) {
     console.log(`Profession command used by ${interaction.user.username}`);

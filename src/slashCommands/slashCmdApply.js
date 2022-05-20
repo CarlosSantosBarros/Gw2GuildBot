@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { ClassGuildApplication } = require("../classes/ClassGuildApplication");
-const { guildSettings } = require("../config.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -8,13 +7,6 @@ module.exports = {
     .setDescription("Apply to join the guild")
     .setDefaultPermission(false),
   guildCommand: true,
-  perms: [
-    {
-      id: guildSettings.verifiedRole,
-      type: "ROLE",
-      permission: true,
-    },
-  ],
 
   async execute(interaction) {
     await interaction.reply({

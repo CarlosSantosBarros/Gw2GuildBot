@@ -3,7 +3,6 @@ const {
   refreshGuildCommands,
   // refreshGlobalCommands,
 } = require("../utils/utilsSlashCommands");
-const { botAdminPerms } = require("../config.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,7 +10,6 @@ module.exports = {
     .setDescription("Refresh/update commands!")
     .setDefaultPermission(false),
   guildCommand: true,
-  perms: botAdminPerms,
 
   async execute(interaction) {
     await interaction.reply({

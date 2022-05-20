@@ -50,7 +50,10 @@ exports.getGW2AccountInfo = async (apikey) => {
     });
   return returnData;
 };
-
+/**
+ * Gets Guildwars 2 Account information.
+ * @return {Promise<Array>} Guild membership info
+ */
 exports.getGW2GuildInfo = async () => {
   const { guildLeaderKey, gw2GuildId } = guildSettings;
   api.authenticate(guildLeaderKey);

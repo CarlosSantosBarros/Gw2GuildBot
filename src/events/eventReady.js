@@ -62,67 +62,67 @@ module.exports = {
       }
     }, 60000);
 
-    const intervalTime = guildSettings.syncTimerInMins * 60000;
-    setInterval(async () => {
-      const { rosterSummaryChannel, rosterSummaryMsg } = guildSettings;
-      const summaryChan = server.getChannelById(rosterSummaryChannel);
-      if (summaryChan) {
-        const summaryMessage = await summaryChan.messages.fetch(
-          rosterSummaryMsg
-        );
-        if (summaryMessage) {
-          const summaryEmbed = new EmbedRosterSummary();
-          summaryMessage.edit({ embeds: [summaryEmbed] });
-        }
-      }
-      try {
-        console.log("Checking guild log for new events");
-        const path = "/SyncLog.json";
-        const readData = fs.readFileSync(__dirname + path, "utf8");
-        const json = JSON.parse(readData);
-        const guildLog = await getGW2GuildLog(json.lastId);
-        if (guildLog.length === 0) console.log("No new guild events");
-        else {
-          guildLog.reverse().forEach(async (entry) => {
-            if (entry.type == "joined") {
-              const member = await isVerifiedMember(entry.user);
-              if (!member) return;
+    //   const intervalTime = guildSettings.syncTimerInMins * 60000;
+    //   setInterval(async () => {
+    //     const { rosterSummaryChannel, rosterSummaryMsg } = guildSettings;
+    //     const summaryChan = server.getChannelById(rosterSummaryChannel);
+    //     if (summaryChan) {
+    //       const summaryMessage = await summaryChan.messages.fetch(
+    //         rosterSummaryMsg
+    //       );
+    //       if (summaryMessage) {
+    //         const summaryEmbed = new EmbedRosterSummary();
+    //         summaryMessage.edit({ embeds: [summaryEmbed] });
+    //       }
+    //     }
+    //     try {
+    //       console.log("Checking guild log for new events");
+    //       const path = "/SyncLog.json";
+    //       const readData = fs.readFileSync(__dirname + path, "utf8");
+    //       const json = JSON.parse(readData);
+    //       const guildLog = await getGW2GuildLog(json.lastId);
+    //       if (guildLog.length === 0) console.log("No new guild events");
+    //       else {
+    //         guildLog.reverse().forEach(async (entry) => {
+    //           if (entry.type == "joined") {
+    //             const member = await isVerifiedMember(entry.user);
+    //             if (!member) return;
 
-              await member.addMemberRole();
-              await member.addRecruitRole();
-              console.log(
-                `${entry.user} Joined guild, i have given them roles`
-              );
-            } else if (entry.type == "rank_change") {
-              const member = await isVerifiedMember(entry.user);
-              if (!member) return;
+    //             await member.addMemberRole();
+    //             await member.addRecruitRole();
+    //             console.log(
+    //               `${entry.user} Joined guild, i have given them roles`
+    //             );
+    //           } else if (entry.type == "rank_change") {
+    //             const member = await isVerifiedMember(entry.user);
+    //             if (!member) return;
 
-              const oldRank = server.getGw2RankByName(entry.old_rank);
-              const newRank = server.getGw2RankByName(entry.new_rank);
-              await member.replaceRoleWith(oldRank.id, newRank.id);
-              console.log(`${entry.user} has had roles changed`);
-            } else if (entry.type == "kick") {
-              const member = await isVerifiedMember(entry.user);
-              if (!member) return;
+    //             const oldRank = server.getGw2RankByName(entry.old_rank);
+    //             const newRank = server.getGw2RankByName(entry.new_rank);
+    //             await member.replaceRoleWith(oldRank.id, newRank.id);
+    //             console.log(`${entry.user} has had roles changed`);
+    //           } else if (entry.type == "kick") {
+    //             const member = await isVerifiedMember(entry.user);
+    //             if (!member) return;
 
-              await member.roles.remove(member.roles.cache);
-              console.log(`${entry.user} Left guild, i have removed roles`);
-            }
-          });
+    //             await member.roles.remove(member.roles.cache);
+    //             console.log(`${entry.user} Left guild, i have removed roles`);
+    //           }
+    //         });
 
-          const lastItem = guildLog[guildLog.length - 1];
-          const item = {
-            lastId: lastItem.id,
-          };
-          const writeData = JSON.stringify(item);
-          fs.writeFile(__dirname + path, writeData, "utf8", (err) => {
-            if (err) console.log(`Error writing file: ${err}`);
-            else console.log(`File is written successfully!`);
-          });
-        }
-      } catch (err) {
-        console.log(`Error reading file from disk: ${err}`);
-      }
-    }, intervalTime);
+    //         const lastItem = guildLog[guildLog.length - 1];
+    //         const item = {
+    //           lastId: lastItem.id,
+    //         };
+    //         const writeData = JSON.stringify(item);
+    //         fs.writeFile(__dirname + path, writeData, "utf8", (err) => {
+    //           if (err) console.log(`Error writing file: ${err}`);
+    //           else console.log(`File is written successfully!`);
+    //         });
+    //       }
+    //     } catch (err) {
+    //       console.log(`Error reading file from disk: ${err}`);
+    //     }
+    //   }, intervalTime);
   },
 };

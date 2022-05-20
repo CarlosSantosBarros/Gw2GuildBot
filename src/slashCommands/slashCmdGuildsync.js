@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { botAdminPerms } = require("../config.json");
-const { ServerUtils } = require("../utils");
+const { InterfaceGW2Player } = require("../classes/database");
+const { ServerUtils, MemberUtils } = require("../utils");
 const { isVerifiedMember, forEachToString } = require("../utils/utils");
 const { getGW2GuildInfo } = require("../utils/utilsGw2API");
 
@@ -10,33 +10,44 @@ module.exports = {
     .setDescription("Sync roles for verified discord users")
     .setDefaultPermission(false),
   guildCommand: true,
-  perms: botAdminPerms,
 
   async execute(interaction) {
     await interaction.reply({
       content: "Syncing...",
       ephemeral: true,
     });
-    const server = new ServerUtils();
 
     const guildMembers = await getGW2GuildInfo();
-    const discordMembers = server.getMembers();
-    let verifiedString = "";
-    guildMembers.forEach(async (entry) => {
-      const verifiedMember = await isVerifiedMember(entry.name);
-      if (!verifiedMember) return;
-      // await this.member.addRankrole(entry.rank);
-      // await this.member.addMemberRole();
-      verifiedString = verifiedString.concat(" ", entry.name);
-      discordMembers.delete(verifiedMember.getId());
-    });
-    const formatString = (item) => {
-      return item.displayNamel;
-    };
-    const notVerifiedMembers = forEachToString(discordMembers, formatString);
+    const gw2db = new InterfaceGW2Player();
+    const verified = await gw2db.getAll();
+    const server = new ServerUtils();
+    while (verified.length > 0) {
+      const verifiedUser = verified.shift().get();
+      const index = guildMembers.findIndex(
+        (entry) => entry.name === verifiedUser.accountName
+      );
+      const member = new MemberUtils(
+        server.getMemberById(verifiedUser.snowflake)
+      );
+      const rankRole = member.hasRankRole();
+      if (index > 0) {
+        const verifiedGuildMember = guildMembers.splice(index, 1)[0];
+        member.addMemberRole();
+        await member.addRankrole(verifiedGuildMember.rank);
+      } else {
+        if (rankRole) member.removeRole(rankRole);
+        // Notes - this is maybe bad because removeMemberRole() already checks for isMember()
+        if (member.isMember()) {
+          await gw2db.deletePlayer(verifiedUser.snowflake);
+          const proficiencies = member.getAllProficiencies();
+          member.removeRole(proficiencies);
+        }
+        await member.removeMemberRole();
+      }
+    }
 
     interaction.editReply({
-      content: `**Verified** ${verifiedString} **Not Verified** ${notVerifiedMembers}`,
+      content: `**Finished**`,
       ephemeral: true,
     });
   },
