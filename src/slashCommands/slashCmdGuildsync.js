@@ -26,9 +26,10 @@ module.exports = {
       const index = guildMembers.findIndex(
         (entry) => entry.name === verifiedUser.accountName
       );
-      const member = new MemberUtils(
-        server.getMemberById(verifiedUser.snowflake)
-      );
+      const discordMember = server.getMemberById(verifiedUser.snowflake);
+      if (!discordMember)
+        return await gw2db.deletePlayer(verifiedUser.snowflake);
+      const member = new MemberUtils(discordMember);
       const rankRole = member.hasRankRole();
       if (index > 0) {
         const verifiedGuildMember = guildMembers.splice(index, 1)[0];
@@ -45,6 +46,7 @@ module.exports = {
         await member.removeMemberRole();
       }
     }
+
     const getAccNames = (item) => {
       return `${item.name}\n`;
     };
