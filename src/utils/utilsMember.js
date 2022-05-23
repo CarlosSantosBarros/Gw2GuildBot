@@ -76,17 +76,27 @@ module.exports = class MemberUtils extends RoleUtils {
   isMentorFor(value) {
     return this.getRoleByNameAndColor(value, professionsSettings.mentorColor);
   }
-  hasRankRole() {
+  getRankRole() {
     return this.getRoleByColor(gw2RankColour);
   }
+
   async addRankrole(rank) {
-    if (this.hasRankRole().name !== rank) {
+    const hasRankRole = this.getRankRole();
+    // these 2 hasRankRole ifs smell bad but i cant see why
+    if (!hasRankRole || hasRankRole.name !== rank) {
       const server = new ServerUtils();
-      let rankRole = this.getRoleByNameAndColor(rank, gw2RankColour);
-      if (!rankRole) rankRole = await server.createRole(rank, gw2RankColour);
-      await this.addRole(rankRole.id);
+      let rankRoleTarget = server.getRoleByNameAndColor(rank, gw2RankColour);
+      if (!rankRoleTarget)
+        rankRoleTarget = await server.createRole(rank, gw2RankColour);
+      await this.addRole(rankRoleTarget);
+    }
+    if (hasRankRole) {
+      if (hasRankRole.name === rank) return;
+      console.log("taek role");
+      await this.removeRole(hasRankRole);
     }
   }
+
   async replaceRoleWith(oldRole, newRole) {
     await this.removeRole(oldRole.id);
     await this.addRole(newRole.id);

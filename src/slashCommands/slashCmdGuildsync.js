@@ -30,7 +30,7 @@ module.exports = {
       if (!discordMember)
         return await gw2db.deletePlayer(verifiedUser.snowflake);
       const member = new MemberUtils(discordMember);
-      const rankRole = member.hasRankRole();
+      const rankRole = member.getRankRole();
       if (index > 0) {
         const verifiedGuildMember = guildMembers.splice(index, 1)[0];
         await member.addMemberRole();

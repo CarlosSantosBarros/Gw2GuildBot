@@ -67,7 +67,8 @@ module.exports = {
           channelName,
           "GUILD_TEXT"
         );
-        if (!announcementChannel) console.log(`${channelName} does not exist`);
+        if (!announcementChannel)
+          return console.log(`${channelName} does not exist`);
         announcementChannel.send({
           content: roleMention(guildSettings.memberRole) + message,
         });
