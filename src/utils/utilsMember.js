@@ -80,9 +80,10 @@ module.exports = class MemberUtils extends RoleUtils {
     return this.getRoleByColor(gw2RankColour);
   }
   async addRankrole(rank) {
-    if (this.hasRankRole.name !== rank) {
+    if (this.hasRankRole().name !== rank) {
       const server = new ServerUtils();
-      const rankRole = await server.createRole(rank, gw2RankColour);
+      let rankRole = this.getRoleByNameAndColor(rank, gw2RankColour);
+      if (!rankRole) rankRole = await server.createRole(rank, gw2RankColour);
       await this.addRole(rankRole.id);
     }
   }
