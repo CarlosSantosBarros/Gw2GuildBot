@@ -1,20 +1,15 @@
-const { log, isVerifiedMember } = require("../utils/utils");
+const { log } = require("../utils/utils");
 const Discord = require("discord.js");
 const { format, isMonday, isThursday, isTuesday } = require("date-fns");
 const { roleMention } = require("@discordjs/builders");
 const { createCollection } = require("../utils/utils");
 const { professionsSettings, guildSettings } = require("../config.json");
-const { getGW2GuildLog } = require("../utils/utilsGw2API");
 const { ServerUtils } = require("../utils");
-const fs = require("fs");
-const EmbedRosterSummary = require("../classes/menus/embeds/embedRosterSummary");
 
 module.exports = {
   name: "ready",
   once: true,
-  /**
-   * @param {import('../classes/ClassClientWrapper').ClientWrapper} client
-   */
+
   async execute(client) {
     log(`Logged in as ${client.user.tag}!`);
     log(`I serve "${client.guilds.cache.size}" servers.`);

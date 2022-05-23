@@ -79,15 +79,3 @@ exports.isProtectedRole = (role) => {
   if (role.hexColor === guildSettings.gw2RankColour) return true;
   return false;
 };
-
-exports.isVerifiedMember = async (user) => {
-  const server = new ServerUtils();
-  const gw2db = new InterfaceGW2Player();
-  const userId = await gw2db.getPlayerDataByIgn(user);
-  if (!userId) {
-    console.log(`${user} has not verified with me`);
-    return;
-  }
-  const memberObj = server.getMemberById(userId.snowflake);
-  return new MemberUtils(memberObj);
-};

@@ -92,7 +92,6 @@ module.exports = class MemberUtils extends RoleUtils {
     }
     if (hasRankRole) {
       if (hasRankRole.name === rank) return;
-      console.log("taek role");
       await this.removeRole(hasRankRole);
     }
   }
