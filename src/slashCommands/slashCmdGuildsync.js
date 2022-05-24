@@ -33,7 +33,7 @@ module.exports = {
 
       const member = new MemberUtils(discordMember);
 
-      if (index > 0) {
+      if (index > -1) {
         const verifiedGuildMember = guildMembers.splice(index, 1)[0];
         await member.addMemberRole();
         await member.addRankrole(verifiedGuildMember.rank);
