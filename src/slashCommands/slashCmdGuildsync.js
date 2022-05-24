@@ -60,16 +60,9 @@ module.exports = {
     const notVeried = forEachToString(guildMembers, getAccNames);
 
     interaction.editReply({
+      // eslint-disable-next-line max-len
       content: `**Finished**\nThe follow have had their roles removed:\n${removedRolesFrom}\nThe following have not verified:\n${notVeried}`,
       ephemeral: true,
     });
   },
 };
-
-/**
- * verified users
- *
- * guild members
- *
- * discord users
- */

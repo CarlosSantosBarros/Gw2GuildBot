@@ -1,10 +1,9 @@
 const { format } = require("date-fns");
 const { memberNicknameMention } = require("@discordjs/builders");
-const { ServerUtils, MemberUtils } = require("./");
+const { ServerUtils } = require("./");
 const { logging, guildSettings } = require("../config.json");
 const { IsSuccessLogging, IsFailureLogging } = logging;
 const fs = require("fs");
-const { InterfaceGW2Player } = require("../classes/database");
 
 // terrible name, call this something else
 exports.findJSStartingWith_In_AndDo_ = (prefix, path, action) => {
@@ -57,6 +56,7 @@ exports.getMentorsAsString = (name) => {
 exports.getProfessionsAsString = (proficiencies) => {
   const { client } = require("../index");
   const professionFormat = (profession) => {
+    // @ts-ignore
     const prof = client.professionsData.get(profession.name);
     const emoji = this.toEmoji(prof);
     return `${emoji} ${prof.label} ${emoji} 

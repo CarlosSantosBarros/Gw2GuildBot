@@ -11,6 +11,15 @@ authenticating for every query is probably bad and will get flagged in high traf
 */
 
 /**
+ * @typedef AccountInfo
+ * @type {object}
+ * @property {string} name
+ * @property {number} world
+ * @property {array} guilds
+ * @property {number} wvw_rank
+ */
+
+/**
  * Gets Guildwars 2 API key/token information.
  * @param {string} apikey - The api key of the user
  * @return {Promise<JSON>} Token info
@@ -33,7 +42,7 @@ exports.getGW2TokenInfo = async (apikey) => {
 /**
  * Gets Guildwars 2 Account information.
  * @param {String} apikey - The api key of the user
- * @return {Promise<JSON>} Account info
+ * @return {Promise<AccountInfo>} Account info
  */
 exports.getGW2AccountInfo = async (apikey) => {
   api.authenticate(apikey);
