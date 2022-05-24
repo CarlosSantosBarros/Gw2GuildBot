@@ -1,5 +1,7 @@
 const { isProtectedRole } = require("../utils/utils");
 
+// this is probably no longer needed
+
 module.exports = {
   name: "guildMemberUpdate",
   once: false,
