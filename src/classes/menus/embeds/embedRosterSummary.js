@@ -40,11 +40,13 @@ module.exports = class EmbedRosterSummary extends MessageEmbed {
     });
 
     this.addField("Profession Breakdown:", "\u200B");
+    // @ts-ignore
     guild.client.professionsData.forEach((professionItem) => {
       const professionFieldString = {
         ...new FieldProfession(professionItem),
         ...{ inline: true },
       };
+      // @ts-ignore
       this.addFields(professionFieldString);
     });
   }

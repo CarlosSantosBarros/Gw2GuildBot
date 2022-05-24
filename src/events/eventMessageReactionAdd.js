@@ -4,6 +4,7 @@ module.exports = {
   once: false,
   async execute(messageReaction, user) {
     if (user.bot) return;
+    // @ts-ignore
     const collection = client.emoji;
     const key = messageReaction.emoji.name;
     if (!collection.has(key)) return;

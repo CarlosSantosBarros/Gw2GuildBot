@@ -30,6 +30,7 @@ exports.ClassGuildApplication = class extends StateGuildApplication {
     const menu = new MenuGuildApplication(this.member, this.state);
     const embeds = menu.getEmbeds();
     const appChan = this.server.getApplicationChan();
+    // @ts-ignore
     const msg = await appChan.send({ embeds: embeds });
 
     const app = this.getAppState();

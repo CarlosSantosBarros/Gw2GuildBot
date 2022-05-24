@@ -10,17 +10,21 @@ module.exports = class StateGuildApplication extends InterfaceGuildApplication {
   }
 
   getAppState() {
+    // @ts-ignore
     this.state = client.guildAppState.get(this.userId);
     return this.state;
   }
   setAppState() {
+    // @ts-ignore
     client.guildAppState.set(this.userId, this.state);
   }
   getAppStatus() {
+    // @ts-ignore
     this.state = client.guildAppStatus.get(this.userId);
     return this.state;
   }
   setAppStatus() {
+    // @ts-ignore
     client.guildAppStatus.set(this.userId, this.state);
   }
 
@@ -97,6 +101,7 @@ module.exports = class StateGuildApplication extends InterfaceGuildApplication {
   }
 
   removeAppState(id) {
+    // @ts-ignore
     client.guildAppState.delete(id);
   }
   // AppState functions --- End ---
@@ -118,6 +123,7 @@ module.exports = class StateGuildApplication extends InterfaceGuildApplication {
   }
 
   removeAppStatus(id) {
+    // @ts-ignore
     client.guildAppStatus.delete(id);
   }
   // AppStatus functions --- End ---

@@ -60,12 +60,11 @@ module.exports = class ServerUtils extends RoleUtils {
     return this.getRoleById(roleId).members;
   }
 
-  // refactor - 2 finds inside of a filter is maybe bad
+  // refactor - refactored but still bad :S
   getPlayers(value) {
-    return this.guild.members.cache.filter(
-      (member) =>
-        member.roles.cache.find((role) => role.id === memberRole) &&
-        member.roles.cache.find((role) => role.name === value)
+    const members = this.getMembers();
+    return members.filter((member) =>
+      member.roles.cache.find((role) => role.name === value)
     ).size;
   }
   getGw2RankByName(rankName) {

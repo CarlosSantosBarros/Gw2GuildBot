@@ -4,12 +4,7 @@ const { guildSettings } = require("./config.json");
 const fs = require("fs");
 const guildId = guildSettings.discordGuildId;
 
-// ----- uncommment next line
 const { token, clientId } = require("./config.json");
-
-// ------ comment the next two lines
-// const token = process.env.DISCORD_TOKEN;
-// const clientId = process.env.CLIENT_ID;
 
 const commands = [];
 const commandFiles = fs

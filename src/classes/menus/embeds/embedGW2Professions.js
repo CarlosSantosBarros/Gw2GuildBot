@@ -14,12 +14,16 @@ module.exports = class EmbedGW2Professions extends MessageEmbed {
     this.setDescription("Professions:");
     this.setThumbnail(this.user.avatarURL());
 
+    // @ts-ignore
     client.proficiencyData.forEach((proficiency) => {
+      // @ts-ignore
       this.addFields(new FieldProficiency(proficiency, member));
       const proficiencies = member.getProficiencies(proficiency.color);
       if (member.isMember())
         proficiencies.forEach((item) => {
+          // @ts-ignore
           const profession = client.professionsData.get(item.name);
+          // @ts-ignore
           this.addFields(new FieldProfession(profession));
         });
     });

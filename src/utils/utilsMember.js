@@ -4,6 +4,7 @@ const RoleUtils = require("./utilsRole");
 const { memberRole, recuitRole, gw2RankColour, verifiedRole } = guildSettings;
 const {
   Collection,
+  // eslint-disable-next-line no-unused-vars
   GuildMember,
   GuildMemberRoleManager,
 } = require("discord.js");
@@ -67,7 +68,6 @@ module.exports = class MemberUtils extends RoleUtils {
     let proficiencies = new Collection();
     professionsSettings.proficiencyData.forEach((entry) => {
       const currentCollection = this.getProficiencies(entry.color);
-      console.log(currentCollection);
       proficiencies = proficiencies.concat(currentCollection);
     });
     return proficiencies;

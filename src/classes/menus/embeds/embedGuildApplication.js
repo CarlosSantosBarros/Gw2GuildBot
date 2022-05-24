@@ -26,6 +26,7 @@ module.exports = class EmbedGuildApplication extends MessageEmbed {
         application.willRoleSwap
       );
     if (application.hasDoneProfs)
+      // @ts-ignore
       client.proficiencyData.forEach((proficiency) =>
         // @ts-ignore
         this.addFields(new FieldProficiency(proficiency, member))
@@ -48,6 +49,7 @@ module.exports = class EmbedGuildApplication extends MessageEmbed {
       // @ts-ignore
       this.addFields(new FieldAppStatus(state.applicationStatus));
     }
+    // @ts-ignore
     this.setColor(embedColour);
   }
 };

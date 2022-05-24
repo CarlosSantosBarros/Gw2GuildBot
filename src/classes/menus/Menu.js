@@ -1,7 +1,7 @@
 module.exports = class Menu {
   constructor() {
-    this.components;
-    this.embeds;
+    this.components = undefined;
+    this.embeds = undefined;
   }
   getEmbeds() {
     return this.embeds;

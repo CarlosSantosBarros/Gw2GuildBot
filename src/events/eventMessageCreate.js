@@ -10,6 +10,7 @@ module.exports = {
     } catch (error) {
       if (typeof error === "object") {
         console.log(error);
+        // eslint-disable-next-line no-ex-assign
         error = "There was an error trying to execute that command!";
       }
       message.reply(error);
