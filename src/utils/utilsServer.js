@@ -1,17 +1,21 @@
+// eslint-disable-next-line no-unused-vars
+const { Guild, Collection, GuildMember } = require("discord.js");
+
 const { guildSettings, professionsSettings } = require("../config.json");
 const RoleUtils = require("./utilsRole");
-const { client } = require("..");
 const { memberRole, officerRole, applicationChannel, gw2RankColour } =
   guildSettings;
 
-const serverSearch = (guildEntry) =>
-  guildEntry.id === guildSettings.discordGuildId;
+/**
+ * Role utils that are tied to a server
+ * @module ServerUtils
+ */
 
 module.exports = class ServerUtils extends RoleUtils {
-  constructor() {
-    super();
-    this.guild = client.guilds.cache.find(serverSearch);
-    this.init(this.guild.roles);
+  /** @param {Guild} guild */
+  constructor(guild) {
+    super(guild.roles);
+    this.guild = guild;
   }
 
   getChannelByNameAndType(name, type) {
@@ -24,24 +28,22 @@ module.exports = class ServerUtils extends RoleUtils {
   }
 
   getMemberById(id) {
-    return this.guild.members.cache.find((member) => member.user.id === id);
+    const returnedMember = this.guild.members.cache.find((member) => member.user.id === id);
+    if (!returnedMember) throw "That user is no longer in the server";
+    else return returnedMember;
   }
 
   getRoleByPermissions(permission) {
     return this.roles.cache.find((role) => !role.permissions.has(permission));
   }
+  /**
+   * @returns {Collection<string,GuildMember>}
+   */
+  getMembers() { return this.getMembersByRoleId(memberRole); }
 
-  getMembers() {
-    return this.getMembersByRoleId(memberRole);
-  }
+  getOfficers() { return this.getMembersByRoleId(officerRole); }
 
-  getOfficers() {
-    return this.getMembersByRoleId(officerRole);
-  }
-
-  getApplicationChan() {
-    return this.getChannelById(applicationChannel);
-  }
+  getApplicationChan() { return this.getChannelById(applicationChannel); }
 
   isApplicationChan(value) {
     if (value == this.getChannelById(applicationChannel)) return true;
@@ -67,9 +69,7 @@ module.exports = class ServerUtils extends RoleUtils {
       member.roles.cache.find((role) => role.name === value)
     ).size;
   }
-  getGw2RankByName(rankName) {
-    return this.getRoleByNameAndColor(rankName, gw2RankColour);
-  }
+  getGw2RankByName(rankName) { return this.getRoleByNameAndColor(rankName, gw2RankColour); }
 
   async createRole(name, color) {
     return await this.guild.roles.create({

@@ -1,99 +1,85 @@
-const ServerUtils = require("./utilsServer");
-const { guildSettings, professionsSettings } = require("../config.json");
-const RoleUtils = require("./utilsRole");
-const { memberRole, recuitRole, gw2RankColour, verifiedRole } = guildSettings;
 const {
-  Collection,
+  Collection, GuildMemberRoleManager,
   // eslint-disable-next-line no-unused-vars
-  GuildMember,
-  GuildMemberRoleManager,
+  GuildMember, User, Role, RoleResolvable
 } = require("discord.js");
-/**
- * extend GuildMember class
- * super(client, member, guild)
- * cant do this, .filter() breaks,
- * something to do with the role manager
- */
+const RoleUtils = require("./utilsRole");
+const { guildSettings, professionsSettings } = require("../config.json");
+const { mentorColor } = professionsSettings;
+const { memberRole, recuitRole, gw2RankColour, verifiedRole } = guildSettings;
+const { proficiencyData } = require("./utilsCollections");
 
+
+/**
+ * @extends RoleUtils
+ */
 module.exports = class MemberUtils extends RoleUtils {
-  /**
-   * @param {GuildMember} member
-   */
+  /** @param {GuildMember} member */
   constructor(member) {
-    super();
+    super(member.roles);
     this.member = member;
-    this.init(member.roles);
   }
+  /** @param {RoleResolvable|Collection<string,Role>} id */
   async addRole(id) {
     if (this.roles instanceof GuildMemberRoleManager) await this.roles.add(id);
   }
+  /** @param {RoleResolvable|Collection<string,Role>} id */
   async removeRole(id) {
-    if (this.roles instanceof GuildMemberRoleManager)
-      await this.roles.remove(id);
+    if (this.roles instanceof GuildMemberRoleManager) await this.roles.remove(id);
   }
-  getUser() {
-    return this.member.user;
-  }
-  getId() {
-    return this.member.user.id;
-  }
-  async addMemberRole() {
-    if (!this.isMember()) await this.addRole(memberRole);
-  }
-  async addVerifiedRole() {
-    await this.addRole(verifiedRole);
-  }
-  async addRecruitRole() {
-    if (!this.isRecuit) await this.addRole(recuitRole);
-  }
-  async removeMemberRole() {
-    if (this.isMember()) await this.removeRole(memberRole);
-  }
-  async removeVerifiedRole() {
-    if (this.isVerified()) await this.removeRole(verifiedRole);
-  }
-  isMember() {
-    return this.getRoleById(memberRole);
-  }
-  isVerified() {
-    return this.getRoleById(verifiedRole);
-  }
-  isRecuit() {
-    return this.getRoleById(recuitRole);
-  }
-  getProficiencies(color) {
-    return this.getAllRolesByColor(color);
-  }
-  getAllProficiencies() {
+  /** @returns {User} */
+  getUser() { return this.member.user; }
+  /** @returns {string} */
+  getId() { return this.member.user.id; }
+
+  async addMemberRole() { if (!this.isMember()) await this.addRole(memberRole); }
+  async addVerifiedRole() { await this.addRole(verifiedRole); }
+  async addRecruitRole() { if (!this.isRecuit) await this.addRole(recuitRole); }
+  async removeMemberRole() { if (this.isMember()) await this.removeRole(memberRole); }
+  async removeVerifiedRole() { if (this.isVerified()) await this.removeRole(verifiedRole); }
+
+  /** @returns {(Role|undefined)} */
+  isMember() { return this.getRoleById(memberRole); }
+
+  /** @returns {(Role|undefined)} */
+  isVerified() { return this.getRoleById(verifiedRole); }
+
+  /** @returns {(Role|undefined)} */
+  isRecuit() { return this.getRoleById(recuitRole); }
+
+  /**
+   * @param {string} color
+   * @returns {Collection<string,Role>}
+   */
+  getProficiencies(color) { return this.getAllRolesByColor(color); }
+
+  async removeProficiencies() {
     let proficiencies = new Collection();
-    professionsSettings.proficiencyData.forEach((entry) => {
+    proficiencyData.forEach((entry) => {
       const currentCollection = this.getProficiencies(entry.color);
       proficiencies = proficiencies.concat(currentCollection);
     });
-    return proficiencies;
+    await this.removeRole(proficiencies);
   }
 
-  isMentorFor(value) {
-    return this.getRoleByNameAndColor(value, professionsSettings.mentorColor);
-  }
-  getRankRole() {
-    return this.getRoleByColor(gw2RankColour);
+  /**
+   * @param {string} value
+   * @returns {(Role|undefined)}
+   */
+  isMentorFor(value) { return this.getRoleByNameAndColor(value, mentorColor); }
+
+  /** @returns {(Role|undefined)} */
+  getRankRole() { return this.getRoleByColor(gw2RankColour); }
+
+  /** @param {Role} rankRole */
+  async addRankrole(rankRole) {
+    await this.removeRankRole();
+    await this.addRole(rankRole.id);
   }
 
-  async addRankrole(rank) {
-    const hasRankRole = this.getRankRole();
-    // these 2 hasRankRole ifs smell bad but i cant see why
-    if (!hasRankRole || hasRankRole.name !== rank) {
-      const server = new ServerUtils();
-      let rankRoleTarget = server.getRoleByNameAndColor(rank, gw2RankColour);
-      if (!rankRoleTarget)
-        rankRoleTarget = await server.createRole(rank, gw2RankColour);
-      await this.addRole(rankRoleTarget);
-    }
-    if (hasRankRole) {
-      if (hasRankRole.name === rank) return;
-      await this.removeRole(hasRankRole);
-    }
+  async removeRankRole() {
+    const rankRole = this.getRankRole();
+    if (rankRole) await this.removeRole(rankRole);
   }
 
   async replaceRoleWith(oldRole, newRole) {

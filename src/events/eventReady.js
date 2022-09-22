@@ -1,44 +1,30 @@
-const { log, guildSync } = require("../utils/utils");
+const { log, guildSync, getGuild } = require("../utils/utils");
 const Discord = require("discord.js");
 const { format, isMonday, isThursday, isTuesday } = require("date-fns");
 const { roleMention } = require("@discordjs/builders");
-const { createCollection } = require("../utils/utils");
-const { professionsSettings, guildSettings } = require("../config.json");
+const { guildSettings } = require("../config.json");
 const { ServerUtils } = require("../utils");
 
 module.exports = {
   name: "ready",
   once: true,
-
+  /**
+ * @param {Client} client
+ */
   async execute(client) {
     log(`Logged in as ${client.user.tag}!`);
     log(`I serve "${client.guilds.cache.size}" servers.`);
     require("../slashCommands/index")(client);
     require("./interactions/selectMenus/index")(client);
     require("./interactions/buttons/index")(client);
+    require("./interactions/modals/index")(client);
     require("../events/reactions/index")(client);
     require("./channelTypes/index")(client);
-    client.professionsData = new Discord.Collection();
-    client.proficiencyData = new Discord.Collection();
     client.gw2pState = new Discord.Collection();
     client.guildAppState = new Discord.Collection();
     client.guildAppStatus = new Discord.Collection();
-    const { professionsData, proficiencyData, mentorColor } =
-      professionsSettings;
-    createCollection(client.professionsData, professionsData);
-    log("Profession data loaded");
-    createCollection(client.proficiencyData, proficiencyData);
-    const server = new ServerUtils();
-    professionsData.forEach(async (profession) => {
-      const name = profession.value;
-      proficiencyData.forEach(async (proficiency) => {
-        const color = proficiency.color;
-        const targetRole = server.getRoleByNameAndColor(name, color);
-        if (!targetRole) await server.createRole(name, color);
-      });
-      const targetRole = server.getRoleByNameAndColor(name, mentorColor);
-      if (!targetRole) await server.createRole(name, mentorColor);
-    });
+    const guild = getGuild(client);
+    const server = new ServerUtils(guild);
 
     log("Role data loaded");
 
@@ -73,7 +59,7 @@ module.exports = {
 
     const intervalTime = guildSettings.syncTimerInMins * 60000;
     setInterval(async () => {
-      const { removedRolesFrom, notVeried } = await guildSync();
+      const { removedRolesFrom, notVeried } = await guildSync(server);
       console.log(
         // eslint-disable-next-line max-len
         `**Finished**\nThe follow have had their roles removed:\n${removedRolesFrom}\nThe following have not verified:\n${notVeried}`
