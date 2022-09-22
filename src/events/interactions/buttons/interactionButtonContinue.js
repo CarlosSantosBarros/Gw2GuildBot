@@ -5,7 +5,7 @@ module.exports = {
   async execute(interaction) {
     const member = interaction.member;
     const user = new ClassGW2Profession(member);
-    user.setEmptyState();
+    user.startSelection();
     user.updateMessage(interaction);
   },
 };

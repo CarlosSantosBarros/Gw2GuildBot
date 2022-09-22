@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { ClassGuildApplication } = require("../classes/ClassGuildApplication");
+const ClassGuildApplication = require("../classes/ClassGuildApplication");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,7 +15,6 @@ module.exports = {
     });
 
     const application = new ClassGuildApplication(interaction.user);
-    await application.startApplication(interaction.member);
-    await application.updateMessage(interaction);
+    await application.startApplication(interaction);
   },
 };
