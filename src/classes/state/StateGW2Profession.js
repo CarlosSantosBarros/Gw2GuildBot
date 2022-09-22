@@ -1,45 +1,55 @@
-const { client } = require("../../index");
-module.exports = class StateGW2Profession {
-  constructor(userId) {
-    this.userId = userId;
-    // @ts-ignore
-    this.state = client.gw2pState.get(this.userId);
+const { proficiencyData } = require("../../utils/utilsCollections");
+const State = require("./State");
+
+/**
+ * @typedef ProfessionSelection
+ * @type {object}
+ * @property {object} proficiency
+ * @property {string} profession
+ */
+
+
+/**
+ * @class
+ * @extends {State}
+ */
+module.exports = class StateGW2Profession extends State {
+  constructor(user) {
+    super(user.client.gw2pState);
+    this.userId = user.userId;
+    // init proficiencyDara collection
   }
-  setState() {
-    // @ts-ignore
-    client.gw2pState.set(this.userId, this.state);
-  }
-  getState() {
-    // @ts-ignore
-    return client.gw2pState.get(this.userId);
-  }
-  selectProficiency(value) {
-    // @ts-ignore
-    const object = client.proficiencyData.get(value);
-    this.state = {
-      ...this.state,
+
+  setProficiency(value) {
+    const object = proficiencyData.get(value);
+    const currentState = this.getState(this.userId);
+    this.setState(this.userId, {
+      ...currentState,
       proficiency: object,
-    };
-    this.setState();
+    });
   }
 
-  selectProfession(value) {
-    this.state = {
-      ...this.state,
+  setProfession(value) {
+    const currentState = this.getState(this.userId);
+    this.setState(this.userId, {
+      ...currentState,
       profession: value,
-    };
-    this.setState();
+    });
   }
 
-  async setEmptyState() {
-    this.state = {
-      profession: null,
+  setEmptyState() {
+    this.setState(this.userId, {
+      profession: "",
       proficiency: null,
-    };
-    this.setState();
+    });
   }
-  finishSelection() {
+
+  deleteSelection() {
     // @ts-ignore
-    client.gw2pState.delete(this.userId);
+    this.state.delete(this.userId);
   }
+  /**
+   * @returns {ProfessionSelection} ProfessionSelection
+   */
+  getSelection() { return this.getState(this.userId); }
 };

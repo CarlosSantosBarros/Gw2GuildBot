@@ -23,8 +23,7 @@ exports.GW2Player = class extends InterfaceGW2Player {
         (gMember) => gMember.name === this.accountData.name
       );
       await this.member.addRankrole(guildMember.rank);
-    }
-    await this.member.addVerifiedRole();
+    } else await this.member.addVerifiedRole();
   }
 
   async getApplicationData() {
