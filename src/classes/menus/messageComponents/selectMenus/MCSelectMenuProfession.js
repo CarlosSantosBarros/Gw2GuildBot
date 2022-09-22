@@ -1,8 +1,10 @@
-const { MessageActionRow } = require("discord.js");
+const { ActionRowBuilder } = require("discord.js");
 const { SelectMenu } = require("..");
+const { professionsData } = require("../../../../utils/utilsCollections");
 
-module.exports = class SelectMenuProfession extends MessageActionRow {
-  constructor(state, member, professionsData) {
+
+module.exports = class SelectMenuProfession extends ActionRowBuilder {
+  constructor(state, member) {
     super();
     this.availableProfessions = professionsData;
     if (state.proficiency) {

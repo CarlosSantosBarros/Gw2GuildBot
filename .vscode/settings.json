@@ -1,1 +1,5 @@
-{"js/ts.implicitProjectConfig.checkJs": true}
+{
+    "js/ts.implicitProjectConfig.checkJs": true,
+    "eslint.format.enable": true,
+    "eslint.lintTask.enable": true
+}

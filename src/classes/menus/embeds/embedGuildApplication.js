@@ -1,49 +1,50 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, userMention } = require("discord.js");
 const FieldProficiency = require("./embedComponents/fieldProficiency");
-const { client } = require("../../../index");
-const { memberNicknameMention } = require("@discordjs/builders");
 const FieldAppStatus = require("./embedComponents/fieldAppStatus");
+const { proficiencyData } = require("../../../utils/utilsCollections");
 
-module.exports = class EmbedGuildApplication extends MessageEmbed {
+module.exports = class EmbedGuildApplication extends EmbedBuilder {
   constructor(member, state) {
     super();
     this.user = member.getUser();
     this.setAuthor({ name: this.user.username });
     this.setTitle("Guild Application");
     this.setDescription(
-      `${memberNicknameMention(this.user.id)}/${state.accountName}`
+      `${userMention(this.user.id)}/${state.accountName}`
     );
     this.setThumbnail(this.user.avatarURL());
-    let embedColour = "YELLOW";
+    let embedColour = "Yellow";
     const application = state.application;
-    this.addField("Server:", `${application.server.name}`);
-    this.addField("WvW Rank:", `${application.wvwRank}`);
+    this.addFields(
+      { name: "Server:", value: `${application.server.name}` },
+      { name: "WvW Rank:", value: `${application.wvwRank}` }
+    );
     if (application.isLegal)
-      this.addField("Are you over 18?", application.isLegal);
+      this.addFields({ name: "Are you over 18?", value: application.isLegal });
     if (application.willRoleSwap)
-      this.addField(
-        "Are you willing to play other classes or builds?",
-        application.willRoleSwap
-      );
+      this.addFields({
+        name:
+          "Are you willing to play other classes or builds?",
+        value: application.willRoleSwap
+      });
     if (application.hasDoneProfs)
-      // @ts-ignore
-      client.proficiencyData.forEach((proficiency) =>
+      proficiencyData.every((proficiency) =>
         // @ts-ignore
         this.addFields(new FieldProficiency(proficiency, member))
       );
     if (application.personalMessage)
-      this.addField("Personal Message", application.personalMessage);
+      this.addFields({ name: "Personal Message", value: application.personalMessage });
     if (state.applicationStatus) {
       const status = state.applicationStatus;
       switch (status.status) {
         case "Denied":
-          embedColour = "RED";
+          embedColour = "Red";
           break;
         case "Blacklisted":
-          embedColour = "NOT_QUITE_BLACK";
+          embedColour = "DarkButNotBlack";
           break;
         default:
-          embedColour = "GREEN";
+          embedColour = "Green";
           break;
       }
       // @ts-ignore

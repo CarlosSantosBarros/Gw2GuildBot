@@ -1,36 +1,22 @@
-const { MessageEmbed } = require("discord.js");
-const { memberNicknameMention } = require("@discordjs/builders");
+const { EmbedBuilder } = require("discord.js");
 const { ServerUtils } = require("../../../utils/");
-const { forEachToString } = require("../../../utils/utils");
 const FieldProfession = require("./embedComponents/fieldProfession");
-const { rosterSummarySettings } = require("../../../config.json");
+const { professionsData } = require("../../../utils/utilsCollections");
+const { getOfficersAsString, getmembershipAsString } = require("../../../utils/utilsStringFormaters");
+const { getGuild } = require("../../../utils/utils");
 
-module.exports = class EmbedRosterSummary extends MessageEmbed {
-  constructor() {
+module.exports = class EmbedRosterSummary extends EmbedBuilder {
+  constructor(client) {
     super();
-    const server = new ServerUtils();
+    const server = new ServerUtils(getGuild(client));
     const guild = server.guild;
     this.setThumbnail(guild.iconURL());
     this.setAuthor({ name: "Ordo Ab [Chao]" });
     this.setTitle("Roster Summary");
     this.setDescription("Guild Breakdown");
 
-    const officerFormat = (item) => {
-      return memberNicknameMention(item.id);
-    };
-    const membershipFormat = (item) => {
-      return `\n ${item.prefixString} ${
-        server.getMembersByRoleId(item.roleId).size
-      }`;
-    };
-
-    const officerCollection = server.getOfficers();
-    const officerString = forEachToString(officerCollection, officerFormat);
-    const membershipString = forEachToString(
-      rosterSummarySettings,
-      membershipFormat
-    );
-
+    const membershipString = getmembershipAsString(server);
+    const officerString = getOfficersAsString(server);
     this.addFields({
       name: "Membership:",
       value: `${membershipString}
@@ -41,7 +27,7 @@ module.exports = class EmbedRosterSummary extends MessageEmbed {
 
     this.addField("Profession Breakdown:", "\u200B");
     // @ts-ignore
-    guild.client.professionsData.forEach((professionItem) => {
+    professionsData.every((professionItem) => {
       const professionFieldString = {
         ...new FieldProfession(professionItem),
         ...{ inline: true },

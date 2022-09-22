@@ -1,11 +1,11 @@
-const { MessageActionRow } = require("discord.js");
+const { ActionRowBuilder, ButtonStyle } = require("discord.js");
 const { buildButtons } = require("..");
 
 const buttonData = [
-  { customId: "continue", label: "Continue", style: "PRIMARY", disabled: true },
+  { customId: "continue", label: "Continue", style: ButtonStyle.Primary, disabled: true },
 ];
 
-module.exports = class ButtonsGuildApplication extends MessageActionRow {
+module.exports = class ButtonsGuildApplication extends ActionRowBuilder {
   // Refactor-here this can maybe take menu state instead ?
   constructor(state) {
     super();

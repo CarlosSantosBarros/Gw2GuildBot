@@ -1,7 +1,7 @@
-const { MessageActionRow } = require("discord.js");
+const { ActionRowBuilder } = require("discord.js");
 const { SelectMenu } = require("..");
 
-module.exports = class SelectMenuIsLegal extends MessageActionRow {
+module.exports = class SelectMenuIsLegal extends ActionRowBuilder {
   constructor() {
     super();
     this.addComponents(

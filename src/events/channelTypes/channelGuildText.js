@@ -1,20 +1,6 @@
-const { ServerUtils } = require("../../utils");
-const {
-  ClassGuildApplication,
-} = require("../../classes/ClassGuildApplication");
+const { ChannelType } = require("discord.js");
+
 module.exports = {
-  name: "GUILD_TEXT",
-  async execute(message) {
-    const server = new ServerUtils();
-    if (server.isApplicationChan(message.channel)) {
-      if (message.author.bot) await message.react("📝");
-      else {
-        const application = new ClassGuildApplication(message.member);
-        application.addReason(message);
-      }
-      await message.react("✅");
-      await message.react("🚫");
-      await message.react("⚠️");
-    }
-  },
+  name: ChannelType.GuildText,
+  async execute(message) { },
 };

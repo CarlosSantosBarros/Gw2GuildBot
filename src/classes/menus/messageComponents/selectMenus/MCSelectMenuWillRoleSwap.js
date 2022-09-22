@@ -1,7 +1,7 @@
-const { MessageActionRow } = require("discord.js");
+const { ActionRowBuilder } = require("discord.js");
 const { SelectMenu } = require("..");
 
-module.exports = class SelectMenuWillRoleSwap extends MessageActionRow {
+module.exports = class SelectMenuWillRoleSwap extends ActionRowBuilder {
   constructor() {
     super();
     this.addComponents(
