@@ -1,5 +1,8 @@
-const { getProfessionsAsString } = require("../../../../utils/utils");
+const { getProfessionsAsString } = require("../../../../utils/utilsStringFormaters");
 
+/**
+ * @returns {Array}
+ */
 module.exports = class FieldProficiency {
   constructor(proficiency, member) {
     const isMember = member.isMember();
@@ -12,11 +15,11 @@ module.exports = class FieldProficiency {
     if (!isMember && proficiencies.size != 0)
       body = getProfessionsAsString(proficiencies);
 
-    return {
+    return [{
       name: `${fieldHeading}`,
       value: `${body}`,
       // eslint-disable-next-line no-unneeded-ternary
       inline: isMember ? false : true,
-    };
+    }];
   }
 };
