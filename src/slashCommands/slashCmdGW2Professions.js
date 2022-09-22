@@ -12,7 +12,7 @@ module.exports = {
     console.log(`Profession command used by ${interaction.user.username}`);
     const member = interaction.member;
     const user = new ClassGW2Profession(member);
-    user.setEmptyState();
+    user.startSelection();
     user.updateMessage(interaction);
   },
 };

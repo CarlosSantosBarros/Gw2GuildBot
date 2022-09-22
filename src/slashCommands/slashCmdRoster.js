@@ -9,7 +9,7 @@ module.exports = {
   guildCommand: true,
 
   async execute(interaction) {
-    const embeds = new EmbedRosterSummary();
+    const embeds = new EmbedRosterSummary(interaction.client);
     console.log(embeds);
     await interaction.reply({
       embeds: [embeds],

@@ -1,16 +1,5 @@
-const {
-  ClassGuildApplication,
-} = require("../../classes/ClassGuildApplication");
-
+const { ChannelType } = require("discord.js");
 module.exports = {
-  name: "DM",
-  async execute(message) {
-    if (!message.author.bot) {
-      const application = new ClassGuildApplication(message.author);
-      if (application.hasDoneProfs()) {
-        application.setPersonalMessage(message.content);
-        application.submit();
-      }
-    }
-  },
+  name: ChannelType.DM,
+  async execute(message) { },
 };

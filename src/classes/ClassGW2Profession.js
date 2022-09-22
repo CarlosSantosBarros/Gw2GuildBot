@@ -1,53 +1,69 @@
 const MenuGW2Profession = require("./menus/menuGW2Professions");
 const { ServerUtils, MemberUtils } = require("../utils/");
 const StateGW2Profession = require("./state/StateGW2Profession");
+const { getGuild } = require("../utils/utils");
+const { proficiencyData } = require("../utils/utilsCollections");
 
-exports.ClassGW2Profession = class extends StateGW2Profession {
+exports.ClassGW2Profession = class {
   constructor(member) {
-    super(member.user.id);
     this.member = new MemberUtils(member);
-    this.server = new ServerUtils();
+    this.server = new ServerUtils(getGuild(member.user.client));
+    this.state = new StateGW2Profession(member.user);
     this.selectedRole = undefined;
   }
 
-  async getSelectedRole() {
-    this.selectedRole = await this.server.getRoleByNameAndColor(
-      this.state.profession,
-      this.state.proficiency.color
-    );
+  getSelectedRole() {
+    const { profession, proficiency } = this.state.getSelection();
+    return this.server.getRoleByNameAndColor(profession, proficiency.color);
   }
 
   async removeRoleInOtherSlot() {
-    const roleInOtherSlot = this.member.getRoleByName(this.state.profession);
+    const { profession } = this.state.getSelection();
+    const roleInOtherSlot = this.member.getRoleByName(profession);
     if (roleInOtherSlot) await this.member.removeRole(roleInOtherSlot.id);
   }
 
-  async setProfession() {
-    const currentMain = this.member.getRoleByColor(
-      this.state.proficiency.color
-    );
+  startSelection() { this.state.setEmptyState(); }
+
+  async selectProficiency(interaction) {
+    this.state.setProficiency(interaction.values[0]);
+    await this.updateMessage(interaction);
+  }
+
+  async selectProfession(interaction) {
+    this.state.setProfession(interaction.values[0]);
+    await this.updateMessage(interaction);
+  }
+
+  async setMain() {
+    const main = proficiencyData.get("Main");
+    const currentMain = this.member.getRoleByColor(main.color);
     if (currentMain) await this.member.removeRole(currentMain.id);
     await this.removeRoleInOtherSlot();
-    await this.getSelectedRole();
-    await this.member.addRole(this.selectedRole.id);
-    return this.setEmptyState();
+    const selectedRole = this.getSelectedRole();
+    if (selectedRole) await this.member.addRole(selectedRole.id);
+    this.state.setEmptyState();
   }
 
   async addProfession() {
     await this.removeRoleInOtherSlot();
-    await this.getSelectedRole();
-    await this.member.addRole(this.selectedRole.id);
-    return this.setEmptyState();
+    const selectedRole = this.getSelectedRole();
+    if (selectedRole) await this.member.addRole(selectedRole.id);
+    this.state.setEmptyState();
   }
 
   async removeProfession() {
     await this.getSelectedRole();
-    await this.member.removeRole(this.selectedRole.id);
-    return this.setEmptyState();
+    const selectedRole = this.getSelectedRole();
+    if (selectedRole) await this.member.removeRole(selectedRole.id);
+    this.state.setEmptyState();
   }
 
+  finishSelection() { this.state.deleteSelection(); }
+
   async updateMessage(message) {
-    const menu = new MenuGW2Profession(this.member, this.state);
+    const selection = this.state.getSelection();
+    const menu = new MenuGW2Profession(this.member, selection);
     const embeds = menu.getEmbeds();
     const components = menu.getComponents();
     // If statement to filter what kinda of change needs to be done

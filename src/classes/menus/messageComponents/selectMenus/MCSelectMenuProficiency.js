@@ -1,9 +1,10 @@
-const { MessageActionRow } = require("discord.js");
+const { ActionRowBuilder } = require("discord.js");
 const { SelectMenu } = require("..");
+const { proficiencyData } = require("../../../../utils/utilsCollections");
 
-module.exports = class SelectMenuProficiency extends MessageActionRow {
+module.exports = class SelectMenuProficiency extends ActionRowBuilder {
   // Refactor-here this can maybe take menu state instead ?
-  constructor(state, data) {
+  constructor(state) {
     super();
     this.addComponents(
       new SelectMenu(
@@ -11,7 +12,7 @@ module.exports = class SelectMenuProficiency extends MessageActionRow {
           customId: "proficiency",
           placeholder: "Proficiency",
         },
-        data,
+        proficiencyData,
         state.proficiency ? state.proficiency.value : null
       )
     );

@@ -13,6 +13,7 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "brace-style": ["error", "1tbs", { allowSingleLine: true }],
     // "comma-dangle": ["error", "always-multiline"],
     "comma-spacing": "error",

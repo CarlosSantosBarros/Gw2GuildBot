@@ -1,11 +1,12 @@
 const { ServerUtils } = require("../../../../utils/");
-const { toEmoji, getMentorsAsString } = require("../../../../utils/utils");
+const { getGuild } = require("../../../../utils/utils");
+const { toEmoji, getMentorsAsString } = require("../../../../utils/utilsStringFormaters");
 
 module.exports = class FieldProfession {
-  constructor(profession) {
+  constructor(profession, client) {
     const emoji = toEmoji(profession);
-    const mentors = getMentorsAsString(profession.value);
-    const server = new ServerUtils();
+    const server = new ServerUtils(getGuild(client));
+    const mentors = getMentorsAsString(profession.value, server);
     return {
       name: `${emoji} ${profession.label} ${emoji}`,
       value: `**Players**: ${server.getPlayers(profession.value)}

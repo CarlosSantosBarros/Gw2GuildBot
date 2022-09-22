@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const { ServerUtils } = require("../utils");
 
-const { guildSync } = require("../utils/utils");
+const { guildSync, getGuild } = require("../utils/utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,8 +15,9 @@ module.exports = {
       content: "Syncing...",
       ephemeral: true,
     });
-
-    const { removedRolesFrom, notVeried } = await guildSync();
+    const guild = getGuild(interaction.client);
+    const server = new ServerUtils(guild);
+    const { removedRolesFrom, notVeried } = await guildSync(server);
 
     interaction.editReply({
       // eslint-disable-next-line max-len

@@ -1,130 +1,82 @@
-const { client } = require("../../index");
-const { InterfaceGuildApplication } = require("../database");
+const State = require("./State");
 const { isLegalMessage, willRoleSwapMessage } =
   require("../../config.json").applicationSettings;
-module.exports = class StateGuildApplication extends InterfaceGuildApplication {
-  constructor(userId) {
-    super();
-    this.userId = userId;
-    this.state;
+
+module.exports = class StateGuildApplication extends State {
+  constructor(user) {
+    super(user.client.guildAppState);
+    this.userId = user.id;
   }
 
-  getAppState() {
-    // @ts-ignore
-    this.state = client.guildAppState.get(this.userId);
-    return this.state;
-  }
-  setAppState() {
-    // @ts-ignore
-    client.guildAppState.set(this.userId, this.state);
-  }
-  getAppStatus() {
-    // @ts-ignore
-    this.state = client.guildAppStatus.get(this.userId);
-    return this.state;
-  }
-  setAppStatus() {
-    // @ts-ignore
-    client.guildAppStatus.set(this.userId, this.state);
-  }
-
-  // AppState functions --- Start ---
   setAccountData(accountData, serverInfo) {
-    this.state = {
+    this.setState(this.userId, {
       ...accountData,
       application: {
         ...accountData.application,
         server: serverInfo,
       },
-    };
-    this.setAppState();
+    });
+    return this.getState(this.userId);
   }
 
-  meetsRequirement(value, message) {
-    if (value == "No") throw { content: { text: message } };
-  }
+  meetsRequirement(value, message) { if (value == "No") throw { content: { text: message } }; }
 
-  selectIsLegal(value) {
+  setIsLegal(value) {
     this.meetsRequirement(value, isLegalMessage);
-    this.getAppState();
-    this.state = {
-      ...this.state,
+    const currentState = this.getState(this.userId);
+    this.setState(this.userId, {
+      ...currentState,
       application: {
-        ...this.state.application,
+        ...currentState.application,
         isLegal: value,
       },
-    };
-    this.setAppState();
+    });
+    return this.getState(this.userId);
   }
 
-  selectWillRoleSwap(value) {
+  setWillRoleSwap(value) {
     this.meetsRequirement(value, willRoleSwapMessage);
-    this.getAppState();
-    this.state = {
-      ...this.state,
+    const currentState = this.getState(this.userId);
+    this.setState(this.userId, {
+      ...currentState,
       application: {
-        ...this.state.application,
+        ...currentState.application,
         willRoleSwap: value,
       },
-    };
-    this.setAppState();
-  }
-
-  async setHasDoneProfs() {
-    this.getAppState();
-    this.state = {
-      ...this.state,
-      application: {
-        ...this.state.application,
-        hasDoneProfs: true,
-      },
-    };
-    this.setAppState();
-  }
-
-  hasDoneProfs() {
-    this.getAppState();
-    if (!this.state.application) return false;
-    return this.state.application.hasDoneProfs;
+    });
+    return this.getState(this.userId);
   }
 
   setPersonalMessage(message) {
-    this.getAppState();
-    this.state = {
-      ...this.state,
+    const currentState = this.getState(this.userId);
+    this.setState(this.userId, {
+      ...currentState,
       application: {
-        ...this.state.application,
+        ...currentState.application,
         personalMessage: message,
       },
-    };
-    this.setAppState();
+    });
   }
 
-  removeAppState(id) {
-    // @ts-ignore
-    client.guildAppState.delete(id);
-  }
-  // AppState functions --- End ---
 
-  // AppStatus functions --- Start ---
-  toggleApplicationReason(applicationId) {
-    this.state = {
-      appId: applicationId,
-    };
-    this.setAppStatus();
+  getApplicationStatus(appId) { return this.getState(appId); }
+
+
+  setApplicationStatus(status, appId, user) {
+    this.setState(appId, {
+      status: status,
+      user: user
+    });
   }
 
-  setApplicationReason(message) {
-    this.state = {
-      ...this.state,
-      applicationStatus: { reason: message },
-    };
-    this.setAppStatus();
+  setApplicationReason(reason, appId) {
+    const currentState = this.getState(appId);
+    this.setState(appId, {
+      ...currentState,
+      reason: reason
+    });
   }
 
-  removeAppStatus(id) {
-    // @ts-ignore
-    client.guildAppStatus.delete(id);
-  }
-  // AppStatus functions --- End ---
+  removeAppStatus(appId) { this.deleteState(appId); }
+
 };

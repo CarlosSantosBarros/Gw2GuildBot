@@ -1,9 +1,6 @@
-const { MessageSelectMenu, MessageButton } = require("discord.js");
+const { SelectMenuBuilder, ButtonBuilder } = require("discord.js");
 
-// TURN THIS INTO A CLASS
-// https://www.w3schools.com/js/js_class_inheritance.asp
-
-exports.SelectMenu = class SelectMenu extends MessageSelectMenu {
+exports.SelectMenu = class SelectMenu extends SelectMenuBuilder {
   constructor(baseData, selectMenuDataArray, selectedValue) {
     super(baseData);
     selectMenuDataArray.forEach((item) => {
@@ -22,7 +19,7 @@ exports.SelectMenu = class SelectMenu extends MessageSelectMenu {
 exports.buildButtons = (buttonDataArray, buttonAction) => {
   const buttonArray = [];
   buttonDataArray.forEach((item) => {
-    const buttonItem = new MessageButton(item);
+    const buttonItem = new ButtonBuilder(item);
     let isDisabled = item.disabled;
     if (buttonAction == item.customId) isDisabled = false;
     buttonItem.setDisabled(isDisabled);
@@ -37,3 +34,4 @@ exports.SelectMenuProficiency = require("./selectMenus/MCSelectMenuProficiency")
 exports.SelectMenuWillRoleSwap = require("./selectMenus/MCSelectMenuWillRoleSwap");
 exports.SelectMenuIsLegal = require("./selectMenus/MCSelectMenuIsLegal");
 exports.ButtonsGuildApplication = require("./buttons/MCButtonsGuildApplication");
+exports.ButtonsGuildApplicationProcess = require("./buttons/MCButtonsGuildApplicationProcess");

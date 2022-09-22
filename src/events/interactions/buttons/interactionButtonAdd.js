@@ -6,6 +6,6 @@ module.exports = {
     const member = interaction.member;
     const user = new ClassGW2Profession(member);
     await user.addProfession();
-    user.updateMessage(interaction);
+    await user.updateMessage(interaction);
   },
 };

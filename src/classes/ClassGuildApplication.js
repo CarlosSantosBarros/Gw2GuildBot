@@ -1,124 +1,106 @@
+// eslint-disable-next-line no-unused-vars
+const { User } = require("discord.js");
 const StateGuildApplication = require("./state/StateGuildApplication");
 const { ServerUtils, MemberUtils } = require("../utils/");
 const MenuGuildApplication = require("./menus/menuGuildApplication");
 const { GW2Player } = require("./GW2Player");
 const { getWorld } = require("../utils/utilsGw2API");
-const { accepted, denied, blacklisted } =
-  require("../config.json").applicationSettings;
+const { getGuild } = require("../utils/utils");
+const { InterfaceGuildApplication } = require("./database");
+const { isCommand } = require("../utils/utilsTypeGuard");
 
-exports.ClassGuildApplication = class extends StateGuildApplication {
+module.exports = class ClassGuildApplication {
+  /**
+   * @param {User} user
+   */
   constructor(user) {
-    super(user.id);
-    this.server = new ServerUtils();
+    this.server = new ServerUtils(getGuild(user.client));
+    this.state = new StateGuildApplication(user);
+    this.db = new InterfaceGuildApplication();
+    this.userId = user.id;
     this.member;
   }
 
   getMember() {
-    const member = this.server.getMemberById(this.state.snowflake);
+    const member = this.server.getMemberById(this.userId);
     this.member = new MemberUtils(member);
   }
 
-  async startApplication(member) {
-    const player = new GW2Player(member);
+  async startApplication(interaction) {
+    const player = new GW2Player(interaction.member);
     const accountData = await player.getApplicationData();
     const serverInfo = await getWorld(accountData.application.server);
-    this.setAccountData(accountData, serverInfo);
+    const newState = this.state.setAccountData(accountData, serverInfo);
+    this.updateMessage(interaction, newState);
   }
+
+  selectIsLegal(interaction) {
+    const newState = this.state.setIsLegal(interaction.values[0]);
+    this.updateMessage(interaction, newState);
+  }
+
+  selectWillRoleSwap(interaction) {
+    const newState = this.state.setWillRoleSwap(interaction.values[0]);
+    this.updateMessage(interaction, newState);
+  }
+
+  async writePersonalMessage(message) { this.state.setPersonalMessage(message); }
 
   async submit() {
     this.getMember();
-    const menu = new MenuGuildApplication(this.member, this.state);
-    const embeds = menu.getEmbeds();
-    const appChan = this.server.getApplicationChan();
-    // @ts-ignore
-    const msg = await appChan.send({ embeds: embeds });
-
-    const app = this.getAppState();
-    this.selectApplication(msg.id);
-    await this.create();
-    await this.update(app);
-    this.removeAppState(this.userId);
-  }
-
-  async addReason(message) {
-    this.getAppStatus();
-    if (!this.state) return await message.delete();
-    this.setApplicationReason(message.content);
-  }
-
-  async processApplication(message, reason) {
-    const app = await this.getAppStatus();
-    let appId = message.id;
-    if (app) {
-      appId = app.appId;
-      reason = app.applicationStatus.reason;
-      await message.delete();
-    }
-    this.selectApplication(appId);
-    this.removeAppStatus(this.userId);
-    return reason;
-  }
-
-  async accept(message, user) {
-    const reason = await this.processApplication(message, accepted.dbMessage);
-    await this.updateStatus("Accepted", reason, user.username);
-    this.state = await this.getApplication();
-  }
-
-  async deny(message, user) {
-    const reason = await this.processApplication(message, denied.dbMessage);
-    await this.updateStatus("Denied", reason, user.username);
-    this.state = await this.getApplication();
-  }
-
-  async blackList(message, user) {
-    const reason = await this.processApplication(
-      message,
-      blacklisted.dbMessage
-    );
-    await this.updateStatus("Blacklisted", reason, user.username);
-    this.state = await this.getApplication();
-  }
-
-  async updateMessage(message) {
-    this.getMember();
-    const menu = new MenuGuildApplication(this.member, this.state);
+    const state = this.state.getState(this.userId);
+    const menu = new MenuGuildApplication(this.member, state);
     const embeds = menu.getEmbeds();
     const components = menu.getComponents();
-    if (message.emoji) {
-      // refactor - this is probs bad, message.message?
-      const appMessage = await message.message.channel.messages.fetch(
-        this.state.applicationId
-      );
-      await appMessage.reactions.removeAll();
-      await appMessage.edit({ embeds: embeds });
-    } else if (message.isSelectMenu())
-      await message.update({ components: components, embeds: embeds });
-    else if (message.isApplicationCommand())
-      await message.editReply({
+    const appChan = this.server.getApplicationChan();
+    // @ts-ignore
+    const msg = await appChan.send({ components: components, embeds: embeds });
+
+    this.db.selectApplication(msg.id);
+    await this.db.create();
+    await this.db.update(state);
+    await this.db.updateStatus({ status: "Pending" });
+    this.state.deleteState(this.userId);
+  }
+
+  async processApplication(interaction, reason, dmReply) {
+    const appId = interaction.message.id;
+    this.state.setApplicationReason(reason, appId);
+    this.db.selectApplication(appId);
+    const appStatus = this.state.getApplicationStatus(appId);
+    console.log(appStatus.status);
+    await this.db.updateStatus(appStatus);
+    const application = await this.db.getApplication();
+    const member = this.server.getMemberById(application.snowflake);
+    await member.send({ content: dmReply });
+    const memberUtils = new MemberUtils(member);
+    if (appStatus.status == "Denied" || appStatus.status == "Blacklisted")
+      await memberUtils.removeProficiencies();
+    await memberUtils.removeVerifiedRole();
+    this.updateMessage(interaction, application);
+  }
+
+  async accept(appId, user) { this.state.setApplicationStatus("Accepted", appId, user); }
+  async deny(appId, user) { this.state.setApplicationStatus("Denied", appId, user); }
+  async blackList(appId, user) { this.state.setApplicationStatus("Blacklisted", appId, user); }
+
+  async updateMessage(interaction, state) {
+    this.getMember();
+    const menu = new MenuGuildApplication(this.member, state);
+    const embeds = menu.getEmbeds();
+    const components = menu.getComponents();
+    if (interaction.isModalSubmit()) {
+      await interaction.update({ embeds: embeds, components: [] });
+      this.state.removeAppStatus(interaction.message.id);
+    } else if (interaction.isSelectMenu())
+      await interaction.update({ components: components, embeds: embeds });
+    else if (isCommand(interaction))
+      await interaction.editReply({
         content: "Please select the approriate answers and click continue",
         components: components,
         embeds: embeds,
       });
   }
 
-  async notify() {
-    const member = this.server.getMemberById(this.state.snowflake);
-    let replyMessage;
-    if (this.state.applicationStatus) {
-      const status = this.state.applicationStatus;
-      switch (status.status) {
-        case "Denied":
-          replyMessage = denied.dmMessage;
-          break;
-        case "Blacklisted":
-          replyMessage = blacklisted.dmMessage;
-          break;
-        default:
-          replyMessage = accepted.dmMessage;
-          break;
-      }
-    }
-    member.send({ content: replyMessage });
-  }
+
 };

@@ -6,18 +6,12 @@ module.exports = class InterfaceGuildApplication extends Interface {
     super(ModelGuildApplication);
   }
   selectApplication(id) {
-    this.setSelector({
-      where: { applicationId: id },
-    });
+    this.setSelector({ where: { applicationId: id }, });
   }
 
-  async updateStatus(status, reason, username) {
-    await this.update({
-      applicationStatus: { status: status, reason: reason, user: username },
-    });
+  async updateStatus(applicationStatusData) {
+    return await this.update({ applicationStatus: applicationStatusData, });
   }
 
-  async getApplication() {
-    return await this.get();
-  }
+  async getApplication() { return await this.get(); }
 };
