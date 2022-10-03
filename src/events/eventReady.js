@@ -44,10 +44,7 @@ module.exports = {
         }
         if (channelName == null) return;
 
-        const announcementChannel = server.getChannelByNameAndType(
-          channelName,
-          "GUILD_TEXT"
-        );
+        const announcementChannel = server.getAnnouncementChan(channelName);
         if (!announcementChannel)
           return console.log(`${channelName} does not exist`);
         // @ts-ignore

@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-const { Guild, Collection, GuildMember } = require("discord.js");
+const { Guild, Collection, GuildMember, ChannelType } = require("discord.js");
 
 const { guildSettings, professionsSettings } = require("../config.json");
 const RoleUtils = require("./utilsRole");
@@ -23,6 +23,9 @@ module.exports = class ServerUtils extends RoleUtils {
       (channel) => channel.name === name && channel.type === type
     );
   }
+
+  getAnnouncementChan(name) { return this.getChannelByNameAndType(name, ChannelType.GuildText); }
+
   getChannelById(id) {
     return this.guild.channels.cache.find((channel) => channel.id === id);
   }
