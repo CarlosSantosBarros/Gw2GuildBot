@@ -4,10 +4,13 @@ const { MemberUtils } = require("../utils/");
 const { guildSettings } = require("../config.json");
 
 exports.GW2Player = class extends InterfaceGW2Player {
+  /**
+ * @param {MemberUtils} member
+*/
   constructor(member) {
     super();
-    this.id = member.user.id;
-    this.member = new MemberUtils(member);
+    this.member = member;
+    this.id = member.getId();
   }
 
   async verify(key) {

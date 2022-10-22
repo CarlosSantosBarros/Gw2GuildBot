@@ -1,33 +1,27 @@
 // eslint-disable-next-line no-unused-vars
-const { User } = require("discord.js");
+const { User, GuildMember } = require("discord.js");
 const StateGuildApplication = require("./state/StateGuildApplication");
-const { ServerUtils, MemberUtils } = require("../utils/");
+const { ServerUtils, MemberUtils } = require("../utils");
 const MenuGuildApplication = require("./menus/menuGuildApplication");
 const { GW2Player } = require("./GW2Player");
 const { getWorld } = require("../utils/utilsGw2API");
-const { getGuild } = require("../utils/utils");
 const { InterfaceGuildApplication } = require("./database");
 const { isCommand } = require("../utils/utilsTypeGuard");
 
 module.exports = class ClassGuildApplication {
   /**
-   * @param {User} user
-   */
-  constructor(user) {
-    this.server = new ServerUtils(getGuild(user.client));
-    this.state = new StateGuildApplication(user);
+   * @param {GuildMember} member;
+   * @param {ServerUtils} server */
+  constructor(member, server) {
+    this.server = server;
+    this.member = new MemberUtils(member, server);
+    this.state = new StateGuildApplication(member.user);
     this.db = new InterfaceGuildApplication();
-    this.userId = user.id;
-    this.member;
-  }
-
-  getMember() {
-    const member = this.server.getMemberById(this.userId);
-    this.member = new MemberUtils(member);
+    this.userId = member.user.id;
   }
 
   async startApplication(interaction) {
-    const player = new GW2Player(interaction.member);
+    const player = new GW2Player(this.member);
     const accountData = await player.getApplicationData();
     const serverInfo = await getWorld(accountData.application.server);
     const newState = this.state.setAccountData(accountData, serverInfo);
@@ -47,7 +41,6 @@ module.exports = class ClassGuildApplication {
   async writePersonalMessage(message) { this.state.setPersonalMessage(message); }
 
   async submit() {
-    this.getMember();
     const state = this.state.getState(this.userId);
     const menu = new MenuGuildApplication(this.member, state);
     const embeds = menu.getEmbeds();
@@ -73,10 +66,10 @@ module.exports = class ClassGuildApplication {
     const application = await this.db.getApplication();
     const member = this.server.getMemberById(application.snowflake);
     await member.send({ content: dmReply });
-    const memberUtils = new MemberUtils(member);
+    const applicationMember = new MemberUtils(member, this.server);
     if (appStatus.status == "Denied" || appStatus.status == "Blacklisted")
-      await memberUtils.removeProficiencies();
-    await memberUtils.removeVerifiedRole();
+      await applicationMember.removeProficiencies();
+    await applicationMember.removeVerifiedRole();
     this.updateMessage(interaction, application);
   }
 
@@ -85,7 +78,6 @@ module.exports = class ClassGuildApplication {
   async blackList(appId, user) { this.state.setApplicationStatus("Blacklisted", appId, user); }
 
   async updateMessage(interaction, state) {
-    this.getMember();
     const menu = new MenuGuildApplication(this.member, state);
     const embeds = menu.getEmbeds();
     const components = menu.getComponents();

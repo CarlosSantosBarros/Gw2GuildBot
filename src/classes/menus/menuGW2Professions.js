@@ -5,8 +5,10 @@ const {
   SelectMenuProficiency,
 } = require("./messageComponents/");
 const EmbedGW2Professions = require("./embeds/embedGW2Professions");
+const { MemberUtils } = require("../../utils/");
 
 module.exports = class MenuGW2Profession extends Menu {
+  /** @param {MemberUtils} member */
   constructor(member, state) {
     super();
     this.components = [

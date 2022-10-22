@@ -1,13 +1,17 @@
+const { ServerUtils, MemberUtils } = require("../utils");
+const { GuildMember } = require("discord.js");
 const MenuGW2Profession = require("./menus/menuGW2Professions");
-const { ServerUtils, MemberUtils } = require("../utils/");
 const StateGW2Profession = require("./state/StateGW2Profession");
-const { getGuild } = require("../utils/utils");
 const { proficiencyData } = require("../utils/utilsCollections");
 
 exports.ClassGW2Profession = class {
-  constructor(member) {
-    this.member = new MemberUtils(member);
-    this.server = new ServerUtils(getGuild(member.user.client));
+  /**
+   * @param {GuildMember} member
+   * @param {ServerUtils} server
+  */
+  constructor(member, server) {
+    this.member = new MemberUtils(member, server);
+    this.server = server;
     this.state = new StateGW2Profession(member.user);
     this.selectedRole = undefined;
   }

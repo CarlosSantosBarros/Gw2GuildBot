@@ -1,5 +1,4 @@
-const { MemberUtils } = require("../utils");
-const { isErrorBadApiKey } = require("../utils/utils");
+const { MemberUtils, isErrorBadApiKey } = require("../utils");
 const { errors } = require("../config.json");
 const { isCommand } = require("../utils/utilsTypeGuard");
 

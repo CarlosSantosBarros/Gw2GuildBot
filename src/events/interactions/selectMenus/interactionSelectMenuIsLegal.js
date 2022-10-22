@@ -1,9 +1,11 @@
 const ClassGuildApplication = require("../../../classes/ClassGuildApplication");
+const { ServerUtils, getGuild } = require("../../../utils");
 
 module.exports = {
   customId: "isLegal",
   async execute(interaction) {
-    const application = new ClassGuildApplication(interaction.member);
+    const server = new ServerUtils(getGuild(interaction.client));
+    const application = new ClassGuildApplication(interaction.member, server);
     application.selectIsLegal(interaction);
   },
 };

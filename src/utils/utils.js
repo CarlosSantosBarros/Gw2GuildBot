@@ -1,37 +1,69 @@
-// eslint-disable-next-line no-unused-vars
-const { Client, Guild } = require("discord.js");
+const { Client, Guild, Collection } = require("discord.js");
 const { format } = require("date-fns");
-const { MemberUtils, ServerUtils } = require("./");
-const { logging, guildSettings } = require("../config.json");
-const { gw2RankColour, discordGuildId } = guildSettings;
-const { IsSuccessLogging, IsFailureLogging } = logging;
 const fs = require("fs");
+const MemberUtils = require("./utilsMember");
 const { getGW2GuildInfo } = require("./utilsGw2API");
-const { InterfaceGW2Player } = require("../classes/database");
 const { forEachToString } = require("./utilsStringFormaters");
+const { InterfaceGW2Player } = require("../classes/database");
+const { logging, guildSettings } = require("../config.json");
+const { discordGuildId } = guildSettings;
+const { IsSuccessLogging, IsFailureLogging } = logging;
+const path = require("path");
 
-
-// terrible name, call this something else
-exports.findJSStartingWith_In_AndDo_ = (prefix, path, action) => {
-  fs.readdirSync(path)
+/**  terrible name, call this something else
+ * @param {string} prefix
+ * @param {fs.PathLike} dirPath
+ * @param {Function} action
+ */
+function findJSStartingWith_In_AndDo_(prefix, dirPath, action) {
+  fs.readdirSync(dirPath)
     .filter((file) => file.endsWith(".js") && file.startsWith(prefix))
     .forEach((file) => action(file));
-};
+}
 
-exports.log = (message) => {
+
+function fileLoader(config, client) {
+  const { prefix, dirPath } = config;
+  const collection = new Collection();
+
+  const itemLoader = (fileItem) => {
+    const filePath = path.join(dirPath, `./${fileItem}`);
+    const item = require(filePath);
+    let key = item.customId;
+    if (prefix == "channel" || prefix == "event") key = item.name;
+    else if (prefix == "slashCmd") key = item.data.name;
+
+    if (prefix != "event") {
+      log(`Loading: ${key}`);
+      collection.set(key, item);
+      return;
+    }
+    if (item.once) client.once(item.name, (...args) => item.execute(...args));
+    else client.on(key, (...args) => item.execute(...args));
+  };
+
+  fs.readdirSync(dirPath)
+    .filter((file) => file.endsWith(".js") && file.startsWith(prefix))
+    .forEach((file) => itemLoader(file));
+  log(`${prefix} Files loaded`);
+  return collection;
+}
+
+
+function log(message) {
   const dateString = format(new Date(), "PPPppp");
   if (IsSuccessLogging) console.log(`[${dateString}] ${message}`);
   if (IsFailureLogging) console.log(`[${dateString}] ${message}`);
-};
+}
 
-exports.isErrorBadApiKey = (errorContent) => {
+function isErrorBadApiKey(errorContent) {
   if (
     errorContent.text === "Invalid access token" ||
     errorContent.text === "invalid key"
   )
     return true;
   else return false;
-};
+}
 
 /**
  * @param {ServerUtils} server
@@ -41,7 +73,7 @@ exports.isErrorBadApiKey = (errorContent) => {
  * @property {string} notVeried
  * @returns {Promise<SyncOutput>}
  */
-exports.guildSync = async (server) => {
+async function guildSync(server) {
   const guildMembers = await getGW2GuildInfo();
   const gw2db = new InterfaceGW2Player();
   const verified = await gw2db.getAll();
@@ -52,7 +84,7 @@ exports.guildSync = async (server) => {
     const index = guildMembers.findIndex((entry) => entry.name === accountName);
     const discordMember = server.getMemberById(snowflake);
 
-    const member = new MemberUtils(discordMember);
+    const member = new MemberUtils(discordMember, server);
     if (member.isVerified()) {
       discordUsersToSync.delete(snowflake);
       continue;
@@ -61,8 +93,7 @@ exports.guildSync = async (server) => {
     if (index != -1) {
       const verifiedGuildMember = guildMembers.splice(index, 1)[0];
       await member.addMemberRole();
-      const rankRole = server.getRoleByNameAndColor(verifiedGuildMember.rank, gw2RankColour);
-      if (rankRole) await member.addRankrole(rankRole);
+      await member.addRankrole(verifiedGuildMember.rank);
       member.removeVerifiedRole();
     } else {
       await gw2db.deletePlayer(snowflake);
@@ -72,7 +103,7 @@ exports.guildSync = async (server) => {
   }
   let removedRolesFrom = "";
   discordUsersToSync.forEach(async (item) => {
-    const member = new MemberUtils(item);
+    const member = new MemberUtils(item, server);
     removedRolesFrom = removedRolesFrom.concat(" ", `${item.displayName}\n`);
 
     await member.removeRankRole();
@@ -85,13 +116,13 @@ exports.guildSync = async (server) => {
   };
   const notVeried = forEachToString(guildMembers, getAccNames);
   return { removedRolesFrom, notVeried };
-};
+}
 
 /**
  * @param {Client} client
  * @returns {Guild}
  */
-exports.getGuild = (client) => {
+function getGuild(client) {
   /**
    * @param {Guild} guild
    * @returns {boolean}
@@ -99,4 +130,13 @@ exports.getGuild = (client) => {
   const search = (guild) => guild.id === discordGuildId;
   // @ts-ignore
   return client.guilds.cache.find(search);
+}
+
+module.exports = {
+  findJSStartingWith_In_AndDo_: findJSStartingWith_In_AndDo_,
+  log: log,
+  isErrorBadApiKey: isErrorBadApiKey,
+  guildSync: guildSync,
+  getGuild: getGuild,
+  fileLoader: fileLoader
 };

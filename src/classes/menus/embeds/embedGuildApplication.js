@@ -2,8 +2,12 @@ const { EmbedBuilder, userMention } = require("discord.js");
 const FieldProficiency = require("./embedComponents/fieldProficiency");
 const FieldAppStatus = require("./embedComponents/fieldAppStatus");
 const { proficiencyData } = require("../../../utils/utilsCollections");
+const { MemberUtils } = require("../../../utils");
 
 module.exports = class EmbedGuildApplication extends EmbedBuilder {
+  /**
+  * @param {MemberUtils} member
+  */
   constructor(member, state) {
     super();
     this.user = member.getUser();

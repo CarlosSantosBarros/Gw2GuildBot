@@ -1,9 +1,8 @@
-const { log, guildSync, getGuild } = require("../utils/utils");
 const Discord = require("discord.js");
 const { format, isMonday, isThursday, isTuesday } = require("date-fns");
 const { roleMention } = require("@discordjs/builders");
 const { guildSettings } = require("../config.json");
-const { ServerUtils } = require("../utils");
+const { ServerUtils, log, guildSync, getGuild } = require("../utils");
 
 module.exports = {
   name: "ready",
@@ -23,8 +22,7 @@ module.exports = {
     client.gw2pState = new Discord.Collection();
     client.guildAppState = new Discord.Collection();
     client.guildAppStatus = new Discord.Collection();
-    const guild = getGuild(client);
-    const server = new ServerUtils(guild);
+    const server = new ServerUtils(getGuild(client));
 
     log("Role data loaded");
 
@@ -57,10 +55,10 @@ module.exports = {
     const intervalTime = guildSettings.syncTimerInMins * 60000;
     setInterval(async () => {
       const { removedRolesFrom, notVeried } = await guildSync(server);
-      console.log(
-        // eslint-disable-next-line max-len
-        `**Finished**\nThe follow have had their roles removed:\n${removedRolesFrom}\nThe following have not verified:\n${notVeried}`
-      );
+      // console.log(
+      //   // eslint-disable-next-line max-len
+      //   `**Finished**\nThe follow have had their roles removed:\n${removedRolesFrom}\nThe following have not verified:\n${notVeried}`
+      // );
     }, intervalTime);
   },
 };

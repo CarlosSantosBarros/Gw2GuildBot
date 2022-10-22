@@ -3,12 +3,13 @@ const { ServerUtils } = require("../../../utils/");
 const FieldProfession = require("./embedComponents/fieldProfession");
 const { professionsData } = require("../../../utils/utilsCollections");
 const { getOfficersAsString, getmembershipAsString } = require("../../../utils/utilsStringFormaters");
-const { getGuild } = require("../../../utils/utils");
 
 module.exports = class EmbedRosterSummary extends EmbedBuilder {
-  constructor(client) {
+  /**
+ * @param {ServerUtils} server
+ * */
+  constructor(server) {
     super();
-    const server = new ServerUtils(getGuild(client));
     const guild = server.guild;
     this.setThumbnail(guild.iconURL());
     this.setAuthor({ name: "Ordo Ab [Chao]" });

@@ -4,20 +4,24 @@ const {
   GuildMember, User, Role, RoleResolvable
 } = require("discord.js");
 const RoleUtils = require("./utilsRole");
+const ServerUtils = require("./utilsServer");
 const { guildSettings, professionsSettings } = require("../config.json");
 const { mentorColor } = professionsSettings;
 const { memberRole, recuitRole, gw2RankColour, verifiedRole } = guildSettings;
 const { proficiencyData } = require("./utilsCollections");
 
-
 /**
  * @extends RoleUtils
  */
 module.exports = class MemberUtils extends RoleUtils {
-  /** @param {GuildMember} member */
-  constructor(member) {
+  /**
+   * @param {GuildMember} member
+   * @param {ServerUtils} server
+  */
+  constructor(member, server) {
     super(member.roles);
     this.member = member;
+    this.server = server;
   }
   /** @param {RoleResolvable|Collection<string,Role>} id */
   async addRole(id) {
@@ -31,6 +35,8 @@ module.exports = class MemberUtils extends RoleUtils {
   getUser() { return this.member.user; }
   /** @returns {string} */
   getId() { return this.member.user.id; }
+  /** @returns {ServerUtils} */
+  getServer() { return this.server; }
 
   async addMemberRole() { if (!this.isMember()) await this.addRole(memberRole); }
   async addVerifiedRole() { await this.addRole(verifiedRole); }
@@ -71,10 +77,12 @@ module.exports = class MemberUtils extends RoleUtils {
   /** @returns {(Role|undefined)} */
   getRankRole() { return this.getRoleByColor(gw2RankColour); }
 
-  /** @param {Role} rankRole */
-  async addRankrole(rankRole) {
-    await this.removeRankRole();
-    await this.addRole(rankRole.id);
+  /** @param {String} rankName */
+  async addRankrole(rankName) {
+    const rankRole = this.server.getRoleByNameAndColor(rankName, gw2RankColour);
+    const currentRank = this.getRankRole();
+    if (currentRank != rankRole) await this.removeRankRole();
+    await this.addRole(rankRole);
   }
 
   async removeRankRole() {

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const EmbedRosterSummary = require("../classes/menus/embeds/embedRosterSummary");
+const { ServerUtils, getGuild } = require("../utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -9,7 +10,8 @@ module.exports = {
   guildCommand: true,
 
   async execute(interaction) {
-    const embeds = new EmbedRosterSummary(interaction.client);
+    const server = new ServerUtils(getGuild(interaction.client));
+    const embeds = new EmbedRosterSummary(server);
     console.log(embeds);
     await interaction.reply({
       embeds: [embeds],

@@ -51,5 +51,12 @@ module.exports = class StateGW2Profession extends State {
   /**
    * @returns {ProfessionSelection} ProfessionSelection
    */
-  getSelection() { return this.getState(this.userId); }
+  getSelection() {
+    let selection = this.getState(this.userId);
+    if (!selection) selection = {
+      profession: "",
+      proficiency: null,
+    };
+    return selection;
+  }
 };

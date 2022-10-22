@@ -1,6 +1,5 @@
 // eslint-disable-next-line no-unused-vars
 const { Guild, Collection, GuildMember, ChannelType } = require("discord.js");
-
 const { guildSettings, professionsSettings } = require("../config.json");
 const RoleUtils = require("./utilsRole");
 const { memberRole, officerRole, applicationChannel, gw2RankColour } =

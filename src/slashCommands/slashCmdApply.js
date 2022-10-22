@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const ClassGuildApplication = require("../classes/ClassGuildApplication");
+const { ServerUtils, getGuild } = require("../utils");
+
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,8 +15,8 @@ module.exports = {
       content: "Applying...",
       ephemeral: true,
     });
-
-    const application = new ClassGuildApplication(interaction.user);
+    const server = new ServerUtils(getGuild(interaction.client));
+    const application = new ClassGuildApplication(interaction.member, server);
     await application.startApplication(interaction);
   },
 };
