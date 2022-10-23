@@ -1,14 +1,20 @@
-const Discord = require("discord.js");
-const { log, findJSStartingWith_In_AndDo_ } = require("../../../utils/utils");
+const { fileLoader } = require("../../../utils");
 
 module.exports = async (client) => {
-  client.buttons = new Discord.Collection();
+  // client.buttons = new Discord.Collection();
 
-  const loadSelectMenu = (fileItem) => {
-    const button = require(`./${fileItem}`);
-    log(`Loading: ${button.customId}`);
-    client.buttons.set(button.customId, button);
+  // const loadSelectMenu = (fileItem) => {
+  //   const button = require(`./${fileItem}`);
+  //   log(`Loading: ${button.customId}`);
+  //   client.buttons.set(button.customId, button);
+  // };
+  // findJSStartingWith_In_AndDo_("interactionButton", __dirname, loadSelectMenu);
+  // log("Buttons loaded");
+
+  const config = {
+    prefix: "interactionButton",
+    dirPath: __dirname,
   };
-  findJSStartingWith_In_AndDo_("interactionButton", __dirname, loadSelectMenu);
-  log("Buttons loaded");
+
+  client.buttons = fileLoader(config);
 };

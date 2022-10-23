@@ -1,14 +1,20 @@
-const Discord = require("discord.js");
-const { log, findJSStartingWith_In_AndDo_ } = require("../utils/utils");
+const { fileLoader } = require("../utils");
 
 module.exports = async (client) => {
-  client.slashCommands = new Discord.Collection();
+  // client.slashCommands = new Discord.Collection();
 
-  const loadSlashCommand = (fileItem) => {
-    const slashCommand = require(`./${fileItem}`);
-    log(`Loading: ${ slashCommand.data.name}`);
-    client.slashCommands.set(slashCommand.data.name, slashCommand);
+  // const loadSlashCommand = (fileItem) => {
+  //   const slashCommand = require(`./${fileItem}`);
+  //   log(`Loading: ${ slashCommand.data.name}`);
+  //   client.slashCommands.set(slashCommand.data.name, slashCommand);
+  // };
+  // findJSStartingWith_In_AndDo_("slashCmd", __dirname, loadSlashCommand);
+  // log("Commands loaded");
+
+  const config = {
+    prefix: "slashCmd",
+    dirPath: __dirname,
   };
-  findJSStartingWith_In_AndDo_("slashCmd", __dirname, loadSlashCommand);
-  log("Commands loaded");
+
+  client.slashCommands = fileLoader(config);
 };
