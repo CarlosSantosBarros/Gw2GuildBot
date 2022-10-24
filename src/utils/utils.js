@@ -89,7 +89,7 @@ async function guildSync(server) {
       const verifiedGuildMember = guildMembers.splice(index, 1)[0];
       await member.addMemberRole();
       await member.addRankrole(verifiedGuildMember.rank);
-      member.removeVerifiedRole();
+      await member.removeVerifiedRole();
       discordUsersToClear.delete(snowflake);
       log(`${accountName} is in guild, give roles and dont clear`);
       continue;

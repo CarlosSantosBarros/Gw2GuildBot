@@ -9,8 +9,11 @@ module.exports = {
     const user = new ClassGW2Profession(interaction.member, server);
     user.finishSelection();
     const member = new MemberUtils(interaction.member, server);
-    if (member.isMember()) return;
-
-    await interaction.showModal(new ModalPersonalMessage(interaction.user));
+    if (!member.isMember()) await interaction.showModal(new ModalPersonalMessage(interaction.user));
+    else await interaction.update({
+      content: 'You have finished selecting your professions',
+      components: [],
+      embeds: [],
+    });
   },
 };
