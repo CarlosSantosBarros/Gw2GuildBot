@@ -61,15 +61,15 @@ module.exports = class ClassGuildApplication {
     this.state.setApplicationReason(reason, appId);
     this.db.selectApplication(appId);
     const appStatus = this.state.getApplicationStatus(appId);
-    console.log(appStatus.status);
     await this.db.updateStatus(appStatus);
     const application = await this.db.getApplication();
     const member = this.server.getMemberById(application.snowflake);
     await member.send({ content: dmReply });
     const applicationMember = new MemberUtils(member, this.server);
-    if (appStatus.status == "Denied" || appStatus.status == "Blacklisted")
+    if (appStatus.status == "Denied" || appStatus.status == "Blacklisted") {
       await applicationMember.removeProficiencies();
-    await applicationMember.removeVerifiedRole();
+      await applicationMember.removeVerifiedRole();
+    }
     this.updateMessage(interaction, application);
   }
 

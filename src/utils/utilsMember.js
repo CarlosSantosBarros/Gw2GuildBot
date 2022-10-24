@@ -38,12 +38,6 @@ module.exports = class MemberUtils extends RoleUtils {
   /** @returns {ServerUtils} */
   getServer() { return this.server; }
 
-  async addMemberRole() { if (!this.isMember()) await this.addRole(memberRole); }
-  async addVerifiedRole() { await this.addRole(verifiedRole); }
-  async addRecruitRole() { if (!this.isRecuit) await this.addRole(recuitRole); }
-  async removeMemberRole() { if (this.isMember()) await this.removeRole(memberRole); }
-  async removeVerifiedRole() { if (this.isVerified()) await this.removeRole(verifiedRole); }
-
   /** @returns {(Role|undefined)} */
   isMember() { return this.getRoleById(memberRole); }
 
@@ -54,10 +48,19 @@ module.exports = class MemberUtils extends RoleUtils {
   isRecuit() { return this.getRoleById(recuitRole); }
 
   /**
+   * @param {string} value
+   * @returns {(Role|undefined)}
+   */
+  isMentorFor(value) { return this.getRoleByNameAndColor(value, mentorColor); }
+
+  /**
    * @param {string} color
    * @returns {Collection<string,Role>}
    */
   getProficiencies(color) { return this.getAllRolesByColor(color); }
+
+  /** @returns {(Role|undefined)} */
+  getRankRole() { return this.getRoleByColor(gw2RankColour); }
 
   async removeProficiencies() {
     let proficiencies = new Collection();
@@ -68,14 +71,11 @@ module.exports = class MemberUtils extends RoleUtils {
     await this.removeRole(proficiencies);
   }
 
-  /**
-   * @param {string} value
-   * @returns {(Role|undefined)}
-   */
-  isMentorFor(value) { return this.getRoleByNameAndColor(value, mentorColor); }
-
-  /** @returns {(Role|undefined)} */
-  getRankRole() { return this.getRoleByColor(gw2RankColour); }
+  async addMemberRole() { if (!this.isMember()) await this.addRole(memberRole); }
+  async addVerifiedRole() { if (!this.isVerified()) await this.addRole(verifiedRole); }
+  async addRecruitRole() { if (!this.isRecuit) await this.addRole(recuitRole); }
+  async removeMemberRole() { if (this.isMember()) await this.removeRole(memberRole); }
+  async removeVerifiedRole() { if (this.isVerified()) await this.removeRole(verifiedRole); }
 
   /** @param {String} rankName */
   async addRankrole(rankName) {

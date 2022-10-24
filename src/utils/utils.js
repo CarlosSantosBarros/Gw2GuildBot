@@ -77,32 +77,34 @@ async function guildSync(server) {
   const guildMembers = await getGW2GuildInfo();
   const gw2db = new InterfaceGW2Player();
   const verified = await gw2db.getAll();
-  const discordUsersToSync = server.getMembers();
+  const discordUsersToClear = server.getMembers();
   while (verified.length > 0) {
-    const verifiedUser = verified.shift().get();
-    const { snowflake, accountName } = verifiedUser;
+    // const verifiedUser = verified.shift().get();
+    const { snowflake, accountName } = verified.shift().get();
     const index = guildMembers.findIndex((entry) => entry.name === accountName);
     const discordMember = server.getMemberById(snowflake);
-
     const member = new MemberUtils(discordMember, server);
-    if (member.isVerified()) {
-      discordUsersToSync.delete(snowflake);
-      continue;
-    }
 
     if (index != -1) {
       const verifiedGuildMember = guildMembers.splice(index, 1)[0];
       await member.addMemberRole();
       await member.addRankrole(verifiedGuildMember.rank);
       member.removeVerifiedRole();
+      discordUsersToClear.delete(snowflake);
+      log(`${accountName} is in guild, give roles and dont clear`);
+      continue;
+    } else if (member.isVerified()) {
+      discordUsersToClear.delete(snowflake);
+      log(`${accountName} is verified, dont clear`);
+      continue;
     } else {
       await gw2db.deletePlayer(snowflake);
+      log(`${accountName} is not verified or in guild, remove key and clear`);
       continue;
     }
-    discordUsersToSync.delete(snowflake);
   }
   let removedRolesFrom = "";
-  discordUsersToSync.forEach(async (item) => {
+  discordUsersToClear.forEach(async (item) => {
     const member = new MemberUtils(item, server);
     removedRolesFrom = removedRolesFrom.concat(" ", `${item.displayName}\n`);
 
