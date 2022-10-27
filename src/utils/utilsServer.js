@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
-const { Guild, Collection, GuildMember, ChannelType } = require("discord.js");
+const { Guild, Collection, GuildMember,
+  ChannelType, } = require("discord.js");
 const { guildSettings, professionsSettings } = require("../config.json");
 const RoleUtils = require("./utilsRole");
 const { memberRole, officerRole, applicationChannel, gw2RankColour } =
@@ -18,12 +19,15 @@ module.exports = class ServerUtils extends RoleUtils {
   }
 
   getChannelByNameAndType(name, type) {
-    return this.guild.channels.cache.find(
-      (channel) => channel.name === name && channel.type === type
-    );
+    const channelSearch = (channel) => channel.name === name && channel.type === type;
+    return this.guild.channels.cache.find(channelSearch);
   }
 
-  getAnnouncementChan(name) { return this.getChannelByNameAndType(name, ChannelType.GuildText); }
+  /**
+  * @param {String} name
+  * @returns {import("discord.js").TextChannel}
+  */
+  getTextChannel(name) { return this.getChannelByNameAndType(name, ChannelType.GuildText); }
 
   getChannelById(id) {
     return this.guild.channels.cache.find((channel) => channel.id === id);

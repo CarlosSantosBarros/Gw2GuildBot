@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
-const { format, isMonday, isThursday, isTuesday } = require("date-fns");
+const { format, isMonday, isThursday, isTuesday, set, differenceInHours, getUnixTime, differenceInMinutes } = require("date-fns");
+const { formatInTimeZone, utcToZonedTime } = require("date-fns-tz");
 const { roleMention } = require("@discordjs/builders");
 const { guildSettings } = require("../config.json");
 const { ServerUtils, log, guildSync, getGuild } = require("../utils");
@@ -27,26 +28,31 @@ module.exports = {
     log("Role data loaded");
 
     setInterval(() => {
-      const date = new Date();
-      const time = format(date, "HHmm");
-      if (time == "1645") {
+      //https://nodatime.org/TimeZones
+      const config = {
+        timeZone: "Europe/London",
+        time: { hours: 17, minutes: 15 },
+        interval: 60
+      };
+
+      const nowZonedTime = utcToZonedTime(new Date(), config.timeZone);
+      const targetTime = set(nowZonedTime, config.time);
+      const minutes = differenceInMinutes(targetTime, nowZonedTime, { roundingMethod: "ceil" });
+      if (minutes == config.interval) {
         let channelName;
         let message;
-        if (isMonday(date) || isThursday(date)) {
+        const unixTime = getUnixTime(targetTime);
+        if (isMonday(nowZonedTime) || isThursday(nowZonedTime)) {
           channelName = "rally_call";
-          message = ": Guild WvW Raid starts in 1h!";
-        }
-        if (isTuesday(date)) {
+          message = `: Guild WvW Raid starts in <t:${unixTime}:R>! at <t:${unixTime}:f>`;
+        } else if (isTuesday(nowZonedTime)) {
           channelName = "chao_chat";
-          message = ": Guild meeting in 1h! Duration 30 min MAX.";
-        }
-        if (channelName == null) return;
+          message = `: Guild meeting in <t:${unixTime}:R>! Duration 30 min MAX.  <t:${unixTime}:f>`;
+        } else return;
 
-        const announcementChannel = server.getAnnouncementChan(channelName);
-        if (!announcementChannel)
-          return console.log(`${channelName} does not exist`);
-        // @ts-ignore
-        announcementChannel.send({
+        const announceChan = server.getTextChannel(channelName);
+        if (!announceChan) console.log(`${channelName} does not exist`);
+        else announceChan.send({
           content: roleMention(guildSettings.memberRole) + message,
         });
       }
