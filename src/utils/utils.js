@@ -1,12 +1,14 @@
-const { Client, Guild, Collection } = require("discord.js");
-const { format } = require("date-fns");
+const { Client, Guild, Collection, roleMention } = require("discord.js");
+const { format, isMonday, isThursday, isTuesday, set, differenceInHours, getUnixTime, differenceInMinutes } = require("date-fns");
+const { formatInTimeZone, utcToZonedTime } = require("date-fns-tz");
+
 const fs = require("fs");
 const MemberUtils = require("./utilsMember");
 const { getGW2GuildInfo } = require("./utilsGw2API");
 const { forEachToString } = require("./utilsStringFormaters");
 const { InterfaceGW2Player } = require("../classes/database");
-const { logging, guildSettings } = require("../config.json");
-const { discordGuildId } = guildSettings;
+const { logging, guildSettings, eventSettings } = require("../config.json");
+const { discordGuildId, memberRole } = guildSettings;
 const { IsSuccessLogging, IsFailureLogging } = logging;
 const path = require("path");
 
@@ -120,15 +122,38 @@ async function guildSync(server) {
   return { removedRolesFrom, notVeried };
 }
 
+async function eventReminder(server) {
+  // when setting the timezones in the config use one from this site
+  // https://nodatime.org/TimeZones
+  const { timeZone, interval, events } = eventSettings;
+  const now = new Date();
+
+  events.forEach((item) => {
+    if (item.days.includes(format(now, "EEEEEE"))) {
+      const nowZonedTime = utcToZonedTime(new Date(), timeZone);
+      const targetTime = set(nowZonedTime, item.time);
+      const minutes = differenceInMinutes(targetTime, nowZonedTime, { roundingMethod: "ceil" });
+      if (minutes == interval) {
+        const unixTime = getUnixTime(targetTime);
+        const role = roleMention(memberRole);
+        const channel = server.getTextChannel(item.channel);
+        if (!channel) console.log(`${item.channel} does not exist`);
+        else channel.send({
+          content: `${role}: ${item.name} starts in <t:${unixTime}:R>! at <t:${unixTime}:f>`
+        });
+      }
+    }
+  });
+}
 /**
- * @param {Client} client
- * @returns {Guild}
- */
+   * @param {Client} client
+   * @returns {Guild}
+   */
 function getGuild(client) {
   /**
-   * @param {Guild} guild
-   * @returns {boolean}
-   */
+     * @param {Guild} guild
+     * @returns {boolean}
+     */
   const search = (guild) => guild.id === discordGuildId;
   // @ts-ignore
   return client.guilds.cache.find(search);
@@ -140,5 +165,6 @@ module.exports = {
   isErrorBadApiKey: isErrorBadApiKey,
   guildSync: guildSync,
   getGuild: getGuild,
-  fileLoader: fileLoader
+  fileLoader: fileLoader,
+  eventReminder: eventReminder
 };

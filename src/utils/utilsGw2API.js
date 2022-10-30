@@ -1,8 +1,10 @@
 const { guildSettings } = require("../config.json");
 const client = require("gw2api-client");
 const cacheMemory = require("gw2api-client/src/cache/memory");
+const { log } = require(".");
+
 const api = client();
-api.debugging(true);
+// api.debugging(true);
 api.cacheStorage(cacheMemory());
 
 /*
@@ -25,6 +27,7 @@ authenticating for every query is probably bad and will get flagged in high traf
  * @return {Promise<JSON>} Token info
  */
 exports.getGW2TokenInfo = async (apikey) => {
+  console.log("Getting token info");
   api.authenticate(apikey);
   let returnData;
   await api
@@ -45,6 +48,7 @@ exports.getGW2TokenInfo = async (apikey) => {
  * @return {Promise<AccountInfo>} Account info
  */
 exports.getGW2AccountInfo = async (apikey) => {
+  console.log("Getting account info");
   api.authenticate(apikey);
   let returnData;
   await api
@@ -65,6 +69,7 @@ exports.getGW2AccountInfo = async (apikey) => {
  */
 exports.getGW2GuildInfo = async () => {
   const { guildLeaderKey, gw2GuildId } = guildSettings;
+  console.log("Getting guild membership info");
   api.authenticate(guildLeaderKey);
   let returnData;
   await api
@@ -107,6 +112,7 @@ exports.getGW2GuildLog = async (id) => {
 };
 
 exports.getWorld = async (worldId) => {
+  console.log("Getting world ID");
   let returnData;
   await api
     .worlds()

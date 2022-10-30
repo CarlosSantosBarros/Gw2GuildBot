@@ -1,9 +1,6 @@
 const Discord = require("discord.js");
-const { format, isMonday, isThursday, isTuesday, set, differenceInHours, getUnixTime, differenceInMinutes } = require("date-fns");
-const { formatInTimeZone, utcToZonedTime } = require("date-fns-tz");
-const { roleMention } = require("@discordjs/builders");
 const { guildSettings } = require("../config.json");
-const { ServerUtils, log, guildSync, getGuild } = require("../utils");
+const { ServerUtils, log, guildSync, getGuild, eventReminder } = require("../utils");
 
 module.exports = {
   name: "ready",
@@ -27,36 +24,7 @@ module.exports = {
 
     log("Role data loaded");
 
-    setInterval(() => {
-      //https://nodatime.org/TimeZones
-      const config = {
-        timeZone: "Europe/London",
-        time: { hours: 17, minutes: 15 },
-        interval: 60
-      };
-
-      const nowZonedTime = utcToZonedTime(new Date(), config.timeZone);
-      const targetTime = set(nowZonedTime, config.time);
-      const minutes = differenceInMinutes(targetTime, nowZonedTime, { roundingMethod: "ceil" });
-      if (minutes == config.interval) {
-        let channelName;
-        let message;
-        const unixTime = getUnixTime(targetTime);
-        if (isMonday(nowZonedTime) || isThursday(nowZonedTime)) {
-          channelName = "rally_call";
-          message = `: Guild WvW Raid starts in <t:${unixTime}:R>! at <t:${unixTime}:f>`;
-        } else if (isTuesday(nowZonedTime)) {
-          channelName = "chao_chat";
-          message = `: Guild meeting in <t:${unixTime}:R>! Duration 30 min MAX.  <t:${unixTime}:f>`;
-        } else return;
-
-        const announceChan = server.getTextChannel(channelName);
-        if (!announceChan) console.log(`${channelName} does not exist`);
-        else announceChan.send({
-          content: roleMention(guildSettings.memberRole) + message,
-        });
-      }
-    }, 60000);
+    setInterval(() => { eventReminder(server); }, 60000);
 
     const intervalTime = guildSettings.syncTimerInMins * 60000;
     setInterval(async () => {

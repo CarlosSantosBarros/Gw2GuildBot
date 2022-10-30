@@ -6,7 +6,8 @@ const {
   isErrorBadApiKey,
   guildSync,
   getGuild,
-  fileLoader } = require("./utils");
+  fileLoader,
+  eventReminder } = require("./utils");
 
 module.exports = {
   MemberUtils,
@@ -16,5 +17,6 @@ module.exports = {
   isErrorBadApiKey,
   guildSync,
   getGuild,
-  fileLoader
+  fileLoader,
+  eventReminder
 };
