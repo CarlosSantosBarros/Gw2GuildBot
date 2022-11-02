@@ -1,6 +1,6 @@
 const { userMention } = require("discord.js");
 const { professionsData } = require("./utilsCollections");
-const { rosterSummarySettings } = require("../config.json");
+const { rosterSummarySettings } = require("../../config.json");
 
 exports.toEmoji = (data) => { return `<:${data.label}:${data.emoji}>`; };
 

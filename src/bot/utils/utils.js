@@ -1,6 +1,6 @@
 const { Client, Guild, Collection, roleMention } = require("discord.js");
-const { format, isMonday, isThursday, isTuesday, set, differenceInHours, getUnixTime, differenceInMinutes } = require("date-fns");
-const { formatInTimeZone, utcToZonedTime } = require("date-fns-tz");
+const { format, set, getUnixTime, differenceInMinutes } = require("date-fns");
+const { utcToZonedTime } = require("date-fns-tz");
 
 const fs = require("fs");
 const MemberUtils = require("./utilsMember");

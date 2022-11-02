@@ -1,16 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 const { RoleManager, GuildMemberRoleManager, Role, Collection } = require("discord.js");
-/**
- * @param {string} roleName
- * @returns {(role: Role) => boolean}
- */
-const findRole = (roleName) => { return (role) => role.name === roleName; };
+const { findRoleByName, findColorByHex, findRoleById } = require("./utilsSearchLambdas");
 
-/**
- * @param {string} colorHexValue
- * @returns {(role: Role) => boolean}
- */
-const findColor = (colorHexValue) => { return (role) => role.hexColor === colorHexValue; };
 
 module.exports = class RoleUtils {
   /** @param {(RoleManager|GuildMemberRoleManager)} roles  */
@@ -21,27 +12,27 @@ module.exports = class RoleUtils {
    * @param {string} name
    * @returns {(Role|undefined)}
    */
-  getRoleByName(name) { return this.roles.cache.find(findRole(name)); }
+  getRoleByName(name) { return this.roles.cache.find(findRoleByName(name)); }
   /**
    * @param {string} name
    * @returns {Collection<string,Role>}
    */
-  getAllRolesByName(name) { return this.roles.cache.filter(findRole(name)); }
+  getAllRolesByName(name) { return this.roles.cache.filter(findRoleByName(name)); }
   /**
    * @param {string} color
    * @returns {(Role|undefined)}
    */
-  getRoleByColor(color) { return this.roles.cache.find(findColor(color)); }
+  getRoleByColor(color) { return this.roles.cache.find(findColorByHex(color)); }
   /**
    * @param {string} color
    * @returns {Collection<string,Role>}
    */
-  getAllRolesByColor(color) { return this.roles.cache.filter(findColor(color)); }
+  getAllRolesByColor(color) { return this.roles.cache.filter(findColorByHex(color)); }
   /**
    * @param {string} id
    * @returns {(Role|undefined)}
    */
-  getRoleById(id) { return this.roles.cache.find((role) => role.id === id); }
+  getRoleById(id) { return this.roles.cache.find(findRoleById(id)); }
 
   /**
    * @param {string} name

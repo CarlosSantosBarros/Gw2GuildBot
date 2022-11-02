@@ -3,6 +3,7 @@ const { Guild, Collection, GuildMember,
   ChannelType, } = require("discord.js");
 const { guildSettings, professionsSettings } = require("../config.json");
 const RoleUtils = require("./utilsRole");
+const { findRoleByName } = require("./utilsSearchLambdas");
 const { memberRole, officerRole, applicationChannel, gw2RankColour } =
   guildSettings;
 
@@ -29,9 +30,7 @@ module.exports = class ServerUtils extends RoleUtils {
   */
   getTextChannel(name) { return this.getChannelByNameAndType(name, ChannelType.GuildText); }
 
-  getChannelById(id) {
-    return this.guild.channels.cache.find((channel) => channel.id === id);
-  }
+  getChannelById(id) { return this.guild.channels.cache.find((channel) => channel.id === id); }
 
   getMemberById(id) {
     const returnedMember = this.guild.members.cache.find((member) => member.user.id === id);
@@ -64,23 +63,13 @@ module.exports = class ServerUtils extends RoleUtils {
     return mentors ? mentors.members : mentors;
   }
 
-  getMembersByRoleId(roleId) {
-    return this.getRoleById(roleId).members;
-  }
+  getMembersByRoleId(roleId) { return this.getRoleById(roleId).members; }
 
   // refactor - refactored but still bad :S
   getPlayers(value) {
     const members = this.getMembers();
-    return members.filter((member) =>
-      member.roles.cache.find((role) => role.name === value)
-    ).size;
+    return members.filter((member) => member.roles.cache.find(findRoleByName(value)));
   }
   getGw2RankByName(rankName) { return this.getRoleByNameAndColor(rankName, gw2RankColour); }
-
-  async createRole(name, color) {
-    return await this.guild.roles.create({
-      name,
-      color,
-    });
-  }
+  async createRole(name, color) { return await this.guild.roles.create({ name, color, }); }
 };

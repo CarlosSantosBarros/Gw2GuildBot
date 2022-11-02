@@ -6,31 +6,26 @@ const { getGW2AccountInfo } = require("../../../utils/utilsGw2API");
 module.exports = class InterfaceGW2Player extends Interface {
   constructor() {
     super(ModelGW2Player);
-    this.playerData;
-    this.accountData;
-    this.apiKey;
   }
-  async getPlayerDataById(id) {
+  async getApiKeyById(id) {
     this.setSelector({ where: { snowflake: id } });
-    this.playerData = await this.get();
-    this.apiKey = this.playerData.apiKey;
+    const playerData = await this.get();
+    return playerData.apiKey;
   }
 
+  // refactor - maybe i dont need this
   async getPlayerDataByIgn(ign) {
     this.setSelector({ where: { accountName: ign } });
     return await this.get();
   }
 
-  async getAccountData() {
-    this.accountData = await getGW2AccountInfo(this.apiKey);
+  async getAccountData(key) {
+    return await getGW2AccountInfo(key);
   }
-  async updatePlayer(id) {
+  async updatePlayer(id, object) {
     this.setSelector({ where: { snowflake: id } });
     await this.findOrCreate();
-    await this.update({
-      accountName: this.accountData.name,
-      apiKey: this.apiKey,
-    });
+    await this.update(object);
   }
   async deletePlayer(id) {
     this.setSelector({ where: { snowflake: id } });

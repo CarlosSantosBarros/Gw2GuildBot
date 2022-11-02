@@ -8,9 +8,10 @@ module.exports = class FieldProfession {
   constructor(profession, server) {
     const emoji = toEmoji(profession);
     const mentors = getMentorsAsString(profession.value, server);
+    const numberOfPlayer = server.getPlayers(profession.value).size;
     return {
       name: `${emoji} ${profession.label} ${emoji}`,
-      value: `**Players**: ${server.getPlayers(profession.value)}
+      value: `**Players**: ${numberOfPlayer}
     **Role**: ${profession.description} 
     **Build:** *[Here](${profession.build})* 
     ${mentors ? `**Mentor**: ${mentors}` : ""}`,

@@ -93,6 +93,4 @@ module.exports = class ClassGuildApplication {
         embeds: embeds,
       });
   }
-
-
 };

@@ -1,6 +1,6 @@
 const State = require("./State");
 const { isLegalMessage, willRoleSwapMessage } =
-  require("../../config.json").applicationSettings;
+  require("../../../config.json").applicationSettings;
 
 module.exports = class StateGuildApplication extends State {
   constructor(user) {

@@ -5,7 +5,7 @@ const sequelize = new Sequelize("database", "user", "password", {
   dialect: "sqlite",
   logging: console.log,
   // SQLite only
-  storage: "./src/classes/database/database.sqlite",
+  storage: "./src/bot/classes/database/database.sqlite",
 });
 
 (async () => {
