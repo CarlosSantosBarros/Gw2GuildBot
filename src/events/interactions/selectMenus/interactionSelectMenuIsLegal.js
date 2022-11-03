@@ -6,6 +6,6 @@ module.exports = {
   async execute(interaction) {
     const server = new ServerUtils(getGuild(interaction.client));
     const application = new ClassGuildApplication(interaction.member, server);
-    application.selectIsLegal(interaction);
+    await application.selectIsLegal(interaction);
   },
 };

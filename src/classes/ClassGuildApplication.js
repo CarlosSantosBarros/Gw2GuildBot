@@ -25,17 +25,17 @@ module.exports = class ClassGuildApplication {
     const accountData = await player.getApplicationData();
     const serverInfo = await getWorld(accountData.application.server);
     const newState = this.state.setAccountData(accountData, serverInfo);
-    this.updateMessage(interaction, newState);
+    await this.updateMessage(interaction, newState);
   }
 
-  selectIsLegal(interaction) {
+  async selectIsLegal(interaction) {
     const newState = this.state.setIsLegal(interaction.values[0]);
-    this.updateMessage(interaction, newState);
+    await this.updateMessage(interaction, newState);
   }
 
-  selectWillRoleSwap(interaction) {
+  async selectWillRoleSwap(interaction) {
     const newState = this.state.setWillRoleSwap(interaction.values[0]);
-    this.updateMessage(interaction, newState);
+    await this.updateMessage(interaction, newState);
   }
 
   async writePersonalMessage(message) { this.state.setPersonalMessage(message); }
@@ -70,7 +70,7 @@ module.exports = class ClassGuildApplication {
       await applicationMember.removeProficiencies();
       await applicationMember.removeVerifiedRole();
     }
-    this.updateMessage(interaction, application);
+    await this.updateMessage(interaction, application);
   }
 
   async accept(appId, user) { this.state.setApplicationStatus("Accepted", appId, user); }

@@ -6,6 +6,6 @@ module.exports = {
   async execute(interaction) {
     const server = new ServerUtils(getGuild(interaction.client));
     const user = new ClassGW2Profession(interaction.member, server);
-    user.selectProficiency(interaction);
+    await user.selectProficiency(interaction);
   },
 };
