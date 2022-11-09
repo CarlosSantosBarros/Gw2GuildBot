@@ -1,7 +1,6 @@
 const { guildSettings } = require("../config.json");
 const client = require("gw2api-client");
 const cacheMemory = require("gw2api-client/src/cache/memory");
-const { log } = require(".");
 
 const api = client();
 // api.debugging(true);

@@ -1,4 +1,4 @@
-const { MemberUtils, isErrorBadApiKey } = require("../utils");
+const { MemberUtils, isErrorBadApiKey, ServerUtils, getGuild } = require("../utils");
 const { errors } = require("../config.json");
 const { isCommand } = require("../utils/utilsTypeGuard");
 
@@ -23,13 +23,14 @@ module.exports = {
 
     } catch (error) {
       let errorMsg = error;
+      const server = new ServerUtils(getGuild(interaction.client));
       if (typeof error === "object") {
         console.log(error);
         errorMsg = errors.default;
         if (error.content)
           if (isErrorBadApiKey(error.content)) {
             errorMsg = errors.badApiKey;
-            const member = new MemberUtils(interaction.member);
+            const member = new MemberUtils(interaction.member, server);
             if (member.isVerified()) member.removeVerifiedRole();
           } else errorMsg = error.content.text;
       }
@@ -42,6 +43,8 @@ module.exports = {
       if (interaction.isCommand())
         await interaction.editReply(reply);
       else await interaction.update(reply);
+      const errorChan = server.getErrorChan();
+      await errorChan.send({ content: error.stack.toString() });
     }
   },
 };

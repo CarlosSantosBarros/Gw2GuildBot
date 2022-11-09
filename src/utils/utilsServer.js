@@ -42,6 +42,7 @@ module.exports = class ServerUtils extends RoleUtils {
   getRoleByPermissions(permission) {
     return this.roles.cache.find((role) => !role.permissions.has(permission));
   }
+
   /**
    * @returns {Collection<string,GuildMember>}
    */
@@ -55,6 +56,8 @@ module.exports = class ServerUtils extends RoleUtils {
     if (value == this.getChannelById(applicationChannel)) return true;
     return false;
   }
+
+  getErrorChan() { return this.getTextChannel("bot-errors"); }
 
   getMentorsFor(value) {
     const mentors = this.getRoleByNameAndColor(

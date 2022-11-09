@@ -1,15 +1,13 @@
 const { Client, Guild, Collection, roleMention } = require("discord.js");
-const { format, isMonday, isThursday, isTuesday, set, differenceInHours, getUnixTime, differenceInMinutes } = require("date-fns");
-const { formatInTimeZone, utcToZonedTime } = require("date-fns-tz");
+const { format, set, getUnixTime, differenceInMinutes } = require("date-fns");
+const { utcToZonedTime } = require("date-fns-tz");
 
 const fs = require("fs");
 const MemberUtils = require("./utilsMember");
-const { getGW2GuildInfo } = require("./utilsGw2API");
 const { forEachToString } = require("./utilsStringFormaters");
 const { InterfaceGW2Player } = require("../classes/database");
-const { logging, guildSettings, eventSettings } = require("../config.json");
+const { guildSettings, eventSettings } = require("../config.json");
 const { discordGuildId, memberRole } = guildSettings;
-const { IsSuccessLogging, IsFailureLogging } = logging;
 const path = require("path");
 
 /**  terrible name, call this something else
@@ -23,6 +21,7 @@ function findJSStartingWith_In_AndDo_(prefix, dirPath, action) {
     .forEach((file) => action(file));
 }
 
+function log(message) { console.log(`[${format(new Date(), "PPPppp")}] ${message}`); }
 
 function fileLoader(config, client) {
   const { prefix, dirPath } = config;
@@ -52,12 +51,6 @@ function fileLoader(config, client) {
 }
 
 
-function log(message) {
-  const dateString = format(new Date(), "PPPppp");
-  if (IsSuccessLogging) console.log(`[${dateString}] ${message}`);
-  if (IsFailureLogging) console.log(`[${dateString}] ${message}`);
-}
-
 function isErrorBadApiKey(errorContent) {
   if (
     errorContent.text === "Invalid access token" ||
@@ -76,6 +69,7 @@ function isErrorBadApiKey(errorContent) {
  * @returns {Promise<SyncOutput>}
  */
 async function guildSync(server) {
+  const { getGW2GuildInfo } = require("./utilsGw2API");
   const guildMembers = await getGW2GuildInfo();
   const gw2db = new InterfaceGW2Player();
   const verified = await gw2db.getAll();
@@ -109,7 +103,7 @@ async function guildSync(server) {
   discordUsersToClear.forEach(async (item) => {
     const member = new MemberUtils(item, server);
     removedRolesFrom = removedRolesFrom.concat(" ", `${item.displayName}\n`);
-
+    log(`Removed roles from ${item.displayName}`);
     await member.removeRankRole();
     await member.removeProficiencies();
     await member.removeMemberRole();
@@ -128,7 +122,7 @@ async function eventReminder(server) {
   const { timeZone, interval, events } = eventSettings;
   const now = new Date();
 
-  events.forEach((item) => {
+  events.forEach(async (item) => {
     if (item.days.includes(format(now, "EEEEEE"))) {
       const nowZonedTime = utcToZonedTime(new Date(), timeZone);
       const targetTime = set(nowZonedTime, item.time);
@@ -137,8 +131,8 @@ async function eventReminder(server) {
         const unixTime = getUnixTime(targetTime);
         const role = roleMention(memberRole);
         const channel = server.getTextChannel(item.channel);
-        if (!channel) console.log(`${item.channel} does not exist`);
-        else channel.send({
+        if (!channel) log(`${item.channel} does not exist`);
+        else await channel.send({
           content: `${role}: ${item.name} starts in <t:${unixTime}:R>! at <t:${unixTime}:f>`
         });
       }

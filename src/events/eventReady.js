@@ -27,12 +27,6 @@ module.exports = {
     setInterval(() => { eventReminder(server); }, 60000);
 
     const intervalTime = guildSettings.syncTimerInMins * 60000;
-    setInterval(async () => {
-      const { removedRolesFrom, notVeried } = await guildSync(server);
-      // console.log(
-      //   // eslint-disable-next-line max-len
-      //   `**Finished**\nThe follow have had their roles removed:\n${removedRolesFrom}\nThe following have not verified:\n${notVeried}`
-      // );
-    }, intervalTime);
+    setInterval(async () => { await guildSync(server); }, intervalTime);
   },
 };
