@@ -133,7 +133,7 @@ async function eventReminder(server) {
         const channel = server.getTextChannel(item.channel);
         if (!channel) log(`${item.channel} does not exist`);
         else await channel.send({
-          content: `${role}: ${item.name} starts in <t:${unixTime}:R>! at <t:${unixTime}:f>`
+          content: `${role}: ${item.name} starts <t:${unixTime}:R>! at <t:${unixTime}:f>`
         });
       }
     }

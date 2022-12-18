@@ -24,7 +24,7 @@ module.exports = {
 
     log("Role data loaded");
 
-    setInterval(() => { eventReminder(server); }, 60000);
+    // setInterval(() => { eventReminder(server); }, 60000);
 
     const intervalTime = guildSettings.syncTimerInMins * 60000;
     setInterval(async () => { await guildSync(server); }, intervalTime);
