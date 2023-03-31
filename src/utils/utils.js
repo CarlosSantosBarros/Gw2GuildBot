@@ -1,6 +1,6 @@
 const { Client, Guild, Collection, roleMention } = require("discord.js");
 const { format, set, getUnixTime, differenceInMinutes } = require("date-fns");
-const { utcToZonedTime } = require("date-fns-tz");
+const { utcToZonedTime, zonedTimeToUtc } = require("date-fns-tz");
 
 const fs = require("fs");
 const MemberUtils = require("./utilsMember");
@@ -124,11 +124,12 @@ async function eventReminder(server) {
 
   events.forEach(async (item) => {
     if (item.days.includes(format(now, "EEEEEE"))) {
-      const nowZonedTime = utcToZonedTime(new Date(), timeZone);
+      const nowZonedTime = utcToZonedTime(now, timeZone);
       const targetTime = set(nowZonedTime, item.time);
       const minutes = differenceInMinutes(targetTime, nowZonedTime, { roundingMethod: "ceil" });
       if (minutes == interval) {
-        const unixTime = getUnixTime(targetTime);
+        const targetUTC = zonedTimeToUtc(targetTime, timeZone);
+        const unixTime = getUnixTime(targetUTC);
         const role = roleMention(memberRole);
         const channel = server.getTextChannel(item.channel);
         if (!channel) log(`${item.channel} does not exist`);
