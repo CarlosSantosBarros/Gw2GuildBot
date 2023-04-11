@@ -84,7 +84,7 @@ module.exports = class ClassGuildApplication {
     if (interaction.isModalSubmit()) {
       await interaction.update({ embeds: embeds, components: [] });
       this.state.removeAppStatus(interaction.message.id);
-    } else if (interaction.isSelectMenu())
+    } else if (interaction.isStringSelectMenu())
       await interaction.update({ components: components, embeds: embeds });
     else if (isCommand(interaction))
       await interaction.editReply({

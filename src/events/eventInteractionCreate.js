@@ -13,7 +13,7 @@ module.exports = {
       let collection = interaction.client.slashCommands;
       let key = interaction.commandName;
       if (interaction.isButton()) collection = interaction.client.buttons;
-      else if (interaction.isSelectMenu()) collection = interaction.client.selectMenus;
+      else if (interaction.isStringSelectMenu()) collection = interaction.client.selectMenus;
       else if (interaction.isModalSubmit()) collection = interaction.client.modals;
       if (!isCommand(interaction)) key = interaction.customId;
 

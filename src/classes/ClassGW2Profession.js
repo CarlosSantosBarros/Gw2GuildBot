@@ -73,7 +73,7 @@ exports.ClassGW2Profession = class {
     // If statement to filter what kinda of change needs to be done
     if (message.isButton())
       await message.update({ embeds: embeds, components: components });
-    else if (message.isSelectMenu())
+    else if (message.isStringSelectMenu())
       await message.update({ components: components });
     else if (message.replied)
       await message.editReply({

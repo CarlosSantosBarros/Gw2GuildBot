@@ -1,6 +1,6 @@
-const { SelectMenuBuilder, ButtonBuilder } = require("discord.js");
+const { StringSelectMenuBuilder, ButtonBuilder } = require("discord.js");
 
-exports.SelectMenu = class SelectMenu extends SelectMenuBuilder {
+exports.SelectMenu = class SelectMenu extends StringSelectMenuBuilder {
   constructor(baseData, selectMenuDataArray, selectedValue) {
     super(baseData);
     selectMenuDataArray.forEach((item) => {
